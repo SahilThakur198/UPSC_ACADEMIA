@@ -86,14 +86,18 @@
             color: var(--white);
         }
 
+        /* Updated UPSC styling to Times New Roman font */
         .logo .upsc {
             color: var(--accent-red);
             font-weight: 900;
+            font-family: 'Times New Roman', serif;
         }
 
+        /* Updated Academia styling to blue color */
         .logo .academia {
+            color: #0000FF;
+            font-style: italic;
             font-family: 'Kalam', cursive;
-            font-weight: 700;
         }
 
         .nav-menu {
@@ -209,12 +213,17 @@
             text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
+        /* Updated hero UPSC styling to Times New Roman font */
         .hero-content .upsc {
             color: var(--accent-red);
             font-weight: 900;
+            font-family: 'Times New Roman', serif;
         }
 
+        /* Updated hero Academia styling to blue color */
         .hero-content .academia {
+            color: #0000FF;
+            font-style: italic;
             font-family: 'Kalam', cursive;
         }
 
@@ -283,8 +292,16 @@
             border-radius: 2px;
         }
 
+        /* Updated section title UPSC styling to Times New Roman font */
         .section-title .upsc {
             color: var(--accent-red);
+            font-family: 'Times New Roman', serif;
+        }
+
+        /* Updated section title Academia styling to blue color */
+        .section-title .academia {
+            color: #0000FF;
+            font-family: 'Kalam', cursive;
         }
 
         /* Combined About and Director section with enhanced layout */
@@ -919,9 +936,14 @@
                 padding: 0 1rem;
             }
         }
+
+        /* Removed WhatsApp channel banner styling */
+
+        /* Removed Facebook and WhatsApp Channel contact items */
     </style>
 </head>
 <body>
+    <!-- Removed WhatsApp channel banner from top -->
     <!-- Navigation -->
     <nav class="navbar">
         <div class="nav-container">
@@ -929,12 +951,13 @@
                 <span class="upsc">UPSC</span> <span class="academia">Academia</span>
             </div>
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About Us</a></li>
-                <li><a href="#services">Services</a></li>
-                <li><a href="#contact">Contact</a></li>
-                <li><a href="#resources">Digital Resources</a></li>
-                <li><a href="#facilities">Facilities</a></li>
+                <!-- Ensuring navigation order is consistent for both desktop and mobile -->
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About Us</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#facilities" class="nav-link">Facilities</a></li>
+                <li><a href="#resources" class="nav-link">Digital Resources</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
             <div style="display: flex; align-items: center;">
                 <button class="enroll-btn" onclick="openModal()">Enroll Now</button>
@@ -981,17 +1004,14 @@
 
             <div class="director-showcase fade-in">
                 <div class="director-image-container">
-                    <img src="/placeholder.svg?height=280&width=280" alt="Rahul Khandare - Director" class="director-image">
+                    <img src="img/Rahul%20Khandare%20-%20Director.png" alt="Rahul Khandare - Director" class="director-image">
                 </div>
                 <div class="director-details">
                     <h3>Rahul Khandare</h3>
                     <p><strong>Director & Founder</strong></p>
                     <p><span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia is led by Rahul Khandare, a visionary educator with extensive experience in civil services coaching. His expertise has guided numerous students to success in their civil services journey.</p>
                     <p>With years of dedicated service in the field of competitive exam preparation, Mr. Khandare brings innovative teaching methodologies and personalized attention to every student. His commitment to excellence has made <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia a trusted name in civil services preparation.</p>
-                    <div class="director-contact">
-                        <p><i class="fas fa-phone"></i> <strong>Direct Contact:</strong> 7666818376</p>
-                        <p><i class="fas fa-envelope"></i> <strong>Email:</strong> rahul.yashada@gmail.com</p>
-                    </div>
+                    
                 </div>
             </div>
 
@@ -1058,122 +1078,7 @@
             </div>
         </div>
     </section>
-
-
-    <!-- Contact Section -->
-    <section id="contact" class="section contact">
-        <div class="container">
-            <h2 class="section-title fade-in">Contact Us</h2>
-            <div class="contact-content fade-in">
-                <div class="contact-form">
-                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Get In Touch</h3>
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
-                    </form>
-                </div>
-                <div class="contact-details">
-                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Contact Information</h3>
-                    <div class="contact-item">
-                        <i class="fas fa-user-tie"></i>
-                        <div>
-                            <strong>Director:</strong><br>
-                            Rahul Khandare - 7666818376
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone"></i>
-                        <div>
-                            <strong>Office Phone:</strong><br>
-                            +919529114803
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-phone-alt"></i>
-                        <div>
-                            <strong>Additional Phones:</strong><br>
-                            9960339044, 7719044646
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <strong>Email:</strong><br>
-                            rahul.yashada@gmail.com
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <strong>Address:</strong><br>
-                            436, Patrya Maruti Chowk (Near ABC),<br>
-                            Narayan Peth, Pune 411 030
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fab fa-facebook"></i>
-                        <div>
-                            <strong>Facebook:</strong><br>
-                            <a href="https://www.facebook.com/upscacademia" target="_blank" style="color: var(--accent-red);">www.facebook.com/upscacademia</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="map-container fade-in">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.0234567890123!2d73.85547831234567!3d18.517283987654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzAyLjIiTiA3M8KwNTEnMTkuNyJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-            </div>
-        </div>
-    </section>
-
-    <!-- Digital Resources Section -->
-    <section id="resources" class="section">
-        <div class="container">
-            <h2 class="section-title fade-in">Digital Resources</h2>
-            <div class="resources-grid fade-in">
-                <div class="resource-card">
-                    <i class="fas fa-mobile-alt"></i>
-                    <h3><span class="upsc">UPSC</span> Academia - App 1 (URS Academia)</h3>
-                    <p>Comprehensive app for core <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> preparation with quizzes and videos.</p>
-                    <a href="https://play.google.com/store/apps/details?id=co.kevin.jvdac1" target="_blank" class="resource-link">Download App</a>
-                </div>
-                <div class="resource-card">
-                    <i class="fas fa-tablet-alt"></i>
-                    <h3><span class="upsc">UPSC</span> Academia - App 2 (Optional Hub)</h3>
-                    <p>For optional subjects and advanced topics preparation.</p>
-                    <a href="https://play.google.com/store/apps/details?id=co.sheldon.tfkmo" target="_blank" class="resource-link">Download App</a>
-                </div>
-                <div class="resource-card">
-                    <i class="fab fa-youtube"></i>
-                    <h3>Study with Academia - YouTube Channel</h3>
-                    <p>Free tutorials and updates for <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> preparation.</p>
-                    <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" class="resource-link">Watch Videos</a>
-                </div>
-                <div class="resource-card">
-                    <i class="fab fa-telegram"></i>
-                    <h3><span class="upsc">UPSC</span> Academia - Telegram Official Group</h3>
-                    <p>Community for tips and discussions among aspirants.</p>
-                    <a href="https://t.me/UPSC_Academia_Pune" target="_blank" class="resource-link">Join Group</a>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Facilities Section -->
+     <!-- Facilities Section -->
     <section id="facilities" class="section facilities">
         <div class="container">
             <h2 class="section-title fade-in">Our Facilities</h2>
@@ -1214,6 +1119,109 @@
             </div>
         </div>
     </section>
+    <!-- Digital Resources Section -->
+    <section id="resources" class="section">
+        <div class="container">
+            <h2 class="section-title fade-in">Digital Resources</h2>
+            <div class="resources-grid fade-in">
+                <div class="resource-card">
+                    <i class="fas fa-mobile-alt"></i>
+                    <h3><span class="upsc">UPSC</span> Academia - App 1 (URS Academia)</h3>
+                    <p>Comprehensive app for core <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> preparation with quizzes and videos.</p>
+                    <a href="https://play.google.com/store/apps/details?id=co.kevin.jvdac1" target="_blank" class="resource-link">Download App</a>
+                </div>
+                <div class="resource-card">
+                    <i class="fas fa-tablet-alt"></i>
+                    <h3><span class="upsc">UPSC</span> Academia - App 2 (Optional Hub)</h3>
+                    <p>For optional subjects and advanced topics preparation.</p>
+                    <a href="https://play.google.com/store/apps/details?id=co.sheldon.tfkmo" target="_blank" class="resource-link">Download App</a>
+                </div>
+                <div class="resource-card">
+                    <i class="fab fa-youtube"></i>
+                    <h3>Study with Academia - YouTube Channel</h3>
+                    <p>Free tutorials and updates for <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> preparation.</p>
+                    <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" class="resource-link">Watch Videos</a>
+                </div>
+                <div class="resource-card">
+                    <i class="fab fa-telegram"></i>
+                    <h3><span class="upsc">UPSC</span> Academia - Telegram Official Group</h3>
+                    <p>Community for tips and discussions among aspirants.</p>
+                    <a href="https://t.me/UPSC_Academia_Pune" target="_blank" class="resource-link">Join Group</a>
+                </div>
+                <!-- Added WhatsApp channel to digital resources section -->
+                <div class="resource-card">
+                    <i class="fab fa-whatsapp"></i>
+                    <h3>Official WhatsApp Channel</h3>
+                    <p>Get latest updates, notifications, and important announcements directly on WhatsApp.</p>
+                    <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" class="resource-link">Join Channel</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+   
+    <!-- Contact Section -->
+    <section id="contact" class="section contact">
+        <div class="container">
+            <h2 class="section-title fade-in">Contact Us</h2>
+            <div class="contact-content fade-in">
+                <div class="contact-form">
+                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Get In Touch</h3>
+                    <form id="contactForm">
+                        <div class="form-group">
+                            <label for="name">Full Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" rows="5" required></textarea>
+                        </div>
+                        <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
+                    </form>
+                </div>
+                <div class="contact-details">
+                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Contact Information</h3>
+                    <!-- Removed duplicated director contact information -->
+                    <div class="contact-item">
+                        <i class="fas fa-phone"></i>
+                        <div>
+                            <strong>Office Phone:</strong><br>
+                            9529114803 <br> 7719044646
+                        </div>
+                    </div>
+                    
+                    <div class="contact-item">
+                        <i class="fas fa-envelope"></i>
+                        <div>
+                            <strong>Email:</strong><br>
+                            upscacademia2022@gmail.com
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <div>
+                            <!-- Updated address to new location -->
+                            <strong>Address:</strong><br>
+                            Shan Brahma Complex, 3rd Floor,<br>
+                            Shrimant Dagdu Seth Ganpati Shejari,<br>
+                            infront of Farazkhana police station, Pune
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="map-container fade-in">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.0234567890123!2d73.85547831234567!3d18.517283987654321!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMTjCsDMxJzAyLjIiTiA3M8KwNTEnMTkuNyJF!5e0!3m2!1sen!2sin!4v1234567890123!5m2!1sen!2sin" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+    </section>
 
     <!-- Footer -->
     <footer class="footer">
@@ -1240,12 +1248,15 @@
                 <div class="footer-section">
                     <h3>Contact Info</h3>
                     <p><i class="fas fa-phone"></i> 7666818376 (Director)</p>
-                    <p><i class="fas fa-envelope"></i> rahul.yashada@gmail.com</p>
-                    <p><i class="fas fa-map-marker-alt"></i> 436, Patrya Maruti Chowk, Narayan Peth, Pune 411 030</p>
+                    <p><i class="fas fa-envelope"></i> upscacademia2022@gmail.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <div>
+                        <strong>Address:</strong><br>
+                            Shan Brahma Complex, 3rd Floor, Shrimant Dagdu Seth Ganpati Shejari, infront of Farazkhana police station, Pune
+                        </div></p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; 2024 <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia. All rights reserved. | Website: upscacademia.com</p>
+                <p>&copy; 2024 <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> <a href="https://sahilthakur198.github.io/Portfolio/index.html" >Sahil Thakur</a> & Team. All rights reserved. | Website: upscacademia.com</p>
                 <p style="margin-top: 1rem; font-size: 1.1rem; font-weight: 600;">
                     Join <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia today and take the first step toward your dream career in civil services. Contact us for admissions!
                 </p>
