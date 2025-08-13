@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPSC Academia - Coaching for UPSC, MPSC in Pune</title>
     <meta name="description" content="Premier coaching institute for UPSC, MPSC civil services preparation in Pune. Expert faculty, comprehensive courses, and proven results.">
-    <meta name="keywords" content="UPSC coaching, MPSC coaching, civil services, Pune, Rahul Khandare, competitive exams">
+    <meta name="keywords" content="UPSC coaching, MPSC coaching, civil services, Pune, Rahul Khandare Sir, competitive exams">
     <link rel="canonical" href="https://upscacademia.com">
     
     <!-- Google Fonts -->
@@ -25,23 +25,28 @@
             --text-primary: #333333;
             --text-secondary: #666666;
             --bg-primary: #ffffff;
-            --bg-secondary: #f8f9fa;
-            --border-color: #e0e0e0;
+            --bg-secondary: linear-gradient(135deg, #f8f9fa, #ffffff);
+            --border-color: rgba(224, 224, 224, 0.5);
             --shadow: rgba(0,0,0,0.1);
+            --card-gradient: linear-gradient(135deg, #ffffff, #f8f9fa);
+            --section-gradient: linear-gradient(135deg, rgba(0, 31, 63, 0.03), rgba(255, 0, 0, 0.03));
         }
 
-        /* Added dark mode variables */
+        /* Enhanced dark mode variables */
         [data-theme="dark"] {
-            --primary-navy: #0066cc;
-            --white: #1a1a1a;
-            --light-gray: #2d2d2d;
-            --dark-gray: #ffffff;
-            --text-primary: #ffffff;
-            --text-secondary: #cccccc;
-            --bg-primary: #1a1a1a;
-            --bg-secondary: #2d2d2d;
-            --border-color: #404040;
-            --shadow: rgba(255,255,255,0.1);
+            --primary-navy: #2196F3;
+            --accent-red: #FF4444;
+            --white: #121212;
+            --light-gray: #1E1E1E;
+            --dark-gray: #E0E0E0;
+            --text-primary: #E0E0E0;
+            --text-secondary: #B0B0B0;
+            --bg-primary: #121212;
+            --bg-secondary: linear-gradient(135deg, #1A1A1A, #121212);
+            --border-color: rgba(255,255,255,0.1);
+            --shadow: rgba(0,0,0,0.3);
+            --card-gradient: linear-gradient(135deg, #1E1E1E, #181818);
+            --section-gradient: linear-gradient(135deg, rgba(33, 150, 243, 0.05), rgba(255, 68, 68, 0.05));
         }
 
         * {
@@ -81,9 +86,24 @@
         }
 
         .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
             font-size: 1.8rem;
             font-weight: 700;
             color: var(--white);
+        }
+
+        .nav-logo {
+            width: 40px;
+            height: 40px;
+            object-fit: contain;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover .nav-logo {
+            transform: scale(1.1);
         }
 
         /* Updated UPSC styling to Times New Roman font */
@@ -564,6 +584,67 @@
             border: 1px solid var(--border-color);
         }
 
+        .spline-container {
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--bg-primary), var(--bg-secondary));
+        }
+
+        .spline-wrapper {
+            position: relative;
+            width: 100%;
+            height: 500px;
+            border-radius: 15px;
+            overflow: hidden;
+            background: transparent;
+        }
+
+        .spline-wrapper iframe {
+            position: relative;
+            z-index: 1;
+            background: transparent;
+        }
+
+        @media (max-width: 768px) {
+            .spline-wrapper {
+                height: 400px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .spline-wrapper {
+                height: 300px;
+            }
+        }
+
+        .chat-button-container {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        .chat-button {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: linear-gradient(135deg, var(--primary-navy), var(--accent-red));
+            color: var(--white);
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .chat-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .chat-button i {
+            font-size: 1.4rem;
+        }
+
         .form-group {
             margin-bottom: 2rem;
         }
@@ -647,15 +728,16 @@
         }
 
         .resource-card {
-            background: var(--bg-primary);
+            background: var(--card-gradient);
             padding: 2.5rem;
-            border-radius: 20px;
+            border-radius: 25px;
             box-shadow: 0 10px 30px var(--shadow);
             border: 1px solid var(--border-color);
             text-align: center;
             transition: all 0.3s ease;
             position: relative;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
         .resource-card::before {
@@ -664,8 +746,27 @@
             top: 0;
             left: 0;
             width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, 
+                rgba(var(--primary-navy-rgb), 0.05),
+                rgba(var(--accent-red-rgb), 0.05)
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .resource-card:hover::before {
+            opacity: 1;
+        }
+
+        .resource-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 4px;
-            background: linear-gradient(45deg, var(--primary-navy), #0066cc);
+            background: linear-gradient(45deg, var(--primary-navy), var(--accent-red));
         }
 
         .resource-card:hover {
@@ -941,58 +1042,130 @@
 
             .nav-menu {
                 display: none;
-                position: absolute;
-                top: 100%;
+                position: fixed;
+                top: 80px;
                 left: 0;
                 width: 100%;
-                background: var(--primary-navy);
+                height: calc(100vh - 80px);
+                background: var(--card-gradient);
                 flex-direction: column;
                 padding: 2rem;
-                box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-                border-radius: 0 0 20px 20px;
+                box-shadow: 0 10px 30px var(--shadow);
+                backdrop-filter: blur(10px);
+                z-index: 1000;
+                justify-content: flex-start;
+                overflow-y: auto;
             }
 
             .nav-menu.active {
                 display: flex;
             }
 
+            .nav-menu a {
+                padding: 1rem;
+                width: 100%;
+                text-align: center;
+                border-radius: 12px;
+                margin: 0.5rem 0;
+                background: var(--bg-secondary);
+            }
+
             .theme-toggle {
                 margin-left: 0.5rem;
             }
 
+            .hero-content {
+                padding: 0 1rem;
+            }
+
             .hero-content h1 {
-                font-size: 2.8rem;
+                font-size: 2.5rem;
             }
 
             .hero-content .tagline {
-                font-size: 1.3rem;
+                font-size: 1.2rem;
             }
 
             .section-title {
-                font-size: 2.2rem;
+                font-size: 2rem;
+                margin-bottom: 2.5rem;
             }
 
             .contact-content {
                 grid-template-columns: 1fr;
-                gap: 3rem;
+                gap: 2rem;
             }
 
             .container {
-                padding: 0 1.5rem;
+                padding: 0 1rem;
             }
 
             .section {
-                padding: 4rem 0;
+                padding: 3rem 0;
             }
 
             .services-grid,
             .resources-grid,
             .facilities-grid {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+                padding: 0 1rem;
+            }
+
+            .resource-card,
+            .service-card,
+            .facility-card {
+                padding: 2rem;
+                margin-bottom: 1rem;
+                border-radius: 20px;
             }
 
             .about-features {
                 grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .director-showcase {
+                grid-template-columns: 1fr;
+                padding: 2rem;
+                gap: 2rem;
+            }
+
+            .director-image {
+                width: 250px;
+                height: 250px;
+            }
+        }
+
+        /* Additional Mobile Optimization */
+        @media (max-width: 480px) {
+            .hero-content h1 {
+                font-size: 2rem;
+            }
+
+            .hero-content .tagline {
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.8rem;
+            }
+
+            .resource-card,
+            .service-card,
+            .facility-card {
+                padding: 1.5rem;
+            }
+
+            .director-image {
+                width: 200px;
+                height: 200px;
+            }
+
+            .cta-button,
+            .resource-link {
+                width: 100%;
+                text-align: center;
             }
         }
 
@@ -1043,6 +1216,7 @@
         <div class="nav-container">
             <div class="logo">
                 <span class="upsc">UPSC</span> <span class="academia">Academia</span>
+                <img src="./img/logo.png" alt="UPSC Academia Logo" class="nav-logo">
             </div>
             <ul class="nav-menu" id="nav-menu">
                 <!-- Ensuring navigation order is consistent for both desktop and mobile -->
@@ -1093,18 +1267,18 @@
             <h2 class="section-title fade-in">About Us & Our Director</h2>
             
             <div class="about-intro fade-in">
-                <p>Founded and directed by Rahul Khandare, <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia combines expert faculty, innovative teaching methodologies, and state-of-the-art facilities to create an environment conducive to success.</p>
+                <p>Founded and directed by Rahul Khandare Sir, <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia combines expert faculty, innovative teaching methodologies, and state-of-the-art facilities to create an environment conducive to success.</p>
             </div>
 
             <div class="director-showcase fade-in">
                 <div class="director-image-container">
-                    <img src="./img/Rahul Khandare - Director.png" alt="Rahul Khandare - Director" class="director-image">
+                    <img src="./img/Rahul Khandare - Director.png" alt="Rahul Khandare Sir - Director" class="director-image">
                 </div>
                 <div class="director-details">
-                    <h3>Rahul Khandare</h3>
+                    <h3>Rahul Khandare Sir</h3>
                     <span class="designation">Director & Founder</span>
-                    <p><span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia is led by Rahul Khandare, a visionary educator with extensive experience in civil services coaching. His expertise has guided numerous students to success in their civil services journey.</p>
-                    <p>With years of dedicated service in the field of competitive exam preparation, Mr. Khandare brings innovative teaching methodologies and personalized attention to every student. His commitment to excellence has made <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia a trusted name in civil services preparation.</p>
+                    <p><span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia is led by Rahul Khandare Sir, a visionary educator with extensive experience in civil services coaching. His expertise has guided numerous students to success in their civil services journey.</p>
+                    <p>With years of dedicated service in the field of competitive exam preparation, Mr. Khandare Sir brings innovative teaching methodologies and personalized attention to every student. His commitment to excellence has made <span style="color: var(--accent-red); font-weight: 700;">UPSC</span> Academia a trusted name in civil services preparation.</p>
                     
                 </div>
             </div>
@@ -1267,27 +1441,17 @@
         <div class="container">
             <h2 class="section-title fade-in">Contact Us</h2>
             <div class="contact-content fade-in">
-                <div class="contact-form">
-                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Get In Touch</h3>
-                    <form id="contactForm">
-                        <div class="form-group">
-                            <label for="name">Full Name</label>
-                            <input type="text" id="name" name="name" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address</label>
-                            <input type="email" id="email" name="email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="phone">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="message">Message</label>
-                            <textarea id="message" name="message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="cta-button" style="width: 100%;">Send Message</button>
-                    </form>
+                <div class="contact-form spline-container">
+                    <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Interactive Assistant</h3>
+                    <div class="spline-wrapper">
+                        <iframe src='https://my.spline.design/genkubgreetingrobot-iBvf1AvcdCKWCvYgkgAoMRxp/' frameborder='0' width='100%' height='500px'></iframe>
+                    </div>
+                    <div class="chat-button-container">
+                        <a href="chatbot.html" class="chat-button">
+                            <i class="fas fa-comments"></i>
+                            Let's Talk
+                        </a>
+                    </div>
                 </div>
                 <div class="contact-details">
                     <h3 style="color: var(--primary-navy); margin-bottom: 1.5rem;">Contact Information</h3>
@@ -1351,7 +1515,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Contact Info</h3>
-                    <p><i class="fas fa-phone"></i> 7666818376 (Director)</p>
+                    <p><i class="fas fa-phone"></i> 7666818376 (Rahul Khandare Sir - Director)</p>
                     <p><i class="fas fa-envelope"></i> upscacademia2022@gmail.com</p>
                     <p><i class="fas fa-map-marker-alt"></i> <div>
                         <strong>Address:</strong><br>
