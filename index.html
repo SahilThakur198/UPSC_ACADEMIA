@@ -616,35 +616,6 @@
             }
         }
 
-        .chat-button-container {
-            text-align: center;
-            margin-top: 2rem;
-        }
-
-        .chat-button {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: linear-gradient(135deg, var(--primary-navy), var(--accent-red));
-            color: var(--white);
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .chat-button i {
-            font-size: 1.4rem;
-        }
-
         .form-group {
             margin-bottom: 2rem;
         }
@@ -1227,7 +1198,7 @@
                 <li><a href="#resources" class="nav-link">Digital Resources</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-            <div style="display: flex; align-items: center;">
+            <div style="display: flex; align-items: center; gap: 10px;">
                 <button class="enroll-btn" onclick="openModal()">Enroll Now</button>
                 <!-- Added theme toggle button -->
                 <button class="theme-toggle" id="theme-toggle" title="Toggle Dark Mode">
@@ -1446,11 +1417,26 @@
                     <div class="spline-wrapper">
                         <iframe src='https://my.spline.design/genkubgreetingrobot-iBvf1AvcdCKWCvYgkgAoMRxp/' frameborder='0' width='100%' height='500px'></iframe>
                     </div>
-                    <div class="chat-button-container">
-                        <a href="chatbot.html" class="chat-button">
+                    
+                    <!-- Chat Button -->
+                    <div style="text-align: center; margin-top: 2rem;">
+                        <button onclick="openChatbot()" style="
+                            background: var(--accent-red);
+                            color: white;
+                            border: none;
+                            padding: 1rem 2rem;
+                            font-size: 1.1rem;
+                            border-radius: 50px;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            display: inline-flex;
+                            align-items: center;
+                            gap: 8px;
+                            box-shadow: 0 4px 15px rgba(255, 0, 0, 0.3);
+                        ">
                             <i class="fas fa-comments"></i>
                             Let's Talk
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="contact-details">
@@ -1574,6 +1560,20 @@
     </div>
 
     <script>
+        // Function to open chatbot in a small window
+        function openChatbot() {
+            const width = 400;
+            const height = 600;
+            const left = window.screen.width - width;
+            const top = window.screen.height - height - 100;
+            
+            window.open(
+                'https://v0-open-ai-api-error-pi.vercel.app/',
+                'UPSC Academia Chat',
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no,location=no`
+            );
+        }
+
         const themeToggle = document.getElementById('theme-toggle');
         const themeIcon = document.getElementById('theme-icon');
         const body = document.body;
@@ -1712,6 +1712,16 @@
                 }
             });
         });
+    </script>
+
+    <!-- UPSC Academia Chatbot Widget -->
+    <script>
+        (function() {
+            var script = document.createElement('script');
+            script.src = 'chatbot-widget.html';
+            script.async = true;
+            document.head.appendChild(script);
+        })();
     </script>
 </body>
 </html>
