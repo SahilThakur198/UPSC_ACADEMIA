@@ -1564,14 +1564,20 @@
         function openChatbot() {
             const width = 400;
             const height = 600;
-            const left = window.screen.width - width;
-            const top = window.screen.height - height - 100;
+            const left = 20;  // Position on the left side
+            const top = window.innerHeight - height - 20;
             
-            window.open(
-                'https://v0-open-ai-api-error-pi.vercel.app/',
+            const chatWindow = window.open(
+                'complete-chatbot-widget.html',
                 'UPSC Academia Chat',
-                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=yes,status=no,menubar=no,toolbar=no,location=no`
+                `width=${width},height=${height},left=${left},top=${top},resizable=yes,scrollbars=no,status=no,menubar=no,toolbar=no,location=no`
             );
+
+            // Center the window on mobile devices
+            if (window.innerWidth <= 480) {
+                const mobileLeft = (window.innerWidth - width) / 2;
+                chatWindow.moveTo(mobileLeft, top);
+            }
         }
 
         const themeToggle = document.getElementById('theme-toggle');
