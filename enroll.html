@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enroll Now - UPSC Academia</title>
+    <meta name="description" content="Enroll in a course at UPSC Academia, the premier coaching institute for civil services preparation in Pune.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+
+
+</head>
+<body id="enroll-page">
+    <!-- Background Decoration -->
+    <div class="bg-decoration"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <span class="upsc">UPSC</span> <span class="academia">Academia</span>
+                <img src="./img/logo.png" alt="UPSC Academia Logo" class="nav-logo">
+            </a>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html#home">Home</a></li>
+                <li><a href="index.html#about">About Us</a></li>
+                <li><a href="index.html#services">Services</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+            </ul>
+             <div style="display: flex; align-items: center;">
+                <a href="enroll.html" class="enroll-btn">Enroll Now</a>
+                <button class="mobile-menu-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Container for Enrollment Form -->
+    <div class="page-container">
+        <div class="enrollment-form-container">
+            <h1>Enrollment Form</h1>
+            <form id="enrollForm">
+                <div class="form-group">
+                    <label for="enrollName">Full Name</label>
+                    <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name">
+                </div>
+                <div class="form-group">
+                    <label for="enrollEmail">Email Address</label>
+                    <input type="email" id="enrollEmail" name="enrollEmail" required placeholder="example@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="enrollPhone">Phone Number</label>
+                    <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your 10-digit phone number">
+                </div>
+                <div class="form-group">
+                    <label for="course">Course of Interest</label>
+                    <select id="course" name="course" required>
+                        <option value="" disabled selected>Select a Course</option>
+                        <option value="upsc-pre-mains">UPSC (Pre/Mains)</option>
+                        <option value="mpsc">MPSC (पूर्व/मुख्य)</option>
+                        <option value="rajyaseva">Rajyaseva Pariksha</option>
+                        <option value="psi-sti">PSI/STI/Asst./Saral Seva</option>
+                        <option value="test-series">Comprehensive Test Series</option>
+                    </select>
+                </div>
+                <button type="submit" class="submit-btn">Submit Enrollment</button>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+             <div class="footer-content">
+                <div class="footer-section">
+                    <h3><span class="upsc">UPSC</span> <span class="academia">Academia</span></h3>
+                    <p>Pioneering civil services coaching in Pune, dedicated to nurturing the nation's future leaders.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/upscacademia" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://t.me/UPSC_Academia_Pune" target="_blank" title="Telegram"><i class="fab fa-telegram-plane"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                     <ul>
+                        <li><a href="index.html#about">About Us</a></li>
+                        <li><a href="index.html#services">Services</a></li>
+                        <li><a href="index.html#facilities">Facilities</a></li>
+                        <li><a href="index.html#resources">Resources</a></li>
+                        <li><a href="index.html#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-phone" style="margin-right:10px; margin-top:5px;"></i><div>7666818376 (Director)<br>9529114803 (Office)</div></li>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-envelope" style="margin-right:10px; margin-top:5px;"></i><a href="mailto:upscacademia2022@gmail.com">upscacademia2022@gmail.com</a></li>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-map-marker-alt" style="margin-right:10px; margin-top:5px;"></i><a href="https://www.google.com/maps?q=18.517248369962946,73.85547932944749" target="_blank">Shan Brahma Complex, 3rd Floor, Pune</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                 <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank" style="color: inherit; text-decoration: underline;">Sahil Thakur & Team</a> | All Rights Reserved</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Main Script -->
+    <script src="script.js" defer></script>
+</body>
+</html>
