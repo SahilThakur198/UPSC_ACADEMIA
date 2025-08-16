@@ -2,9 +2,15 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Enroll Now - UPSC Academia</title>
     <meta name="description" content="Enroll in a course at UPSC Academia, the premier coaching institute for civil services preparation in Pune.">
+    
+    <!-- Enhanced mobile optimization -->
+    <meta name="theme-color" content="#0A2B57">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="format-detection" content="telephone=no">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -14,30 +20,35 @@
 
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
-
-
 </head>
 <body id="enroll-page">
     <!-- Background Decoration -->
     <div class="bg-decoration"></div>
 
     <!-- Navigation Bar -->
-    <nav class="navbar">
+    <nav class="navbar" id="main-navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
                 <span class="upsc">UPSC</span> <span class="academia">Academia</span>
                 <img src="./img/logo.png" alt="UPSC Academia Logo" class="nav-logo">
             </a>
+            <!-- Enhanced mobile menu with proper structure and z-index -->
             <ul class="nav-menu" id="nav-menu">
-                <li><a href="index.html#home">Home</a></li>
-                <li><a href="index.html#about">About Us</a></li>
-                <li><a href="index.html#services">Services</a></li>
-                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="#home" class="nav-link">Home</a></li>
+                <li><a href="#about" class="nav-link">About Us</a></li>
+                <li><a href="#services" class="nav-link">Services</a></li>
+                <li><a href="#facilities" class="nav-link">Facilities</a></li>
+                <li><a href="#resources" class="nav-link">Resources</a></li>
+                <li><a href="#contact" class="nav-link">Contact</a></li>
             </ul>
-             <div style="display: flex; align-items: center;">
-                <a href="enroll.html" class="enroll-btn">Enroll Now</a>
-                <button class="mobile-menu-toggle" id="mobile-toggle">
-                    <i class="fas fa-bars"></i>
+            <div class="nav-actions">
+                <!-- Mobile menu button -->
+                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle mobile menu">
+                    <span class="menu-icon">
+                        <span class="menu-line"></span>
+                        <span class="menu-line"></span>
+                        <span class="menu-line"></span>
+                    </span>
                 </button>
             </div>
         </div>
@@ -79,7 +90,7 @@
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-             <div class="footer-content">
+            <div class="footer-content">
                 <div class="footer-section">
                     <h3><span class="upsc">UPSC</span> <span class="academia">Academia</span></h3>
                     <p>Pioneering civil services coaching in Pune, dedicated to nurturing the nation's future leaders.</p>
@@ -91,7 +102,7 @@
                 </div>
                 <div class="footer-section">
                     <h3>Quick Links</h3>
-                     <ul>
+                    <ul>
                         <li><a href="index.html#about">About Us</a></li>
                         <li><a href="index.html#services">Services</a></li>
                         <li><a href="index.html#facilities">Facilities</a></li>
@@ -109,7 +120,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                 <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank" style="color: inherit; text-decoration: underline;">Sahil Thakur & Team</a> | All Rights Reserved</p>
+                <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank" style="color: inherit; text-decoration: underline;">Sahil Thakur & Team</a> | All Rights Reserved</p>
             </div>
         </div>
     </footer>
