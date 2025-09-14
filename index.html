@@ -2,8 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Enhanced viewport meta for better Android compatibility -->
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>UPSC Academia - Coaching for UPSC, MPSC in Pune</title>
     <meta name="description" content="Premier coaching institute for UPSC, MPSC civil services preparation in Pune. Expert faculty, comprehensive courses, and proven results.">
     <meta name="keywords" content="UPSC coaching, MPSC coaching, civil services, Pune, Rahul Khandare Sir, competitive exams">
@@ -24,19 +23,17 @@
     <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
-<!-- Added mobile-optimized class for better Android handling -->
-<body id="home-page" class="mobile-optimized">
+<body id="home-page">
     <!-- Background Decoration -->
     <div class="bg-decoration"></div>
 
     <!-- Navigation Bar -->
-    <nav class="navbar" id="main-navbar">
+    <nav class="navbar">
         <div class="nav-container">
             <a href="index.html" class="logo">
                 <span class="upsc">UPSC</span> <span class="academia">Academia</span>
                 <img src="./img/logo.png" alt="UPSC Academia Logo" class="nav-logo">
             </a>
-            <!-- Enhanced mobile menu with proper structure and z-index -->
             <ul class="nav-menu" id="nav-menu">
                 <li><a href="#home" class="nav-link">Home</a></li>
                 <li><a href="#about" class="nav-link">About Us</a></li>
@@ -44,27 +41,16 @@
                 <li><a href="#facilities" class="nav-link">Facilities</a></li>
                 <li><a href="#resources" class="nav-link">Resources</a></li>
                 <li><a href="#contact" class="nav-link">Contact</a></li>
-                <!-- Added Enroll Now to mobile menu as requested -->
-                <li class="mobile-only"><a href="enroll.html" class="nav-link enroll-mobile">Enroll Now</a></li>
             </ul>
             <div class="nav-actions">
-                <!-- Added mobile menu button for Android devices -->
-                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle mobile menu">
-                    <span class="menu-icon">
-                        <span class="menu-line"></span>
-                        <span class="menu-line"></span>
-                        <span class="menu-line"></span>
-                    </span>
+                <a href="enroll.html" class="enroll-btn">Enroll Now</a>
+                <button class="mobile-menu-toggle" id="mobile-toggle">
+                    <i class="fas fa-bars"></i>
                 </button>
-                <!-- Removed Enroll Now button from navbar for mobile optimization -->
-                <a href="enroll.html" class="enroll-btn desktop-only">Enroll Now</a>
             </div>
         </div>
     </nav>
-    
-    <!-- Added proper spacing div to prevent content hiding behind fixed navbar -->
-    <div class="navbar-spacer"></div>
-    
+
     <!-- Hero Section -->
     <section id="home" class="hero">
         <div class="hero-content fade-in">
@@ -136,41 +122,11 @@
         <div class="container">
             <h2 class="section-title fade-in">Your Digital Edge</h2>
             <div class="resources-grid fade-in">
-                <div class="resource-card">
-                    <div class="app-logo"><img src="./img/ursacademia.png" alt="URS Academia Logo"></div>
-                    <h3><span class="upsc">UPSC</span> Academia App (URS)</h3>
-                    <p>Our core app for UPSC preparation, packed with quizzes, video lectures, and study materials.</p>
-                    <!-- Updated button text as requested -->
-                    <a href="https://play.google.com/store/apps/details?id=co.kevin.jvdac1" target="_blank" class="resource-link">Download App</a>
-                </div>
-                <div class="resource-card">
-                    <div class="app-logo"><img src="./img/optionalhub.png" alt="Optional Hub Logo"></div>
-                    <h3><span class="upsc">Optional</span> Hub App</h3>
-                    <p>A dedicated application for specialized preparation in your chosen optional subjects.</p>
-                    <!-- Updated button text as requested -->
-                    <a href="https://play.google.com/store/apps/details?id=co.sheldon.tfkmo" target="_blank" class="resource-link">Download App</a>
-                </div>
-                <div class="resource-card">
-                    <i class="fab fa-youtube"></i>
-                    <h3>Study with Academia</h3>
-                    <p>Subscribe to our YouTube channel for free video tutorials, strategy sessions, and exam updates.</p>
-                    <!-- Updated button text as requested -->
-                    <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" class="resource-link">Watch Videos</a>
-                </div>
-                <div class="resource-card">
-                    <i class="fab fa-telegram"></i>
-                    <h3>Telegram Community</h3>
-                    <p>Join our official Telegram group for daily quizzes, study materials, and peer discussions.</p>
-                    <!-- Updated button text as requested -->
-                    <a href="https://t.me/UPSC_Academia_Pune" target="_blank" class="resource-link">Join</a>
-                </div>
-                <div class="resource-card">
-                    <div class="app-logo"><img src="./img/whatsapp.png" alt="WhatsApp Channel Logo"></div>
-                    <h3>Official WhatsApp Channel</h3>
-                    <p>Get the latest updates, notifications, and important announcements directly on WhatsApp.</p>
-                    <!-- Updated button text as requested -->
-                    <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" class="resource-link">Join</a>
-                </div>
+                <div class="resource-card"><div class="app-logo"><img src="./img/ursacademia.png" alt="URS Academia Logo"></div><h3><span class="upsc">UPSC</span> Academia App (URS)</h3><p>Our core app for UPSC preparation, packed with quizzes, video lectures, and study materials.</p><a href="https://play.google.com/store/apps/details?id=co.kevin.jvdac1" target="_blank" class="resource-link">Download Now</a></div>
+                <div class="resource-card"><div class="app-logo"><img src="./img/optionalhub.png" alt="Optional Hub Logo"></div><h3><span class="upsc">Optional</span> Hub App</h3><p>A dedicated application for specialized preparation in your chosen optional subjects.</p><a href="https://play.google.com/store/apps/details?id=co.sheldon.tfkmo" target="_blank" class="resource-link">Download Now</a></div>
+                <div class="resource-card"><i class="fab fa-youtube"></i><h3>Study with Academia</h3><p>Subscribe to our YouTube channel for free video tutorials, strategy sessions, and exam updates.</p><a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" class="resource-link">Watch Videos</a></div>
+                <div class="resource-card"><i class="fab fa-telegram"></i><h3>Telegram Community</h3><p>Join our official Telegram group for daily quizzes, study materials, and peer discussions.</p><a href="https://t.me/UPSC_Academia_Pune" target="_blank" class="resource-link">Join Group</a></div>
+                <div class="resource-card"><div class="app-logo"><img src="./img/whatsapp.png" alt="WhatsApp Channel Logo"></div><h3>Official WhatsApp Channel</h3><p>Get the latest updates, notifications, and important announcements directly on WhatsApp.</p><a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" class="resource-link">Join Channel</a></div>
             </div>
         </div>
     </section>
@@ -179,128 +135,65 @@
     <section id="contact" class="section contact">
         <div class="container">
             <h2 class="section-title fade-in">Get In Touch</h2>
-            <!-- Enhanced contact content with proper overflow controls -->
             <div class="contact-content fade-in">
                 <div class="contact-details">
                     <h3 style="color: var(--primary-blue); margin-bottom: 2rem;font-weight:700;">Contact Information</h3>
-                    <!-- Improved contact items with better mobile text wrapping -->
-                    <div class="contact-item">
-                        <i class="fas fa-phone-alt"></i>
-                        <div>
-                            <strong> Phone:</strong><br>
-                            <a href="tel:7666818376" style="color:inherit; text-decoration:none;">7666818376 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:7719044646" style="color:inherit; text-decoration:none;">7719044646 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:9529114803" style="color:inherit; text-decoration:none;">9529114803 - Samad Sir (Office)</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-envelope"></i>
-                        <div>
-                            <strong>Email Address:</strong><br>
-                            <a href="mailto:upscacademia2022@gmail.com" style="color:inherit; text-decoration:none; word-break: break-all;">upscacademia2022@gmail.com</a>
-                        </div>
-                    </div>
-                    <div class="contact-item">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <div>
-                            <strong>Our Address:</strong><br>
-                            <a href="https://www.google.com/maps?q=18.517250358585486,73.85550441761669" target="_blank" style="color: inherit; text-decoration: none;">
-                                3rd Floor, Shan Brahma Complex, Behind Shrimant Dagduseth Ganpati, Infront of Farazkhana Police Station, Pune
-                            </a>
-                        </div>
-                    </div>
+                    <div class="contact-item"><i class="fas fa-phone-alt"></i><div><strong>Office Phone:</strong><br><a href="tel:9529114803" style="color:inherit; text-decoration:none;">9529114803</a>, <a href="tel:7719044646" style="color:inherit; text-decoration:none;">7719044646</a></div></div>
+                    <div class="contact-item"><i class="fas fa-envelope"></i><div><strong>Email Address:</strong><br><a href="mailto:upscacademia2022@gmail.com" style="color:inherit; text-decoration:none;">upscacademia2022@gmail.com</a></div></div>
+                    <div class="contact-item"><i class="fas fa-map-marker-alt"></i><div><strong>Our Address:</strong><br><a href="https://www.google.com/maps?q=18.517250358585486, 73.85550441761669" target="_blank" style="color: inherit; text-decoration: none;">Shan Brahma Complex, 3rd Floor,<br>Near Dagdusheth Ganpati Mandir, Pune</a></div></div>
                 </div>
-                <!-- Optimized chatbot container with proper mobile constraints -->
-                <div class="contact-form-wrapper mobile-friendly-chatbot">
-                    <div class="chatbot-container" id="chatbot-container">
-                        <div class="chatbot-placeholder" id="chatbot-placeholder">
-                            <div class="chatbot-icon">
-                                <i class="fas fa-robot"></i>
-                            </div>
-                            <p>Tap to load interactive assistant</p>
-                            <button class="load-chatbot-btn" id="load-chatbot">Load Assistant</button>
-                        </div>
-                        <iframe id="chatbot-iframe" src="/placeholder.svg" frameborder="0" width="100%" height="100%" loading="lazy" style="display: none;"></iframe>
-                    </div>
-                    <!-- Enhanced Let's talk button with proper mobile sizing -->
-                    <a href="https://v0-open-ai-api-error-pi.vercel.app/" target="_blank" class="cta-button" style="display: block; width: 100%; text-align: center; margin-top: 1rem; padding: 0.75rem 1rem; box-sizing: border-box;">Let's Talk</a>
+                <div class="contact-form-wrapper">
+                    <iframe src='https://my.spline.design/genkubgreetingrobot-XxvllaA08jGSzvpGD5eJSF75/' frameborder='0' width='100%' height='100%'></iframe>
+                    <a href="https://v0-open-ai-api-error-pi.vercel.app/" target="_blank" class="cta-button" style="width: 100%; text-align: center; margin-top: 2rem;">Let's talk</a>
                 </div>
             </div>
-            <!-- Enhanced map container with Android-specific optimizations -->
             <div class="map-container fade-in">
-                <div class="map-loading" id="map-loading">
-                    <div class="loading-spinner"></div>
-                    <p>Loading Map...</p>
-                </div>
-                <iframe 
-                    id="google-map"
-                    src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d236.45360555250986!2d73.8554716239249!3d18.51725374158777!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1755158905080!5m2!1sen!2sin" 
-                    width="100%" 
-                    height="450" 
-                    style="border:0; display: none;" 
-                    allowfullscreen="" 
-                    loading="lazy" 
-                    referrerpolicy="no-referrer-when-downgrade"
-                    onload="showMap()"
-                    onerror="handleMapError()">
-                </iframe>
-                <div class="map-fallback" id="map-fallback" style="display: none;">
-                    <div class="fallback-content">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <h3>Visit Our Location</h3>
-                        <p>Shan Brahma Complex, 3rd Floor<br>Near Dagdusheth Ganpati Mandir, Pune</p>
-                        <a href="https://www.google.com/maps?q=18.517250358585486,73.85550441761669" target="_blank" class="map-link">
-                            Open in Google Maps
-                        </a>
-                    </div>
-                </div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m10!1m8!1m3!1d236.45360555250986!2d73.8554716239249!3d18.51725374158777!3m2!1i1024!2i768!4f13.1!5e0!3m2!1sen!2sin!4v1755158905080!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
             </div>
         </div>
     </section>
 
     <!-- Footer -->
-<footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section about">
-                <h3 class="footer-logo"><span class="upsc">UPSC</span> <span class="academia">Academia</span></h3>
-                <p>Pioneering civil services coaching in Pune, dedicated to nurturing the nation's future leaders through expert guidance and innovative teaching.</p>
-                <div class="social-links">
-                    <a href="https://www.facebook.com/upscacademia" target="_blank" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="https://t.me/UPSC_Academia_Pune" target="_blank" title="Telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3><span class="upsc">UPSC</span> <span class="academia">Academia</span></h3>
+                    <p>Pioneering civil services coaching in Pune, dedicated to nurturing the nation's future leaders.</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/upscacademia" target="_blank" title="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" title="YouTube"><i class="fab fa-youtube"></i></a>
+                        <a href="https://t.me/UPSC_Academia_Pune" target="_blank" title="Telegram"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.78 18.65l.28-4.23l7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3L3.64 12c-.88-.25-.89-.86.2-1.08l11.16-4.02c.8-.28 1.49.31 1.29 1.28l-1.83 8.84c-.2 1.02-.73 1.23-1.5.76L12 14.85l-1.9 1.8c-.24.22-.44.42-.8.42z"></path></svg></a>
+                        <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" title="WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19.11 4.93a9.85 9.85 0 0 0-13.98 0a9.85 9.85 0 0 0 0 13.98L4 20l1.18-.87a9.85 9.85 0 0 0 13.98 0a9.85 9.85 0 0 0 0-13.98zM8.11 16.45v-1.14c0-.28.1-.53.3-.73l.25-.25c.2-.2.45-.3.73-.3h.28c.28 0 .53.1.73.3l.25.25c.2.2.3.45.3.73v1.14c0 .28-.1.53-.3.73l-.25.25c-.2.2-.45.3-.73.3h-.28c-.28 0-.53-.1-.73-.3l-.25-.25a1 1 0 0 1-.3-.73zm4.24 0v-1.14c0-.28.1-.53.3-.73l.25-.25c.2-.2.45-.3.73-.3h.28c.28 0 .53.1.73.3l.25.25c.2.2.3.45.3.73v1.14c0 .28-.1.53-.3.73l-.25.25c-.2.2-.45.3-.73.3h-.28c-.28 0-.53-.1-.73-.3l-.25-.25a1 1 0 0 1-.3-.73zm4.24 0v-1.14c0-.28.1-.53.3-.73l.25-.25c.2-.2.45-.3.73-.3h.28c.28 0 .53.1.73.3l.25.25c.2.2.3.45.3.73v1.14c0 .28-.1.53-.3.73l-.25.25c-.2.2-.45.3-.73.3h-.28c-.28 0-.53-.1-.73-.3l-.25-.25a1 1 0 0 1-.3-.73z"></path></svg></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                     <ul>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#facilities">Facilities</a></li>
+                        <li><a href="#resources">Resources</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <ul>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-phone" style="margin-right:10px; margin-top:5px;"></i><div>7666818376 (Director)<br>9529114803 (Office)</div></li>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-envelope" style="margin-right:10px; margin-top:5px;"></i><a href="mailto:upscacademia2022@gmail.com">upscacademia2022@gmail.com</a></li>
+                        <li style="display:flex; align-items:start;"><i class="fas fa-map-marker-alt" style="margin-right:10px; margin-top:5px;"></i><a href="https://www.google.com/maps?q=18.517248369962946,73.85547932944749" target="_blank">Shan Brahma Complex, 3rd Floor, Pune</a></li>
+                    </ul>
                 </div>
             </div>
-            <div class="footer-section links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#facilities">Facilities</a></li>
-                    <li><a href="#resources">Resources</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section contact-info">
-                <h3>Contact Info</h3>
-                <ul>
-                    <li><i class="fas fa-phone"></i><span><a href="tel:7666818376" style="color:inherit; text-decoration:none;">7666818376 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:7719044646" style="color:inherit; text-decoration:none;">7719044646 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:9529114803" style="color:inherit; text-decoration:none;">9529114803 - Samad Sir (Office)</a></span></li>
-                    <li><i class="fas fa-envelope"></i><a href="mailto:upscacademia2022@gmail.com">upscacademia2022@gmail.com</a></li>
-                    <li><i class="fas fa-map-marker-alt"></i><a href="https://www.google.com/maps?q=18.517248369962946,73.85547932944749" target="_blank">3rd Floor, Shan Brahma Complex, Behind Shrimant Dagduseth Ganpati, Infront of Farazkhana Police Station, Pune</a></li>
-                </ul>
+            <div class="footer-bottom">
+                 <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank" style="color: inherit; text-decoration: underline;">Sahil Thakur & Team</a> | All Rights Reserved</p>
             </div>
         </div>
-        <div class="footer-bottom">
-             <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank">Sahil Thakur & Team</a> | All Rights Reserved</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
     <!-- Back to Top Button -->
-    <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <button class="back-to-top" id="backToTop">
         <i class="fas fa-arrow-up"></i>
     </button>
     
