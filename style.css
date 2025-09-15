@@ -132,6 +132,9 @@ body {
 .navbar-spacer {
   height: 65px;
   width: 100%;
+  /* Ensure content doesn't hide behind navbar */
+  position: relative;
+  z-index: 1;
 }
 
 .nav-container {
@@ -262,6 +265,9 @@ body {
   min-height: 44px;
   justify-content: center;
   align-items: center;
+  /* Enhanced visibility for Android */
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .mobile-menu-btn:hover {
@@ -322,6 +328,9 @@ body {
   background: linear-gradient(135deg, rgba(10, 43, 87, 0.05) 0%, rgba(216, 27, 33, 0.05) 100%);
   /* Ensure hero doesn't overlap with navbar */
   margin-top: 0;
+  /* Fix content visibility during scroll */
+  z-index: 1;
+  overflow: visible;
 }
 
 .hero-content {
@@ -382,7 +391,9 @@ body {
 .section {
   padding: 5rem 0;
   position: relative;
-  overflow: hidden;
+  overflow: visible;
+  /* Ensure content is not hidden during scroll */
+  z-index: 1;
 }
 
 .container {
@@ -701,6 +712,10 @@ body {
   margin-bottom: 3rem;
   width: 100%;
   align-items: start;
+  /* Fix content positioning and visibility */
+  position: relative;
+  z-index: 2;
+  overflow: visible;
 }
 
 .contact-details {
@@ -708,6 +723,9 @@ body {
   background: var(--white);
   border-radius: 20px;
   box-shadow: 0 10px 30px var(--shadow);
+  /* Fix logo positioning in contact section */
+  position: relative;
+  z-index: 2;
 }
 
 .contact-item {
@@ -976,6 +994,15 @@ body {
 
 .footer-section.contact-info a {
     word-break: break-word;
+    /* Make phone numbers clickable */
+    color: var(--white);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-section.contact-info a:hover {
+    color: var(--accent-red);
+    text-decoration: underline;
 }
 
 .footer-section .social-links {
@@ -1312,10 +1339,19 @@ body {
     transition: left 0.3s ease;
     z-index: 1001;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    /* Ensure menu doesn't hide content */
+    overflow-y: auto;
   }
 
   .nav-menu.active {
     left: 0;
+  }
+
+  /* Ensure mobile menu button is always visible on mobile */
+  .mobile-menu-btn {
+    display: flex !important;
+    visibility: visible !important;
+    opacity: 1 !important;
   }
 }
 
@@ -1341,6 +1377,11 @@ body {
 
   .nav-menu {
     display: none;
+  }
+
+  /* Ensure mobile menu button is visible on mobile */
+  .mobile-menu-btn {
+    display: flex !important;
   }
 
   .nav-actions .enroll-btn {

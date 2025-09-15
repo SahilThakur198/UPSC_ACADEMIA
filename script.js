@@ -118,6 +118,8 @@ function initMobileMenu() {
   // Show mobile menu button on mobile devices
   if (window.innerWidth <= 768) {
     mobileMenuBtn.style.display = "flex"
+    mobileMenuBtn.style.visibility = "visible"
+    mobileMenuBtn.style.opacity = "1"
     console.log("[v0] Mobile menu button displayed for mobile device")
   }
 
@@ -129,6 +131,8 @@ function initMobileMenu() {
       navMenu.style.display = "flex"
     } else {
       mobileMenuBtn.style.display = "flex"
+      mobileMenuBtn.style.visibility = "visible"
+      mobileMenuBtn.style.opacity = "1"
       if (!navMenu.classList.contains("active")) {
         navMenu.style.display = "none"
       }
