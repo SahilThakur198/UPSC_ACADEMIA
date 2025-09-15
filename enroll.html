@@ -25,34 +25,8 @@
     <!-- Background Decoration -->
     <div class="bg-decoration"></div>
 
-    <!-- Navigation Bar -->
-    <nav class="navbar" id="main-navbar">
-        <div class="nav-container">
-            <a href="index.html" class="logo">
-                <span class="upsc">UPSC</span> <span class="academia">Academia</span>
-                <img src="./img/logo.png" alt="UPSC Academia Logo" class="nav-logo">
-            </a>
-            <!-- Enhanced mobile menu with proper structure and z-index -->
-            <ul class="nav-menu" id="nav-menu">
-                <li><a href="#home" class="nav-link">Home</a></li>
-                <li><a href="#about" class="nav-link">About Us</a></li>
-                <li><a href="#services" class="nav-link">Services</a></li>
-                <li><a href="#facilities" class="nav-link">Facilities</a></li>
-                <li><a href="#resources" class="nav-link">Resources</a></li>
-                <li><a href="#contact" class="nav-link">Contact</a></li>
-            </ul>
-            <div class="nav-actions">
-                <!-- Mobile menu button -->
-                <button class="mobile-menu-btn" id="mobile-menu-btn" aria-label="Toggle mobile menu">
-                    <span class="menu-icon">
-                        <span class="menu-line"></span>
-                        <span class="menu-line"></span>
-                        <span class="menu-line"></span>
-                    </span>
-                </button>
-            </div>
-        </div>
-    </nav>
+    <!-- Reusable Header Component -->
+    <div id="site-header"></div>
 
     <!-- Page Container for Enrollment Form -->
     <div class="page-container">
@@ -87,45 +61,8 @@
         </div>
     </div>
     
-    <footer class="footer">
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-section about">
-                <h3 class="footer-logo"><span class="upsc">UPSC</span> <span class="academia">Academia</span></h3>
-                <p>Pioneering civil services coaching in Pune, dedicated to nurturing the nation's future leaders through expert guidance and innovative teaching.</p>
-                <div class="social-links">
-                    <a href="https://www.facebook.com/upscacademia" target="_blank" title="Facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
-                    <a href="https://youtube.com/@studywithacademia?si=1C-188fjkg5-9x34" target="_blank" title="YouTube" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                    <a href="https://t.me/UPSC_Academia_Pune" target="_blank" title="Telegram" aria-label="Telegram"><i class="fab fa-telegram-plane"></i></a>
-                    <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank" title="WhatsApp" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
-                </div>
-            </div>
-            <div class="footer-section links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#about">About Us</a></li>
-                    <li><a href="#services">Services</a></li>
-                    <li><a href="#facilities">Facilities</a></li>
-                    <li><a href="#resources">Resources</a></li>
-                    <li><a href="#contact">Contact</a></li>
-                </ul>
-            </div>
-            <div class="footer-section contact-info">
-                <h3>Contact Info</h3>
-                <ul>
-                    <li><i class="fas fa-phone"></i><span><a href="tel:7666818376" style="color:inherit; text-decoration:none;">7666818376 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:7719044646" style="color:inherit; text-decoration:none;">7719044646 - Rahul Sir (Director)<br></a> 
-                            <a href="tel:9529114803" style="color:inherit; text-decoration:none;">9529114803 - Samad Sir (Office)</a></span></li>
-                    <li><i class="fas fa-envelope"></i><a href="mailto:upscacademia2022@gmail.com">upscacademia2022@gmail.com</a></li>
-                    <li><i class="fas fa-map-marker-alt"></i><a href="https://www.google.com/maps?q=18.517248369962946,73.85547932944749" target="_blank">3rd Floor, Shan Brahma Complex, Behind Shrimant Dagduseth Ganpati, Infront of Farazkhana Police Station, Pune</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="footer-bottom">
-             <p>&copy; 2024 UPSC Academia | Website by <a href="https://sahilthakur198.github.io/Portfolio/index.html" target="_blank">Sahil Thakur & Team</a> | All Rights Reserved</p>
-        </div>
-    </div>
-</footer>
+    <!-- Reusable Footer Component -->
+    <div id="site-footer"></div>
 
     <!-- Main Script -->
     <script src="script.js" defer></script>

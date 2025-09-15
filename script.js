@@ -1,6 +1,7 @@
-document.addEventListener("DOMContentLoaded", () => {
-  // --- Shared Logic for All Pages ---
+document.addEventListener("DOMContentLoaded", async () => {
+  await loadLayoutComponents()
 
+  // --- Shared Logic for All Pages ---
   initParticleAnimation()
   initMobileMenu()
 
@@ -24,13 +25,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // --- Page-Specific Logic ---
   const bodyId = document.body.id
-
   if (bodyId === "home-page") {
     initHomePage()
   } else if (bodyId === "enroll-page") {
     initEnrollPage()
   }
 })
+
+async function loadLayoutComponents() {
+  try {
+    const headerHost = document.getElementById("site-header")
+    const footerHost = document.getElementById("site-footer")
+
+    const [headerRes, footerRes] = await Promise.all([
+      fetch("components/header.html", { cache: "no-cache" }),
+      fetch("components/footer.html", { cache: "no-cache" }),
+    ])
+
+    if (headerHost && headerRes.ok) {
+      headerHost.outerHTML = await headerRes.text()
+    }
+    if (footerHost && footerRes.ok) {
+      footerHost.outerHTML = await footerRes.text()
+    }
+
+    // After inject, normalize active link based on current hash or page
+    markActiveNavLink()
+    enableInPageSmoothScroll()
+  } catch (err) {
+    console.error("[v0] Failed to load layout components", err)
+  }
+}
+
+function markActiveNavLink() {
+  const navLinks = document.querySelectorAll(".nav-menu a.nav-link")
+  const currentHash = window.location.hash
+  const isHome = document.body.id === "home-page"
+  navLinks.forEach((link) => {
+    link.classList.remove("active")
+    const href = link.getAttribute("href") || ""
+    const linkHash = href.includes("#") ? `#${href.split("#")[1]}` : ""
+    if ((isHome && linkHash && linkHash === currentHash) || (!currentHash && isHome && linkHash === "#home")) {
+      link.classList.add("active")
+    }
+  })
+}
+
+function enableInPageSmoothScroll() {
+  if (document.body.id !== "home-page") return
+  // Handle both pure hash links and index.html# links
+  const selector = 'a[href^="#"], a[href^="index.html#"]'
+  document.querySelectorAll(selector).forEach((anchor) => {
+    anchor.addEventListener("click", function (e) {
+      const href = this.getAttribute("href") || ""
+      const hasHash = href.includes("#")
+      const targetId = hasHash ? `#${href.split("#")[1]}` : ""
+      const target = targetId ? document.querySelector(targetId) : null
+      if (target) {
+        e.preventDefault()
+        const navbar = document.querySelector(".navbar")
+        const navbarHeight = navbar ? navbar.offsetHeight : 0
+        const targetPosition = target.offsetTop - navbarHeight - 20
+        window.scrollTo({ top: targetPosition, behavior: "smooth" })
+        history.replaceState(null, "", targetId)
+        markActiveNavLink()
+      }
+    })
+  })
+}
 
 function initMobileMenu() {
   const mobileMenuBtn = document.getElementById("mobile-menu-btn")
