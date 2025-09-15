@@ -1789,3 +1789,39 @@ a[href^="mailto:"]:hover,
     height: 2.5px;
   }
 }
+
+/* Popup Notification */
+#popupMessage {
+  position: fixed;
+  top: 20px;
+  right: -400px;
+  z-index: 9999;
+  transition: all 0.5s ease-in-out;
+}
+#popupMessage.show {
+  right: 20px;
+}
+.popup-content {
+  background: #fff;
+  border-radius: 12px;
+  padding: 16px 20px;
+  box-shadow: 0 6px 16px rgba(0,0,0,0.15);
+  font-family: 'Inter', sans-serif;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 280px;
+}
+.popup-content.success {
+  border-left: 6px solid #2ecc71;
+}
+.popup-content.error {
+  border-left: 6px solid #e74c3c;
+}
+.popup-icon {
+  font-size: 22px;
+}
+.popup-content p {
+  margin: 0;
+  font-size: 15px;
+}

@@ -1,111 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Enroll Now - UPSC Academia</title>
-    <meta name="description" content="Enroll in a course at UPSC Academia, the premier coaching institute for civil services preparation in Pune.">
-    
-    <meta name="theme-color" content="#0A2B57">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="format-detection" content="telephone=no">
-    
-    <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Enroll Now - UPSC Academia</title>
+  <meta name="description" content="Enroll in a course at UPSC Academia, Pune’s premier coaching institute.">
+  
+  <!-- Fonts + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+  
+  <!-- Your Styles -->
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body id="enroll-page">
-    <div class="bg-decoration"></div>
+  <div class="bg-decoration"></div>
 
-    <div id="site-header"></div>
-    <div class="navbar-spacer"></div>
+  <!-- Header Component -->
+  <div id="site-header"></div>
+  <div class="navbar-spacer"></div>
 
-    <div class="page-container">
-        <div class="enrollment-form-container">
-            <h1>Enrollment Form</h1>
-            <form id="enrollForm">
-                <div class="form-group">
-                    <label for="enrollName">Full Name</label>
-                    <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name">
-                </div>
-                <div class="form-group">
-                    <label for="enrollEmail">Email Address</label>
-                    <input type="email" id="enrollEmail" name="enrollEmail" required placeholder="example@email.com">
-                </div>
-                <div class="form-group">
-                    <label for="enrollPhone">Phone Number</label>
-                    <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your 10-digit phone number">
-                </div>
-                <div class="form-group">
-                    <label for="course">Course of Interest</label>
-                    <select id="course" name="course" required>
-                        <option value="" disabled selected>Select a Course</option>
-                        <option value="upsc-pre-mains">UPSC (Pre/Mains)</option>
-                        <option value="mpsc">MPSC (पूर्व/मुख्य)</option>
-                        <option value="rajyaseva">Rajyaseva Pariksha</option>
-                        <option value="psi-sti">PSI/STI/Asst./Saral Seva</option>
-                        <option value="test-series">Comprehensive Test Series</option>
-                    </select>
-                </div>
-                <button type="submit" class="submit-btn">Submit Enrollment</button>
-            </form>
+  <!-- Enrollment Form -->
+  <div class="page-container">
+    <div class="enrollment-form-container">
+      <h1>Request a Demo Class</h1>
+      <form id="enrollForm">
+        <div class="form-group">
+          <label for="enrollName">Full Name</label>
+          <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name" />
         </div>
+
+        <div class="form-group">
+          <label for="enrollEmail">Email Address</label>
+          <input type="email" id="enrollEmail" name="enrollEmail" required placeholder="example@email.com" />
+        </div>
+
+        <div class="form-group">
+          <label for="enrollPhone">Phone Number</label>
+          <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your phone number" />
+        </div>
+
+        <div class="form-group">
+          <label for="course">Course of Interest</label>
+          <select id="course" name="course" required>
+            <option value="" disabled selected>Select a Course</option>
+            <option value="UPSC (Pre/Mains)">UPSC (Pre/Mains)</option>
+            <option value="MPSC">MPSC (पूर्व/मुख्य)</option>
+            <option value="Rajyaseva">Rajyaseva Pariksha</option>
+            <option value="PSI/STI">PSI/STI/Asst./Saral Seva</option>
+            <option value="Test Series">Comprehensive Test Series</option>
+          </select>
+        </div>
+
+        <button type="submit" class="submit-btn" id="submitBtn">Submit Enrollment</button>
+        <div id="formMessage" style="margin-top:10px;"></div>
+      </form>
     </div>
-    
-    <div id="site-footer"></div>
+  </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            var form = document.getElementById('enrollForm');
-            form.addEventListener('submit', function(event) {
-                event.preventDefault(); // Stop the form from submitting normally
-                
-                // Get the form data
-                var formData = new FormData(form);
-                var data = {};
-                formData.forEach((value, key) => data[key] = value);
-                
-                // Show a loading state
-                const submitBtn = document.querySelector('.submit-btn');
-                submitBtn.textContent = 'Submitting...';
-                submitBtn.disabled = true;
+  <!-- Footer Component -->
+  <div id="site-footer"></div>
 
-                // Send the data to the Apps Script using fetch
-                fetch('https://script.google.com/macros/s/AKfycbxdKHnxNBX0OEnYDpMdc_dNlYGNaBnu-9eFHxbbehn2T1Dssx0PHU50_1ASVGbNTS7M/exec', {
-                    method: 'POST',
-                    body: JSON.stringify(data),
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                })
-                .then(response => {
-                    // Re-enable the button
-                    submitBtn.textContent = 'Submit Enrollment';
-                    submitBtn.disabled = false;
-                    
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(result => {
-                    if (result.status === 'success') {
-                        console.log('Success:', result);
-                        window.location.href = 'thank-you.html';
-                    } else {
-                        throw new Error(result.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert("An unexpected error occurred. Please try again.");
-                });
-            });
-        });
-    </script>
-    <script src="script.js" defer></script>
+  <!-- Main Script -->
+  <script src="script.js" defer></script>
 </body>
 </html>
