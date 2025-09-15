@@ -211,7 +211,6 @@ function initHomePage() {
   console.log("[v0] Device pixel ratio:", window.devicePixelRatio)
 
   setupHomepageScrolling()
-  initChatbotLoader()
   initMapLoader()
   debugContactSection()
 }
@@ -280,20 +279,6 @@ function setupHomepageScrolling() {
   })
 }
 
-function initChatbotLoader() {
-  const loadChatbotBtn = document.getElementById("load-chatbot")
-  const chatbotPlaceholder = document.getElementById("chatbot-placeholder")
-  const chatbotIframe = document.getElementById("chatbot-iframe")
-
-  if (loadChatbotBtn && chatbotPlaceholder && chatbotIframe) {
-    loadChatbotBtn.addEventListener("click", () => {
-      console.log("[v0] Loading chatbot for mobile device")
-      chatbotIframe.src = "https://my.spline.design/genkubgreetingrobot-XxvllaA08jGSzvpGD5eJSF75/"
-      chatbotPlaceholder.style.display = "none"
-      chatbotIframe.style.display = "block"
-    })
-  }
-}
 
 function initMapLoader() {
   const mapLoading = document.getElementById("map-loading")

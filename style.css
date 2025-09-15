@@ -118,6 +118,7 @@ body {
   height: 65px;
   display: flex;
   align-items: center;
+  overflow: visible;
 }
 
 /* Android compatibility fallback */
@@ -381,13 +382,13 @@ body {
 .section {
   padding: 5rem 0;
   position: relative;
+  overflow: hidden;
 }
 
 .container {
-  max-width: 100%;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 1rem;
-  overflow-x: hidden;
 }
 
 .section-title {
@@ -433,14 +434,16 @@ body {
 
 .director-image-container {
   position: relative;
+  display: flex;
+  justify-content: center;
 }
 
 .director-image {
   width: 300px;
   height: 300px;
-  border-radius: 50%;
+  border-radius: 20px;
   object-fit: cover;
-  border: 8px solid var(--white);
+  border: none;
   box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
   transition: transform 0.3s ease;
 }
@@ -694,42 +697,54 @@ body {
 .contact-content {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  margin-bottom: 4rem;
-  max-width: 100%;
-  overflow-x: hidden;
+  gap: 3rem;
+  margin-bottom: 3rem;
+  width: 100%;
+  align-items: start;
 }
 
 .contact-details {
-  padding: 2rem;
-  max-width: 100%;
-  overflow-x: hidden;
+  padding: 1.5rem;
+  background: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 10px 30px var(--shadow);
 }
 
 .contact-item {
   display: flex;
   align-items: flex-start;
-  gap: 1rem;
+  gap: 1.5rem;
   margin-bottom: 2rem;
   padding: 1.5rem;
-  background: var(--white);
-  border-radius: 15px;
-  box-shadow: 0 5px 20px var(--shadow);
-  transition: transform 0.3s ease;
-  max-width: 100%;
-  overflow-wrap: break-word;
+  background: var(--light-gray);
+  border-radius: 12px;
+  transition: all 0.3s ease;
   word-wrap: break-word;
+}
+
+.contact-item:hover {
+  transform: translateY(-2px);
+  background: var(--white);
+  box-shadow: 0 8px 25px var(--shadow);
+}
+
+.contact-item i {
+  font-size: 1.5rem;
+  color: var(--accent-red);
+  flex-shrink: 0;
 }
 
 .contact-form-wrapper {
   background: var(--white);
   border-radius: 20px;
-  padding: 2rem;
-  box-shadow: 0 15px 40px var(--shadow);
-  height: 600px;
+  padding: 1.5rem;
+  box-shadow: 0 10px 30px var(--shadow);
+  height: auto;
+  min-height: 400px;
   position: relative;
-  max-width: 100%;
-  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 }
 
 .mobile-friendly-chatbot .chatbot-container {
@@ -1442,27 +1457,30 @@ body {
   }
 
   .contact-details {
-    padding: 1rem;
+    padding: 1.25rem;
     order: 2;
   }
 
   .contact-item {
-    padding: 1rem;
+    padding: 1.25rem;
     margin-bottom: 1rem;
+    flex-direction: row;
+    align-items: center;
+  }
+
+  .contact-item i {
+    font-size: 1.25rem;
   }
 
   .contact-item div {
-    word-break: break-word;
-    overflow-wrap: break-word;
-    max-width: 100%;
+    flex: 1;
   }
 
   .contact-form-wrapper {
-    padding: 1rem;
-    height: 350px;
+    padding: 1.25rem;
+    min-height: 350px;
     order: 1;
     width: 100%;
-    box-sizing: border-box;
   }
 
   .mobile-friendly-chatbot .chatbot-container {
