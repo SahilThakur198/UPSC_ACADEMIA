@@ -6,30 +6,23 @@
     <title>Enroll Now - UPSC Academia</title>
     <meta name="description" content="Enroll in a course at UPSC Academia, the premier coaching institute for civil services preparation in Pune.">
     
-    <!-- Enhanced mobile optimization -->
     <meta name="theme-color" content="#0A2B57">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="format-detection" content="telephone=no">
     
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     
-    <!-- Font Awesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
-    <!-- Main Stylesheet -->
     <link rel="stylesheet" href="style.css">
 </head>
 <body id="enroll-page">
-    <!-- Background Decoration -->
     <div class="bg-decoration"></div>
 
-    <!-- Reusable Header Component -->
     <div id="site-header"></div>
     <div class="navbar-spacer"></div>
 
-    <!-- Page Container for Enrollment Form -->
     <div class="page-container">
         <div class="enrollment-form-container">
             <h1>Enrollment Form</h1>
@@ -62,10 +55,57 @@
         </div>
     </div>
     
-    <!-- Reusable Footer Component -->
     <div id="site-footer"></div>
 
-    <!-- Main Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var form = document.getElementById('enrollForm');
+            form.addEventListener('submit', function(event) {
+                event.preventDefault(); // Stop the form from submitting normally
+                
+                // Get the form data
+                var formData = new FormData(form);
+                var data = {};
+                formData.forEach((value, key) => data[key] = value);
+                
+                // Show a loading state
+                const submitBtn = document.querySelector('.submit-btn');
+                submitBtn.textContent = 'Submitting...';
+                submitBtn.disabled = true;
+
+                // Send the data to the Apps Script using fetch
+                fetch('https://script.google.com/macros/s/AKfycbxdKHnxNBX0OEnYDpMdc_dNlYGNaBnu-9eFHxbbehn2T1Dssx0PHU50_1ASVGbNTS7M/exec', {
+                    method: 'POST',
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    // Re-enable the button
+                    submitBtn.textContent = 'Submit Enrollment';
+                    submitBtn.disabled = false;
+                    
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(result => {
+                    if (result.status === 'success') {
+                        console.log('Success:', result);
+                        window.location.href = 'thank-you.html';
+                    } else {
+                        throw new Error(result.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert("An unexpected error occurred. Please try again.");
+                });
+            });
+        });
+    </script>
     <script src="script.js" defer></script>
 </body>
 </html>
