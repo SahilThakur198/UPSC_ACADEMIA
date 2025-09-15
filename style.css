@@ -314,11 +314,10 @@ body {
 }
 
 .hero {
-  /* Use dynamic viewport height for better mobile browser compatibility */
-  height: 100dvh;
-  /* Fallback for browsers that don't support dvh */
-  min-height: 100vh;
-  /* Additional fallback for Android devices */
+  /* Use CSS variable-based viewport height for Android address bar behavior */
+  height: calc(var(--vh, 1vh) * 100);
+  /* Fallbacks */
+  min-height: calc(100dvh - 65px);
   min-height: calc(100vh - 65px);
   display: flex;
   align-items: center;
@@ -763,6 +762,24 @@ body {
   margin-top: 2px;
 }
 
+/* Global phone/email/address hover behavior across site */
+a[href^="tel:"],
+a[href^="mailto:"],
+.contact-item a,
+.footer-section.contact-info a {
+  transition: color 0.25s ease, transform 0.25s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+a[href^="tel:"]:hover,
+a[href^="mailto:"]:hover,
+.contact-item a:hover,
+.footer-section.contact-info a:hover {
+  color: var(--accent-red);
+  transform: translateX(5px);
+}
+
 .contact-form-wrapper {
   background: var(--white);
   border-radius: 20px;
@@ -903,21 +920,21 @@ body {
 .footer {
     background: #082245;
     color: rgba(255, 255, 255, 0.8);
-    padding: 5rem 0 2rem;
+    padding: 2.25rem 0 1rem;
     border-top: 4px solid var(--accent-red);
 }
 
 .footer-wave {
     position: relative;
     width: 100%;
-    height: 120px;
+    height: 60px;
     overflow: hidden;
 }
 
 .footer-wave svg {
     display: block;
     width: 100%;
-    height: 120px;
+    height: 60px;
 }
 
 .footer .container {
@@ -927,19 +944,19 @@ body {
 .footer-content {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 3rem;
-    margin-bottom: 3rem;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
 }
 
 .footer-section h3 {
-    font-size: 1.3rem;
+    font-size: 1.2rem;
     font-weight: 700;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     color: var(--white);
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     position: relative;
-    padding-bottom: 0.5rem;
+    padding-bottom: 0.4rem;
 }
 
 .footer-section h3::after {
@@ -947,7 +964,7 @@ body {
     position: absolute;
     left: 0;
     bottom: 0;
-    width: 40px;
+    width: 36px;
     height: 2px;
     background: var(--accent-red);
 }
@@ -975,8 +992,8 @@ body {
 }
 
 .footer-section p {
-    line-height: 1.8;
-    margin-bottom: 1.5rem;
+    line-height: 1.7;
+    margin-bottom: 1rem;
 }
 
 .footer-section ul {
@@ -985,7 +1002,7 @@ body {
 }
 
 .footer-section ul li {
-    margin-bottom: 1rem;
+    margin-bottom: 0.6rem;
     display: flex;
     align-items: flex-start;
     gap: 10px;
@@ -994,26 +1011,40 @@ body {
 .footer-section ul li a {
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: color 0.3s ease, padding-left 0.3s ease;
+    transition: color 0.25s ease, transform 0.25s ease;
     position: relative;
+    display: inline-flex;
+    align-items: center;
 }
 
 .footer-section ul li a:hover {
     color: var(--white);
-    padding-left: 5px;
+    transform: translateX(5px);
+}
+
+.footer-section.links ul li a {
+    padding-left: 18px;
 }
 
 .footer-section.links ul li a::before {
-    content: '\f105';
-    font-family: 'Font Awesome 5 Free';
-    font-weight: 900;
-    margin-right: 10px;
+    content: '›';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
     color: var(--accent-red);
-    transition: transform 0.3s ease;
+    font-size: 1rem;
+    line-height: 1;
 }
 
 .footer-section.links ul li a:hover::before {
-    transform: translateX(5px);
+    transform: translateY(-50%) translateX(5px);
+}
+
+/* Prevent double icons if manual <i> or <svg> were added inside links */
+.footer-section.links ul li a i,
+.footer-section.links ul li a svg {
+    display: none !important;
 }
 
 /* Unify hover behavior for contact links (phone, email, address) */
@@ -1021,12 +1052,14 @@ body {
     word-break: break-word;
     color: rgba(255, 255, 255, 0.8);
     text-decoration: none;
-    transition: color 0.3s ease, padding-left 0.3s ease;
+    transition: color 0.25s ease, transform 0.25s ease;
+    display: inline-flex;
+    align-items: center;
 }
 
 .footer-section.contact-info a:hover {
     color: var(--accent-red);
-    padding-left: 5px;
+    transform: translateX(5px);
 }
 
 .footer-section .social-links {
@@ -1096,11 +1129,16 @@ body {
 
 /* Base Hover Animation - Applied to all icons */
 .social-links a:hover {
-    transform: translateY(-5px);
+    transform: translateY(-6px) scale(1.06);
+    filter: drop-shadow(0 8px 12px rgba(0,0,0,0.25));
 }
 
 .social-links a:hover i {
-    transform: rotate(10deg) scale(1.1);
+    transform: rotate(8deg) scale(1.12);
+}
+
+.social-links a:hover svg {
+    transform: rotate(8deg) scale(1.12);
 }
 
 /* --- Platform-Specific Hover Colors --- */
@@ -1131,11 +1169,19 @@ body {
 
 .footer-bottom {
     text-align: center;
-    padding-top: 2rem;
-    margin-top: 2rem;
+    padding-top: 1rem;
+    margin-top: 1rem;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
     font-size: 0.9rem;
     color: rgba(255, 255, 255, 0.7);
+}
+
+/* Ensure only a single divider above footer-bottom even if manual styles exist */
+.footer .footer-content {
+    border-bottom: 0 !important;
+}
+.footer hr {
+    display: none;
 }
 
 .footer-bottom a {
@@ -1439,11 +1485,8 @@ body {
 
   /* Better mobile hero section with Android viewport fix */
   .hero {
-    height: calc(100vh - 65px);
-    height: calc(100dvh - 65px);
+    height: calc(var(--vh, 1vh) * 100 - 65px);
     min-height: 440px;
-    /* Additional Android browser compatibility */
-    min-height: calc(100vh - 65px);
   }
 
   .hero-content h1 {
@@ -1600,8 +1643,7 @@ body {
   }
 
   .hero {
-    height: calc(100vh - 65px);
-    height: calc(100dvh - 65px);
+    height: calc(var(--vh, 1vh) * 100 - 65px);
     min-height: 380px;
   }
 
