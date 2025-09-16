@@ -27,6 +27,13 @@
       initHomePage()
     } else if (bodyId === "enroll-page") {
       initEnrollPage()
+        // Hide Demo Class button on enroll page
+        // Desktop button
+        const enrollBtn = document.querySelector(".enroll-btn.desktop-only")
+        if (enrollBtn) enrollBtn.style.display = "none"
+        // Mobile button
+        const enrollMobile = document.querySelector(".enroll-mobile.mobile-only")
+        if (enrollMobile) enrollMobile.parentElement.style.display = "none"
     }
   })
 
@@ -640,7 +647,7 @@
   }
 
   // ==== Enrollment: Google Apps Script submission ====
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw1iLJ_0BO9XHsp5c9N2O_CVguuqNxaQAEBjO7gWs8EJkZcfjBo__aFpkQIIsRZjnE9/exec"
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysyS9VsnjB8BWRAXA_5ViODuFV-oTQ8eU57t3oUtKgrBMRUwynLHBgiBuFHveSSy_5/exec"
 
   function validatePhoneNumber(phone) {
     const digitsOnly = (phone || "").replace(/\D/g, "")
