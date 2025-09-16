@@ -647,7 +647,7 @@
   }
 
   // ==== Enrollment: Google Apps Script submission ====
-  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbysyS9VsnjB8BWRAXA_5ViODuFV-oTQ8eU57t3oUtKgrBMRUwynLHBgiBuFHveSSy_5/exec"
+  const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbztGRGHQkUr1YKZGZIk04lJNY_G5ImUfduRahlJ7azOvnISEWUQzw5gimyUETgyDQ9f/exec"
 
   function validatePhoneNumber(phone) {
     const digitsOnly = (phone || "").replace(/\D/g, "")
