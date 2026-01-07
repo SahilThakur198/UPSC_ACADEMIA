@@ -1,0 +1,21 @@
+# robots.txt for UPSC Academia
+# This file guides search engine crawlers on how to index the site
+
+User-agent: *
+Allow: /
+
+# Disallow private/component directories
+Disallow: /components/
+Disallow: /.vscode/
+
+# Allow all other content
+Allow: /img/
+Allow: /*.html
+Allow: /*.css
+Allow: /*.js
+
+# Sitemap location
+Sitemap: https://upscacademia.com/sitemap.xml
+
+# Crawl rate (optional - helps prevent server overload)
+Crawl-delay: 1
