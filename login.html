@@ -44,7 +44,7 @@
       overflow-x: hidden;
     }
 
-    /* Background Decoration (Matches Main Site) */
+    /* Background Decoration */
     .bg-decoration {
       position: fixed;
       top: 0;
@@ -95,17 +95,68 @@
     /* Dashboard Styling */
     #dashboard {
       display: none;
-      background-color: rgba(255, 255, 255, 0.85);
+      background-color: rgba(255, 255, 255, 0.9);
       backdrop-filter: blur(15px);
       border-radius: 30px;
-      width: 900px;
-      max-width: 95%;
-      padding: 50px;
-      text-align: center;
+      width: 95%;
+      max-width: 1200px;
+      padding: 40px;
       box-shadow: var(--shadow-soft);
       border: 1px solid var(--glass-border);
       position: relative;
       z-index: 10;
+    }
+
+    /* Dashboard Tabs */
+    .dashboard-tabs {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 30px;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 0;
+    }
+
+    .tab-button {
+      background: transparent;
+      border: none;
+      padding: 15px 30px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+
+    .tab-button:hover {
+      color: var(--primary-blue);
+    }
+
+    .tab-button.active {
+      color: var(--primary-blue);
+      border-bottom-color: var(--accent-red);
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .upload-box {
@@ -113,16 +164,30 @@
       padding: 40px;
       border-radius: 20px;
       margin-top: 30px;
-      background: rgba(240, 248, 255, 0.5);
+      background: rgba(240, 248, 255, 0.7);
       transition: all 0.3s ease;
     }
 
     .upload-box:hover {
-      background: rgba(240, 248, 255, 0.8);
+      background: rgba(240, 248, 255, 0.9);
       border-color: var(--primary-blue);
+      box-shadow: 0 4px 12px rgba(30, 136, 229, 0.1);
     }
 
-    /* NEW STYLES FOR FILE LIST */
+    .file-input-wrapper {
+      margin: 20px 0;
+      padding: 10px;
+      background: white;
+      border: 2px solid #d0d7de;
+      border-radius: 12px;
+      transition: all 0.3s ease;
+    }
+
+    .file-input-wrapper:hover {
+      border-color: var(--accent-blue);
+    }
+
+    /* File List */
     .file-list-section {
       margin-top: 40px;
       text-align: left;
@@ -137,7 +202,7 @@
       padding: 15px 20px;
       margin-bottom: 12px;
       border-radius: 12px;
-      transition: padding 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      transition: all 0.3s ease;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
     }
 
@@ -154,6 +219,7 @@
       display: flex;
       align-items: center;
       gap: 12px;
+      flex: 1;
     }
 
     .file-name i {
@@ -161,15 +227,25 @@
       font-size: 18px;
     }
 
-    .file-actions a {
-      margin-left: 10px;
+    .file-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .file-actions a,
+    .file-actions button {
+      margin-left: 5px;
       text-decoration: none;
       font-size: 13px;
       padding: 8px 16px;
       border-radius: 50px;
-      display: inline-block;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
       font-weight: 500;
       transition: all 0.3s ease;
+      border: none;
+      cursor: pointer;
     }
 
     .view-btn {
@@ -191,6 +267,74 @@
     .download-btn:hover {
       transform: translateY(-2px);
       box-shadow: 0 6px 15px rgba(8, 31, 61, 0.3);
+    }
+
+    .delete-btn {
+      background: var(--accent-red);
+      color: white;
+      box-shadow: 0 4px 10px rgba(198, 40, 40, 0.2);
+    }
+
+    .delete-btn:hover {
+      background: #a10f14;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(198, 40, 40, 0.3);
+    }
+
+    /* Leads Table */
+    .leads-container {
+      overflow-x: auto;
+      margin-top: 20px;
+    }
+
+    .leads-table {
+      width: 100%;
+      border-collapse: collapse;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    }
+
+    .leads-table thead {
+      background: var(--gradient-primary);
+      color: white;
+    }
+
+    .leads-table th {
+      padding: 15px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .leads-table td {
+      padding: 12px 15px;
+      border-bottom: 1px solid #eef2f5;
+      font-size: 14px;
+      color: var(--text-primary);
+    }
+
+    .leads-table tbody tr:hover {
+      background-color: #f8f9fa;
+    }
+
+    .leads-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state i {
+      font-size: 48px;
+      color: var(--border-color, #ddd);
+      margin-bottom: 20px;
     }
 
     .container p {
@@ -272,9 +416,10 @@
 
     input[type="text"],
     input[type="email"],
-    input[type="password"] {
-      background-color: #f0f4f8;
-      border: 2px solid transparent;
+    input[type="password"],
+    input[type="file"] {
+      background-color: #ffffff;
+      border: 2px solid #d0d7de;
       margin: 8px 0;
       padding: 12px 20px;
       font-size: 14px;
@@ -283,12 +428,17 @@
       outline: none;
       transition: all 0.3s ease;
       color: var(--text-primary);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     input:focus {
       background-color: #fff;
       border-color: var(--accent-blue);
-      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+    }
+
+    input:hover {
+      border-color: #a8b3c1;
     }
 
     input.valid {
@@ -299,7 +449,7 @@
       border-color: #dc3545;
     }
 
-    /* Password Input Wrapper for Toggle */
+    /* Password Input Wrapper */
     .password-field-wrapper {
       position: relative;
       width: 100%;
@@ -357,16 +507,6 @@
     .password-strength.strong .password-strength-bar {
       width: 100%;
       background: #28a745;
-    }
-
-    .file-input-wrapper {
-      margin: 20px 0;
-    }
-
-    input[type="file"] {
-      padding: 10px;
-      font-size: 14px;
-      color: var(--text-secondary);
     }
 
     .form-container {
@@ -732,16 +872,10 @@
         animation: none;
       }
 
-      /* Hide the animated toggle on mobile, show both forms stacked or simplify */
       .toggle-container {
         display: none;
       }
 
-      /* Since toggle is gone, we need a way to switch. For now, let's stack them or better yet -
-         keep the toggle logic but just hide visual panel and toggle visibility of forms manually.
-         Actually simpler: Just stack them for now or use a simple tab system.
-         But to preserve the JS logic, let's keep one hidden and one shown via CSS classes.
-       */
       .sign-up {
         display: none;
       }
@@ -755,7 +889,6 @@
         opacity: 1;
       }
 
-      /* Mobile Switches */
       .mobile-toggle {
         display: block;
         text-align: center;
@@ -767,6 +900,25 @@
         cursor: pointer;
         font-weight: 700;
         text-decoration: underline;
+      }
+
+      .dashboard-tabs {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+      }
+
+      .tab-button {
+        white-space: nowrap;
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+
+      .leads-container {
+        overflow-x: scroll;
+      }
+
+      .leads-table {
+        min-width: 800px;
       }
     }
   </style>
@@ -848,6 +1000,7 @@
     </div>
   </div>
 
+  <!-- Enhanced Dashboard with Tabs -->
   <div id="dashboard">
     <div class="social-icons" style="text-align: right;">
       <a href="index.html" class="home-icon-link" title="Back to Home">
@@ -855,34 +1008,69 @@
       </a>
     </div>
     <h1 id="welcomeUser" style="color: var(--primary-blue); font-family: 'Kalam', cursive;">Welcome!</h1>
-    <p>Academia Management Dashboard</p>
+    <p style="margin-bottom: 30px;">Academia Management Dashboard</p>
 
-    <div class="upload-box">
-      <h3 style="color: var(--primary-blue); margin-bottom: 15px;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload
-        Document</h3>
-      <div class="file-input-wrapper">
-        <input type="file" id="fileInput">
-      </div>
-      <button onclick="processFileUpload()" id="uploadBtn">Upload to Drive</button>
-      <div id="uploadStatus" class="message"></div>
+    <!-- Dashboard Navigation Tabs -->
+    <div class="dashboard-tabs">
+      <button class="tab-button active" onclick="switchTab('files')">
+        <i class="fa-solid fa-folder"></i> Files Management
+      </button>
+      <button class="tab-button" onclick="switchTab('leads')">
+        <i class="fa-solid fa-users"></i> Leads Dashboard
+      </button>
     </div>
 
-    <div class="file-list-section">
-      <h3
-        style="color: var(--primary-blue); border-bottom: 2px solid var(--accent-red); padding-bottom: 15px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
-        <span><i class="fa-solid fa-folder-open"></i> Class Files</span>
-        <button onclick="loadDriveFiles()"
-          style="padding: 8px 15px; font-size: 11px; margin: 0; background: var(--text-secondary);">Refresh
-          List</button>
-      </h3>
-
-      <div id="fileLoader" style="display:none; text-align:center; padding: 30px;">
-        <span class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></span>
-        <p style="margin-top: 10px; font-size: 13px;">Fetching files from Drive...</p>
+    <!-- Files Tab -->
+    <div id="filesTab" class="tab-content active">
+      <div class="upload-box">
+        <h3 style="color: var(--primary-blue); margin-bottom: 15px;"><i class="fa-solid fa-cloud-arrow-up"></i>
+          Upload
+          Document</h3>
+        <div class="file-input-wrapper">
+          <input type="file" id="fileInput">
+        </div>
+        <button onclick="processFileUpload()" id="uploadBtn">Upload to Drive</button>
+        <div id="uploadStatus" class="message"></div>
       </div>
 
-      <div id="fileContainer" style="max-height: 350px; overflow-y: auto; margin-top: 20px; padding-right: 5px;">
-        <!-- Files will be injected here -->
+      <div class="file-list-section">
+        <h3
+          style="color: var(--primary-blue); border-bottom: 2px solid var(--accent-red); padding-bottom: 15px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+          <span><i class="fa-solid fa-folder-open"></i> Class Files</span>
+          <button onclick="loadDriveFiles()"
+            style="padding: 8px 15px; font-size: 11px; margin: 0; background: var(--text-secondary);">Refresh
+            List</button>
+        </h3>
+
+        <div id="fileLoader" style="display:none; text-align:center; padding: 30px;">
+          <span class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></span>
+          <p style="margin-top: 10px; font-size: 13px;">Fetching files from Drive...</p>
+        </div>
+
+        <div id="fileContainer" style="max-height: 350px; overflow-y: auto; margin-top: 20px; padding-right: 5px;">
+          <!-- Files will be injected here -->
+        </div>
+      </div>
+    </div>
+
+    <!-- Leads Tab -->
+    <div id="leadsTab" class="tab-content">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="color: var(--primary-blue); margin: 0;">
+          <i class="fa-solid fa-chart-line"></i> Enrollment Leads
+        </h3>
+        <button onclick="loadLeads()" style="padding: 8px 15px; font-size: 11px; margin: 0;">
+          <i class="fa-solid fa-refresh"></i> Refresh
+        </button>
+      </div>
+
+      <div id="leadsLoader" style="display:none; text-align:center; padding: 30px;">
+        <span class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></span>
+        <p style="margin-top: 10px; font-size: 13px;">Loading leads data...</p>
+      </div>
+
+      <div id="leadsContainer" class="leads-container">
+        <!-- Leads table will be injected here -->
       </div>
     </div>
 
@@ -891,13 +1079,14 @@
     </button>
   </div>
 
-  <!-- OPT MODAL -->
+  <!-- Forgot Password Modal -->
   <div id="otpModal" class="modal">
     <div class="modal-content">
       <!-- Step 1: Email Entry -->
       <div id="emailStep" class="modal-step active">
         <h2><i class="fa-solid fa-lock"></i> Forgot Password</h2>
-        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Enter your registered email address to receive a
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Enter your registered email address to
+          receive a
           secure OTP.</p>
         <input type="email" id="forgotEmail" placeholder="Enter your email" />
         <div id="emailMessage" class="message"></div>
@@ -909,7 +1098,8 @@
       <!-- Step 2: OTP Verification -->
       <div id="otpStep" class="modal-step">
         <h2><i class="fa-solid fa-shield-halved"></i> Verify OTP</h2>
-        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">We've sent a 6-digit code to your email. Please
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">We've sent a 6-digit code to your email.
+          Please
           enter it below.</p>
         <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6"
           style="text-align: center; letter-spacing: 5px; font-size: 18px; font-weight: bold;" />
@@ -928,30 +1118,74 @@
             <i class="fa-solid fa-copy"></i> Copy
           </button>
         </div>
-        <p style="font-size: 13px; color: #666; margin-top: 15px;">Your password has been auto-filled in the login form.
+        <p style="font-size: 13px; color: #666; margin-top: 15px;">Your password has been auto-filled in the
+          login form.
         </p>
         <button style="background:var(--primary-blue)" onclick="closePasswordModal()">Login Now</button>
       </div>
     </div>
   </div>
 
+  <!-- Delete Confirmation Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h2><i class="fa-solid fa-trash"></i> Confirm Deletion</h2>
+      <p style="margin: 20px 0;">Are you sure you want to delete this file?</p>
+      <p style="font-weight: bold; color: var(--accent-red); margin-bottom: 20px;" id="deleteFileName"></p>
+      <button onclick="confirmDelete()" style="background: var(--accent-red);">
+        <i class="fa-solid fa-trash"></i> Yes, Delete
+      </button>
+      <button onclick="closeDeleteModal()" style="background: #636e72; margin-top: 10px;">
+        Cancel
+      </button>
+    </div>
+  </div>
+
   <script>
-    // **IMPORTANT**: Replace this URL with your Google Apps Script Web App URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbwa7D-JdpLZKr_AAlsSSgmZPOH9unrtXTl1KREH7RZwJmJDrZO7d1IzOoHy5gG328Rr/exec';
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Google Apps Script Backend URL
+    // ═══════════════════════════════════════════════════════════════════════════
+    const API_URL = 'https://script.google.com/macros/s/AKfycbxFuiAlQaGG0UrvgDJfQuykNf3NgVnhI3eeNe_TLgi5zMt5EvXadyVt2Cfhs5-rZIAW/exec';
 
     const container = document.getElementById('container');
     const dash = document.getElementById('dashboard');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
-
-    // Mobile toggle buttons
     const mobileToRegister = document.getElementById('mobileToRegister');
     const mobileToLogin = document.getElementById('mobileToLogin');
 
     let currentEmail = '';
     let retrievedPassword = '';
+    let fileToDelete = null;
 
-    // Check for mobile layout to enable manual toggling
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TAB MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function switchTab(tabName) {
+      // Update tab buttons
+      document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.closest('.tab-button').classList.add('active');
+
+      // Update tab content
+      document.querySelectorAll('.tab-content').forEach(content => {
+        content.classList.remove('active');
+      });
+
+      if (tabName === 'files') {
+        document.getElementById('filesTab').classList.add('active');
+      } else if (tabName === 'leads') {
+        document.getElementById('leadsTab').classList.add('active');
+        loadLeads(); // Auto-load leads when tab opens
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MOBILE DETECTION
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function checkMobile() {
       if (window.innerWidth <= 768) {
         document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'block');
@@ -961,11 +1195,12 @@
     }
 
     window.addEventListener('resize', checkMobile);
-
-    // Initial check
     checkMobile();
 
-    // Password visibility toggle
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PASSWORD VISIBILITY TOGGLE
+    // ═══════════════════════════════════════════════════════════════════════════
+
     function togglePasswordVisibility(inputId, icon) {
       const input = document.getElementById(inputId);
       if (input.type === 'password') {
@@ -979,21 +1214,19 @@
       }
     }
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // SESSION MANAGEMENT
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    // Load session on page load
     window.addEventListener('DOMContentLoaded', function () {
       checkMobile();
 
-      // Existing session check
       const session = localStorage.getItem('staffPortalSession');
       if (session) {
         try {
           const userData = JSON.parse(session);
           container.style.display = 'none';
-          document.querySelector('.welcome-heading').style.display = 'none'; // Hide heading on dashboard
+          document.querySelector('.welcome-heading').style.display = 'none';
           dash.style.display = 'block';
           document.getElementById('welcomeUser').textContent = "Welcome back, " + userData.userName;
           loadDriveFiles();
@@ -1003,13 +1236,11 @@
       }
     });
 
-    // Save session to localStorage
     function saveSession(userName, email) {
       const sessionData = { userName, email, timestamp: Date.now() };
       localStorage.setItem('staffPortalSession', JSON.stringify(sessionData));
     }
 
-    // Clear session (logout)
     function clearSession() {
       localStorage.removeItem('staffPortalSession');
       location.reload();
@@ -1019,29 +1250,22 @@
     registerBtn.addEventListener('click', () => container.classList.add("active"));
     loginBtn.addEventListener('click', () => container.classList.remove("active"));
 
-    // Mobile specific toggles
     if (mobileToRegister) {
-      mobileToRegister.addEventListener('click', () => {
-        container.classList.add("active");
-      });
+      mobileToRegister.addEventListener('click', () => container.classList.add("active"));
     }
 
     if (mobileToLogin) {
-      mobileToLogin.addEventListener('click', () => {
-        container.classList.remove("active");
-      });
+      mobileToLogin.addEventListener('click', () => container.classList.remove("active"));
     }
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // CLIENT-SIDE VALIDATION
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    // Email validation (instant feedback)
     function validateEmail(email) {
       return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
     }
 
-    // Password strength checker
     function checkPasswordStrength(password) {
       const strengthMeter = document.getElementById('passwordStrength');
       let strength = 0;
@@ -1072,7 +1296,7 @@
       return '';
     }
 
-    // Add real-time validation listeners
+    // Real-time validation
     document.getElementById('signupEmail').addEventListener('input', function (e) {
       if (e.target.value) {
         if (validateEmail(e.target.value)) {
@@ -1105,13 +1329,11 @@
       checkPasswordStrength(e.target.value);
     });
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // API HELPER
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
     async function callAPI(action, data = {}) {
-      // Use URLSearchParams (form-encoded) for compatibility with Code.gs
-      // Code.gs handleApiRequest expects 'action' and 'data' (JSON stringified)
       const params = new URLSearchParams();
       params.append('action', action);
       params.append('data', JSON.stringify(data));
@@ -1136,9 +1358,9 @@
       }
     }
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // AUTHENTICATION LOGIC
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
     async function handleSignUp(event) {
       event.preventDefault();
@@ -1164,7 +1386,6 @@
         const result = await callAPI('signup', { name, email, password });
         if (result.success) {
           showMessage(messageDiv, 'Sign up successful! Please login.', true);
-          // Auto switch to login after 2 seconds
           setTimeout(() => {
             container.classList.remove("active");
             document.getElementById('signupName').value = '';
@@ -1196,9 +1417,9 @@
         const result = await callAPI('login', { email, password });
         if (result.success) {
           showMessage(messageDiv, 'Login successful!', true);
-          saveSession(result.userName, email); // Save session
+          saveSession(result.userName, email);
           setTimeout(() => {
-            location.reload(); // Reload to show dashboard
+            location.reload();
           }, 1000);
         } else {
           showMessage(messageDiv, result.message || 'Invalid credentials', false);
@@ -1211,9 +1432,9 @@
       }
     }
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // FILE MANAGEMENT LOGIC
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
     async function processFileUpload() {
       const fileInput = document.getElementById('fileInput');
@@ -1221,7 +1442,7 @@
       const statusDiv = document.getElementById('uploadStatus');
 
       if (fileInput.files.length === 0) {
-        showMessage(statusDiv, "Please select away file!", false);
+        showMessage(statusDiv, "Please select a file!", false);
         return;
       }
 
@@ -1233,7 +1454,6 @@
         setLoading(uploadBtn, true, "Uploading...");
 
         try {
-          // Get user from session
           const session = JSON.parse(localStorage.getItem('staffPortalSession'));
           const uploadedBy = session ? session.userName : 'Unknown';
 
@@ -1246,8 +1466,8 @@
 
           if (result.success) {
             showMessage(statusDiv, "File uploaded successfully!", true);
-            fileInput.value = ""; // Clear input
-            loadDriveFiles(); // Refresh list
+            fileInput.value = "";
+            loadDriveFiles();
           } else {
             showMessage(statusDiv, "Upload failed: " + result.message, false);
           }
@@ -1279,7 +1499,6 @@
             const fileDiv = document.createElement('div');
             fileDiv.className = 'file-item';
 
-            // Determine icon based on type (returned from Code.gs)
             let iconClass = 'fa-file';
             const mimeType = (file.type || '').toLowerCase();
             if (mimeType.includes('pdf')) iconClass = 'fa-file-pdf';
@@ -1297,7 +1516,10 @@
                         </div>
                         <div class="file-actions">
                             <a href="${file.url}" target="_blank" class="view-btn"><i class="fa-solid fa-eye"></i> View</a>
-                            <a href="${file.downloadUrl}" target="_blank" class="view-btn" style="background: var(--accent-red); margin-left: 5px;"><i class="fa-solid fa-download"></i></a>
+                            <a href="${file.downloadUrl}" target="_blank" class="download-btn"><i class="fa-solid fa-download"></i></a>
+                            <button class="delete-btn" onclick="showDeleteModal('${file.id}', '${file.name.replace(/'/g, "\\'")}')">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
                         </div>
                     `;
             container.appendChild(fileDiv);
@@ -1312,10 +1534,105 @@
       }
     }
 
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FILE DELETION
+    // ═══════════════════════════════════════════════════════════════════════════
 
-    // =============================================
+    function showDeleteModal(fileId, fileName) {
+      fileToDelete = fileId;
+      document.getElementById('deleteFileName').textContent = fileName;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
+
+    function closeDeleteModal() {
+      fileToDelete = null;
+      document.getElementById('deleteModal').style.display = 'none';
+    }
+
+    async function confirmDelete() {
+      if (!fileToDelete) return;
+
+      try {
+        const result = await callAPI('deleteFile', { fileId: fileToDelete });
+
+        if (result.success) {
+          alert('File deleted successfully!');
+          closeDeleteModal();
+          loadDriveFiles(); // Refresh file list
+        } else {
+          alert('Failed to delete file: ' + result.message);
+        }
+      } catch (error) {
+        alert('Error deleting file');
+        console.error(error);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LEADS MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function loadLeads() {
+      const container = document.getElementById('leadsContainer');
+      const loader = document.getElementById('leadsLoader');
+
+      container.innerHTML = '';
+      loader.style.display = 'block';
+
+      try {
+        const result = await callAPI('getLeads');
+
+        loader.style.display = 'none';
+
+        if (result.success && result.leads && result.leads.length > 0) {
+          const table = document.createElement('table');
+          table.className = 'leads-table';
+
+          // Table header
+          table.innerHTML = `
+            <thead>
+              <tr>
+                <th>Timestamp</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Course</th>
+                <th>Demo Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${result.leads.map(lead => `
+                <tr>
+                  <td>${lead.timestamp}</td>
+                  <td>${lead.name}</td>
+                  <td>${lead.email}</td>
+                  <td>${lead.phone}</td>
+                  <td>${lead.course}</td>
+                  <td>${lead.comingForDemo || '-'}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          `;
+
+          container.appendChild(table);
+        } else {
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-inbox"></i>
+              <p>No leads data available yet.</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        loader.style.display = 'none';
+        container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load leads data.</p>';
+        console.error(error);
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
     // UI UTILITIES
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
     function showMessage(element, text, isSuccess) {
       element.textContent = text;
@@ -1333,9 +1650,9 @@
       }
     }
 
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
     // FORGOT PASSWORD MODAL LOGIC
-    // =============================================
+    // ═══════════════════════════════════════════════════════════════════════════
 
     function handleForgotPassword() {
       const modal = document.getElementById('otpModal');
@@ -1343,7 +1660,6 @@
       const otpStep = document.getElementById('otpStep');
       const passwordStep = document.getElementById('passwordStep');
 
-      // Reset
       emailStep.classList.add('active');
       otpStep.classList.remove('active');
       passwordStep.classList.remove('active');
@@ -1368,9 +1684,8 @@
         return;
       }
 
-      currentEmail = email; // Store for verification step
+      currentEmail = email;
 
-      // Show loading
       const btn = document.querySelector('#emailStep button:first-of-type');
       const originalText = btn.innerText;
       btn.disabled = true;
@@ -1380,7 +1695,6 @@
         const result = await callAPI('forgotPassword', { email: email });
 
         if (result.success) {
-          // Switch to OTP step
           document.getElementById('emailStep').classList.remove('active');
           document.getElementById('otpStep').classList.add('active');
         } else {
@@ -1408,7 +1722,6 @@
         return;
       }
 
-      // Show loading
       const btn = document.querySelector('#otpStep button:first-of-type');
       const originalText = btn.innerText;
       btn.disabled = true;
@@ -1421,7 +1734,6 @@
           retrievedPassword = result.password;
           document.getElementById('retrievedPassword').textContent = retrievedPassword;
 
-          // Switch to Password step
           document.getElementById('otpStep').classList.remove('active');
           document.getElementById('passwordStep').classList.add('active');
         } else {
@@ -1450,17 +1762,20 @@
 
     function closePasswordModal() {
       closeOTPModal();
-      // Auto-fill login
       document.getElementById('loginEmail').value = currentEmail;
       document.getElementById('loginPassword').value = retrievedPassword;
-      container.classList.remove("active"); // Switch to sign in view
+      container.classList.remove("active");
     }
 
-    // Close modal if clicked outside
+    // Close modals if clicked outside
     window.onclick = function (event) {
-      const modal = document.getElementById('otpModal');
-      if (event.target == modal) {
-        modal.style.display = "none";
+      const otpModal = document.getElementById('otpModal');
+      const deleteModal = document.getElementById('deleteModal');
+      if (event.target == otpModal) {
+        otpModal.style.display = "none";
+      }
+      if (event.target == deleteModal) {
+        closeDeleteModal();
       }
     }
   </script>
