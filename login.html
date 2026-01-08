@@ -5,61 +5,126 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" />
-  <title>Academia Portal</title>
+  <title>Academia Portal | UPSC Academia</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
   <style>
-    @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
+    :root {
+      --primary-blue: #081f3d;
+      --accent-red: #c62828;
+      --accent-blue: #1e88e5;
+      --white: #ffffff;
+      --light-gray: #f8f9fa;
+      --dark-gray: #2d3436;
+      --text-primary: #1a1a1a;
+      --text-secondary: #636e72;
+      --glass-bg: rgba(255, 255, 255, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.5);
+      --shadow-soft: 0 10px 40px rgba(0, 0, 0, 0.08);
+      --gradient-primary: linear-gradient(135deg, #081f3d 0%, #154685 100%);
+      --gradient-accent: linear-gradient(45deg, #c62828, #e53935);
+    }
 
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: "Montserrat", sans-serif;
+      font-family: "Inter", sans-serif;
     }
 
     body {
-      background-color: #b890e6;
-      background: linear-gradient(to right, #b890e6, #8e44ad);
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
       min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Background Decoration (Matches Main Site) */
+    .bg-decoration {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      overflow: hidden;
+      background: linear-gradient(135deg, rgba(8, 31, 61, 0.03) 0%, rgba(198, 40, 40, 0.03) 100%);
+    }
+
+    .bg-decoration::before {
+      content: "";
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 50% 50%, rgba(30, 136, 229, 0.08) 0%, transparent 50%);
+      animation: rotateBg 60s linear infinite;
+    }
+
+    @keyframes rotateBg {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
     }
 
     .container {
-      background-color: #fff;
+      background-color: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
       border-radius: 30px;
-      box-shadow: 0 50px 100px -20px rgba(50, 50, 93, 0.25);
+      box-shadow: var(--shadow-soft);
       position: relative;
       overflow: hidden;
-      width: 768px;
+      width: 850px;
       max-width: 95%;
-      min-height: 480px;
+      min-height: 550px;
+      transition: all 0.4s ease;
     }
 
     /* Dashboard Styling */
     #dashboard {
       display: none;
-      background-color: #fff;
+      background-color: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(15px);
       border-radius: 30px;
-      width: 768px;
+      width: 900px;
       max-width: 95%;
-      padding: 40px;
+      padding: 50px;
       text-align: center;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow-soft);
+      border: 1px solid var(--glass-border);
+      position: relative;
+      z-index: 10;
     }
 
     .upload-box {
-      border: 2px dashed #b890e6;
-      padding: 30px;
+      border: 2px dashed var(--accent-blue);
+      padding: 40px;
       border-radius: 20px;
-      margin-top: 20px;
-      background: #fcfaff;
+      margin-top: 30px;
+      background: rgba(240, 248, 255, 0.5);
+      transition: all 0.3s ease;
+    }
+
+    .upload-box:hover {
+      background: rgba(240, 248, 255, 0.8);
+      border-color: var(--primary-blue);
     }
 
     /* NEW STYLES FOR FILE LIST */
     .file-list-section {
-      margin-top: 30px;
+      margin-top: 40px;
       text-align: left;
     }
 
@@ -67,111 +132,231 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      background: #fcfaff;
-      border: 1px solid #e0e0e0;
-      padding: 10px 15px;
-      margin-bottom: 8px;
-      border-radius: 8px;
-      transition: transform 0.2s;
+      background: white;
+      border: 1px solid #eef2f5;
+      padding: 15px 20px;
+      margin-bottom: 12px;
+      border-radius: 12px;
+      transition: padding 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
     }
 
     .file-item:hover {
       transform: translateX(5px);
-      border-color: #b890e6;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+      border-color: var(--accent-blue);
     }
 
     .file-name {
-      font-size: 13px;
-      color: #333;
+      font-size: 14px;
+      color: var(--text-primary);
       font-weight: 500;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
+    }
+
+    .file-name i {
+      color: var(--accent-red);
+      font-size: 18px;
     }
 
     .file-actions a {
       margin-left: 10px;
       text-decoration: none;
-      font-size: 12px;
-      padding: 5px 10px;
-      border-radius: 4px;
+      font-size: 13px;
+      padding: 8px 16px;
+      border-radius: 50px;
       display: inline-block;
+      font-weight: 500;
+      transition: all 0.3s ease;
     }
 
     .view-btn {
-      background-color: #e0e0e0;
-      color: #333;
+      background-color: #f1f3f5;
+      color: var(--text-primary);
+    }
+
+    .view-btn:hover {
+      background-color: #e9ecef;
+      color: var(--primary-blue);
     }
 
     .download-btn {
-      background-color: #b890e6;
+      background: var(--gradient-primary);
       color: white;
+      box-shadow: 0 4px 10px rgba(8, 31, 61, 0.2);
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(8, 31, 61, 0.3);
     }
 
     .container p {
       font-size: 14px;
-      line-height: 20px;
+      line-height: 1.6;
       margin: 20px 0;
+      color: var(--text-secondary);
     }
 
     .container span {
-      font-size: 12px;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 15px;
     }
 
     .container a {
-      color: #333;
+      color: var(--text-primary);
       font-size: 13px;
       text-decoration: none;
       margin: 15px 0 10px;
       cursor: pointer;
+      font-weight: 500;
+      transition: color 0.3s;
+    }
+
+    .container a:hover {
+      color: var(--accent-blue);
+      text-decoration: underline;
     }
 
     button {
-      background-color: rgb(203 101 244);
+      background: var(--gradient-accent);
       color: #fff;
-      font-size: 12px;
-      padding: 10px 45px;
-      border: 1px solid transparent;
-      border-radius: 8px;
+      font-size: 13px;
+      padding: 12px 45px;
+      border: none;
+      border-radius: 50px;
       font-weight: 600;
-      letter-spacing: 0.5px;
+      letter-spacing: 1px;
       text-transform: uppercase;
-      margin-top: 10px;
+      margin-top: 15px;
       cursor: pointer;
       transition: all 0.3s ease;
+      box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
     }
 
     button:hover {
-      background-color: rgb(183 91 234);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(198, 40, 40, 0.4);
+    }
+
+    button:active {
+      transform: scale(0.98);
     }
 
     button:disabled {
-      background-color: #ccc;
+      background: #ccc;
       cursor: not-allowed;
+      box-shadow: none;
     }
 
     form {
-      background-color: #fff;
+      background-color: transparent;
       display: flex;
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      padding: 0 40px;
+      padding: 0 50px;
       height: 100%;
+      text-align: center;
+    }
+
+    form h1 {
+      font-weight: 800;
+      margin-bottom: 15px;
+      color: var(--primary-blue);
+      font-size: 2.2rem;
     }
 
     input[type="text"],
     input[type="email"],
     input[type="password"] {
-      background-color: #eee;
-      border: none;
+      background-color: #f0f4f8;
+      border: 2px solid transparent;
       margin: 8px 0;
-      padding: 10px 15px;
-      font-size: 13px;
-      border-radius: 8px;
+      padding: 12px 20px;
+      font-size: 14px;
+      border-radius: 12px;
       width: 100%;
       outline: none;
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+    }
+
+    input:focus {
+      background-color: #fff;
+      border-color: var(--accent-blue);
+      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1);
+    }
+
+    input.valid {
+      border-color: #28a745;
+    }
+
+    input.invalid {
+      border-color: #dc3545;
+    }
+
+    /* Password Input Wrapper for Toggle */
+    .password-field-wrapper {
+      position: relative;
+      width: 100%;
+      margin: 8px 0;
+    }
+
+    .password-field-wrapper input {
+      margin: 0;
+      padding-right: 50px;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      cursor: pointer;
+      color: var(--text-secondary);
+      font-size: 16px;
+      transition: color 0.3s;
+      z-index: 10;
+    }
+
+    .toggle-password:hover {
+      color: var(--accent-blue);
+    }
+
+    /* Password Strength */
+    .password-strength {
+      height: 4px;
+      border-radius: 2px;
+      margin: 5px 0 10px;
+      background: #eee;
+      width: 100%;
+      overflow: hidden;
+      display: none;
+    }
+
+    .password-strength-bar {
+      height: 100%;
+      transition: all 0.3s ease;
+      width: 0%;
+    }
+
+    .password-strength.weak .password-strength-bar {
+      width: 33%;
+      background: #dc3545;
+    }
+
+    .password-strength.medium .password-strength-bar {
+      width: 66%;
+      background: #ffc107;
+    }
+
+    .password-strength.strong .password-strength-bar {
+      width: 100%;
+      background: #28a745;
     }
 
     .file-input-wrapper {
@@ -181,7 +366,7 @@
     input[type="file"] {
       padding: 10px;
       font-size: 14px;
-      color: #555;
+      color: var(--text-secondary);
     }
 
     .form-container {
@@ -195,10 +380,15 @@
       left: 0;
       width: 50%;
       z-index: 2;
+      opacity: 1;
+      background-color: white;
     }
 
     .container.active .sign-in {
       transform: translateX(100%);
+      opacity: 0;
+      z-index: 1;
+      pointer-events: none;
     }
 
     .sign-up {
@@ -206,12 +396,15 @@
       width: 50%;
       opacity: 0;
       z-index: 1;
+      pointer-events: none;
+      background-color: white;
     }
 
     .container.active .sign-up {
       transform: translateX(100%);
       opacity: 1;
       z-index: 5;
+      pointer-events: auto;
       animation: move 0.6s;
     }
 
@@ -235,14 +428,24 @@
     }
 
     .social-icons a {
-      border: 1px solid #ccc;
-      border-radius: 20%;
+      border: 1px solid #ddd;
+      border-radius: 50%;
       display: inline-flex;
       justify-content: center;
       align-items: center;
-      margin: 0 3px;
-      width: 40px;
-      height: 40px;
+      margin: 0 5px;
+      width: 45px;
+      height: 45px;
+      transition: all 0.3s ease;
+      color: var(--primary-blue);
+      background: white;
+    }
+
+    .social-icons a:hover {
+      background: var(--primary-blue);
+      color: white;
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(8, 31, 61, 0.2);
     }
 
     .toggle-container {
@@ -253,17 +456,17 @@
       height: 100%;
       overflow: hidden;
       transition: all 0.6s ease-in-out;
-      border-radius: 150px 0 0 100px;
+      border-radius: 100px 0 0 100px;
       z-index: 1000;
     }
 
     .container.active .toggle-container {
       transform: translateX(-100%);
-      border-radius: 0 150px 100px 0;
+      border-radius: 0 100px 100px 0;
     }
 
     .toggle {
-      background-color: #2b1369;
+      background: var(--gradient-primary);
       height: 100%;
       color: #fff;
       position: relative;
@@ -285,10 +488,32 @@
       align-items: center;
       justify-content: center;
       flex-direction: column;
-      padding: 0 30px;
+      padding: 0 40px;
       text-align: center;
       top: 0;
       transition: all 0.6s ease-in-out;
+    }
+
+    .toggle-panel h1 {
+      color: white;
+      font-size: 2.2rem;
+    }
+
+    .toggle-panel p {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 20px 0 30px;
+    }
+
+    .toggle-panel button {
+      background: transparent;
+      border: 2px solid #fff;
+      box-shadow: none;
+    }
+
+    .toggle-panel button:hover {
+      background: #fff;
+      color: var(--primary-blue);
+      transform: translateY(-3px);
     }
 
     .toggle-left {
@@ -310,7 +535,7 @@
 
     .spinner {
       border: 3px solid #f3f3f3;
-      border-top: 3px solid #2b1369;
+      border-top: 3px solid var(--primary-blue);
       border-radius: 50%;
       width: 16px;
       height: 16px;
@@ -331,11 +556,13 @@
     }
 
     .message {
-      padding: 10px;
+      padding: 12px;
       margin: 10px 0;
-      border-radius: 5px;
-      font-size: 12px;
+      border-radius: 8px;
+      font-size: 13px;
       display: none;
+      width: 100%;
+      text-align: center;
     }
 
     .message.success {
@@ -358,36 +585,226 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(8, 31, 61, 0.6);
+      backdrop-filter: blur(5px);
     }
 
     .modal-content {
       background: #fff;
-      margin: 15% auto;
-      padding: 30px;
-      border-radius: 15px;
+      margin: 10% auto;
+      padding: 40px;
+      border-radius: 20px;
       width: 90%;
-      max-width: 400px;
+      max-width: 450px;
       text-align: center;
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
+      animation: slideDown 0.4s ease;
+    }
+
+    @keyframes slideDown {
+      from {
+        opacity: 0;
+        transform: translateY(-50px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-content h2 {
+      color: var(--primary-blue);
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .modal-content input {
+      margin: 15px 0;
+    }
+
+    .modal-step {
+      display: none;
+    }
+
+    .modal-step.active {
+      display: block;
+    }
+
+    .welcome-heading {
+      text-align: center;
+      padding: 30px;
+      margin-bottom: 40px;
+      background: rgba(255, 255, 255, 0.4);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+      z-index: 10;
+    }
+
+    .welcome-heading h1 {
+      font-family: 'Kalam', cursive;
+      color: var(--primary-blue);
+      font-size: 36px;
+      font-weight: 700;
+      margin: 0;
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Password Display in Modal */
+    .password-display {
+      background: #fcfaff;
+      border: 2px dashed var(--accent-blue);
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 12px;
+      text-align: center;
+    }
+
+    .password-display h3 {
+      color: var(--primary-blue);
+      margin-bottom: 15px;
+      font-size: 16px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .password-text {
+      background: white;
+      padding: 15px;
+      border-radius: 8px;
+      font-family: 'Courier New', monospace;
+      font-size: 22px;
+      color: var(--accent-red);
+      font-weight: bold;
+      letter-spacing: 3px;
+      margin-bottom: 15px;
+      word-break: break-all;
+      border: 1px solid #eee;
+    }
+
+    .copy-btn {
+      background: #28a745;
+      margin-top: 10px;
+      width: auto;
+      padding: 10px 25px;
+    }
+
+    .copy-btn:hover {
+      background: #218838;
+    }
+
+    .copy-btn.copied {
+      background: #6c757d;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .container {
+        width: 100%;
+        min-height: 600px;
+        border-radius: 0;
+        box-shadow: none;
+        backdrop-filter: none;
+        background: transparent;
+      }
+
+      .form-container {
+        width: 100%;
+        position: relative;
+        height: auto;
+        min-height: 480px;
+        background: var(--glass-bg);
+        margin-bottom: 20px;
+        border-radius: 20px;
+        padding: 40px 20px;
+        box-shadow: var(--shadow-soft);
+      }
+
+      .sign-up,
+      .sign-in {
+        width: 100%;
+        left: 0;
+        z-index: 1;
+        opacity: 1;
+        transform: none !important;
+        animation: none;
+      }
+
+      /* Hide the animated toggle on mobile, show both forms stacked or simplify */
+      .toggle-container {
+        display: none;
+      }
+
+      /* Since toggle is gone, we need a way to switch. For now, let's stack them or better yet -
+         keep the toggle logic but just hide visual panel and toggle visibility of forms manually.
+         Actually simpler: Just stack them for now or use a simple tab system.
+         But to preserve the JS logic, let's keep one hidden and one shown via CSS classes.
+       */
+      .sign-up {
+        display: none;
+      }
+
+      .container.active .sign-in {
+        display: none;
+      }
+
+      .container.active .sign-up {
+        display: flex;
+        opacity: 1;
+      }
+
+      /* Mobile Switches */
+      .mobile-toggle {
+        display: block;
+        text-align: center;
+        margin-top: 20px;
+      }
+
+      .mobile-toggle span {
+        color: var(--accent-blue);
+        cursor: pointer;
+        font-weight: 700;
+        text-decoration: underline;
+      }
     }
   </style>
 </head>
 
 <body>
+  <div class="bg-decoration"></div>
+
+  <!-- Welcome Heading -->
+  <div class="welcome-heading">
+    <h1>Welcome Academia Teacher</h1>
+  </div>
+
   <div class="container" id="container">
     <div class="form-container sign-up">
       <form onsubmit="handleSignUp(event)">
         <h1>Create Account</h1>
         <div class="social-icons">
-          <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
-          <a href="#" class="icon"><i class="fa-brands fa-github"></i></a>
+          <a href="index.html" class="home-icon-link" title="Back to Home">
+            <i class="fa-solid fa-home"></i>
+          </a>
         </div>
-        <span>or use email for registration</span>
-        <input type="text" id="signupName" placeholder="Name" required />
-        <input type="email" id="signupEmail" placeholder="Email" required />
-        <input type="password" id="signupPassword" placeholder="Password" required />
+        <span>use your email for registration</span>
+        <input type="text" id="signupName" placeholder="Full Name" required />
+        <input type="email" id="signupEmail" placeholder="Email Address" required />
+        <div class="password-field-wrapper">
+          <input type="password" id="signupPassword" placeholder="Password (min 8 chars)" required />
+          <i class="fa-solid fa-eye-slash toggle-password"
+            onclick="togglePasswordVisibility('signupPassword', this)"></i>
+        </div>
+        <div class="password-strength" id="passwordStrength">
+          <div class="password-strength-bar"></div>
+        </div>
         <div class="message" id="signupMessage"></div>
         <button type="submit" id="signupBtn">Sign Up</button>
+        <div class="mobile-toggle" style="display:none;">
+          <p>Already have an account? <span id="mobileToLogin">Sign In</span></p>
+        </div>
       </form>
     </div>
 
@@ -395,15 +812,23 @@
       <form onsubmit="handleSignIn(event)">
         <h1>Sign In</h1>
         <div class="social-icons">
-          <a href="#" class="icon"><i class="fa-brands fa-google"></i></a>
-          <a href="#" class="icon"><i class="fa-brands fa-linkedin-in"></i></a>
+          <a href="index.html" class="home-icon-link" title="Back to Home">
+            <i class="fa-solid fa-home"></i>
+          </a>
         </div>
-        <span>or use your email password</span>
-        <input type="email" id="loginEmail" placeholder="Email" required />
-        <input type="password" id="loginPassword" placeholder="Password" required />
-        <a href="#" onclick="handleForgotPassword()">Forgot Password?</a>
+        <span>use your verified email account</span>
+        <input type="email" id="loginEmail" placeholder="Email Address" required />
+        <div class="password-field-wrapper">
+          <input type="password" id="loginPassword" placeholder="Password" required />
+          <i class="fa-solid fa-eye-slash toggle-password"
+            onclick="togglePasswordVisibility('loginPassword', this)"></i>
+        </div>
+        <a href="#" onclick="handleForgotPassword()">Forgot Your Password?</a>
         <div class="message" id="signinMessage"></div>
         <button type="submit" id="signinBtn">Sign In</button>
+        <div class="mobile-toggle" style="display:none;">
+          <p>Don't have an account? <span id="mobileToRegister">Sign Up</span></p>
+        </div>
       </form>
     </div>
 
@@ -411,12 +836,12 @@
       <div class="toggle">
         <div class="toggle-panel toggle-left">
           <h1>Welcome Back!</h1>
-          <p>To keep connected with us please login with your personal info</p>
+          <p>To access your dashboard and manage student files, please login with your personal info.</p>
           <button id="login">Sign In</button>
         </div>
         <div class="toggle-panel toggle-right">
           <h1>Hello, Teacher!</h1>
-          <p>Enter your personal details and start journey with us</p>
+          <p>Enter your personal details to create an account and start your journey with UPSC Academia.</p>
           <button id="register">Sign Up</button>
         </div>
       </div>
@@ -424,11 +849,17 @@
   </div>
 
   <div id="dashboard">
-    <h1 id="welcomeUser" style="color: #2b1369;">Welcome!</h1>
+    <div class="social-icons" style="text-align: right;">
+      <a href="index.html" class="home-icon-link" title="Back to Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </div>
+    <h1 id="welcomeUser" style="color: var(--primary-blue); font-family: 'Kalam', cursive;">Welcome!</h1>
     <p>Academia Management Dashboard</p>
 
     <div class="upload-box">
-      <h3><i class="fa-solid fa-cloud-arrow-up"></i> Upload Document</h3>
+      <h3 style="color: var(--primary-blue); margin-bottom: 15px;"><i class="fa-solid fa-cloud-arrow-up"></i> Upload
+        Document</h3>
       <div class="file-input-wrapper">
         <input type="file" id="fileInput">
       </div>
@@ -437,158 +868,400 @@
     </div>
 
     <div class="file-list-section">
-      <h3 style="color: #2b1369; border-bottom: 2px solid #b890e6; padding-bottom: 10px; margin-top: 20px;">
-        <i class="fa-solid fa-folder-open"></i> Class Files
+      <h3
+        style="color: var(--primary-blue); border-bottom: 2px solid var(--accent-red); padding-bottom: 15px; margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+        <span><i class="fa-solid fa-folder-open"></i> Class Files</span>
         <button onclick="loadDriveFiles()"
-          style="float: right; padding: 5px 15px; font-size: 10px; margin-top: -5px;">Refresh</button>
+          style="padding: 8px 15px; font-size: 11px; margin: 0; background: var(--text-secondary);">Refresh
+          List</button>
       </h3>
 
-      <div id="fileLoader" style="display:none; text-align:center; padding: 20px;">
-        <span class="spinner"></span> Loading files...
+      <div id="fileLoader" style="display:none; text-align:center; padding: 30px;">
+        <span class="spinner" style="width: 24px; height: 24px; border-width: 3px;"></span>
+        <p style="margin-top: 10px; font-size: 13px;">Fetching files from Drive...</p>
       </div>
 
-      <div id="fileContainer" style="max-height: 300px; overflow-y: auto; margin-top: 15px;">
+      <div id="fileContainer" style="max-height: 350px; overflow-y: auto; margin-top: 20px; padding-right: 5px;">
+        <!-- Files will be injected here -->
       </div>
     </div>
 
-    <button style="margin-top: 30px; background: #666;" onclick="location.reload()">Sign Out</button>
+    <button style="margin-top: 40px; background: #636e72;" onclick="clearSession()">
+      <i class="fa-solid fa-right-from-bracket"></i> Sign Out
+    </button>
   </div>
 
+  <!-- OPT MODAL -->
   <div id="otpModal" class="modal">
     <div class="modal-content">
-      <h2>Verify OTP</h2>
-      <input type="text" id="otpInput" placeholder="6-digit OTP" maxlength="6" />
-      <div id="otpMessage" class="message"></div>
-      <button onclick="verifyOTP()">Verify</button>
-      <button style="background:#666" onclick="closeOTPModal()">Cancel</button>
+      <!-- Step 1: Email Entry -->
+      <div id="emailStep" class="modal-step active">
+        <h2><i class="fa-solid fa-lock"></i> Forgot Password</h2>
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Enter your registered email address to receive a
+          secure OTP.</p>
+        <input type="email" id="forgotEmail" placeholder="Enter your email" />
+        <div id="emailMessage" class="message"></div>
+        <button onclick="sendOTP()">Send OTP</button>
+        <button style="background:transparent; color:#666; box-shadow:none; margin-top:5px;"
+          onclick="closeOTPModal()">Cancel</button>
+      </div>
+
+      <!-- Step 2: OTP Verification -->
+      <div id="otpStep" class="modal-step">
+        <h2><i class="fa-solid fa-shield-halved"></i> Verify OTP</h2>
+        <p style="font-size: 14px; color: #666; margin-bottom: 20px;">We've sent a 6-digit code to your email. Please
+          enter it below.</p>
+        <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6"
+          style="text-align: center; letter-spacing: 5px; font-size: 18px; font-weight: bold;" />
+        <div id="otpMessage" class="message"></div>
+        <button onclick="verifyOTP()">Verify Code</button>
+        <button style="background:transparent; color:#666; box-shadow:none;" onclick="goBackToEmail()">Back</button>
+      </div>
+
+      <!-- Step 3: Password Display -->
+      <div id="passwordStep" class="modal-step">
+        <h2><i class="fa-solid fa-key"></i> Password Retrieved</h2>
+        <div class="password-display">
+          <h3>Your Password</h3>
+          <div class="password-text" id="retrievedPassword">••••••••</div>
+          <button class="copy-btn" onclick="copyPassword()" id="copyBtn">
+            <i class="fa-solid fa-copy"></i> Copy
+          </button>
+        </div>
+        <p style="font-size: 13px; color: #666; margin-top: 15px;">Your password has been auto-filled in the login form.
+        </p>
+        <button style="background:var(--primary-blue)" onclick="closePasswordModal()">Login Now</button>
+      </div>
     </div>
   </div>
 
   <script>
     // **IMPORTANT**: Replace this URL with your Google Apps Script Web App URL
-    const API_URL = 'https://script.google.com/macros/s/AKfycbxANRcOBhLEggbzj-fPn7sMyGFZa0D4XHeJDL5dEWFNi_pdWs657s2N3WnPdNoAYdo/exec';
+    const API_URL = 'https://script.google.com/macros/s/AKfycbwa7D-JdpLZKr_AAlsSSgmZPOH9unrtXTl1KREH7RZwJmJDrZO7d1IzOoHy5gG328Rr/exec';
 
     const container = document.getElementById('container');
     const dash = document.getElementById('dashboard');
     const registerBtn = document.getElementById('register');
     const loginBtn = document.getElementById('login');
-    let currentEmail = '';
 
+    // Mobile toggle buttons
+    const mobileToRegister = document.getElementById('mobileToRegister');
+    const mobileToLogin = document.getElementById('mobileToLogin');
+
+    let currentEmail = '';
+    let retrievedPassword = '';
+
+    // Check for mobile layout to enable manual toggling
+    function checkMobile() {
+      if (window.innerWidth <= 768) {
+        document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'block');
+      } else {
+        document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'none');
+      }
+    }
+
+    window.addEventListener('resize', checkMobile);
+
+    // Initial check
+    checkMobile();
+
+    // Password visibility toggle
+    function togglePasswordVisibility(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
+      }
+    }
+
+    // =============================================
+    // SESSION MANAGEMENT
+    // =============================================
+
+    // Load session on page load
+    window.addEventListener('DOMContentLoaded', function () {
+      checkMobile();
+
+      // Existing session check
+      const session = localStorage.getItem('staffPortalSession');
+      if (session) {
+        try {
+          const userData = JSON.parse(session);
+          container.style.display = 'none';
+          document.querySelector('.welcome-heading').style.display = 'none'; // Hide heading on dashboard
+          dash.style.display = 'block';
+          document.getElementById('welcomeUser').textContent = "Welcome back, " + userData.userName;
+          loadDriveFiles();
+        } catch (e) {
+          localStorage.removeItem('staffPortalSession');
+        }
+      }
+    });
+
+    // Save session to localStorage
+    function saveSession(userName, email) {
+      const sessionData = { userName, email, timestamp: Date.now() };
+      localStorage.setItem('staffPortalSession', JSON.stringify(sessionData));
+    }
+
+    // Clear session (logout)
+    function clearSession() {
+      localStorage.removeItem('staffPortalSession');
+      location.reload();
+    }
+
+    // Toggle Logic
     registerBtn.addEventListener('click', () => container.classList.add("active"));
     loginBtn.addEventListener('click', () => container.classList.remove("active"));
 
-    /**
-     * Helper function to call Apps Script API
-     */
+    // Mobile specific toggles
+    if (mobileToRegister) {
+      mobileToRegister.addEventListener('click', () => {
+        container.classList.add("active");
+      });
+    }
+
+    if (mobileToLogin) {
+      mobileToLogin.addEventListener('click', () => {
+        container.classList.remove("active");
+      });
+    }
+
+    // =============================================
+    // CLIENT-SIDE VALIDATION
+    // =============================================
+
+    // Email validation (instant feedback)
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    // Password strength checker
+    function checkPasswordStrength(password) {
+      const strengthMeter = document.getElementById('passwordStrength');
+      let strength = 0;
+
+      if (password.length >= 8) strength++;
+      if (password.length >= 12) strength++;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+      strengthMeter.classList.remove('weak', 'medium', 'strong');
+
+      if (password.length > 0) {
+        strengthMeter.style.display = 'block';
+        if (strength <= 2) {
+          strengthMeter.classList.add('weak');
+          return 'weak';
+        } else if (strength <= 4) {
+          strengthMeter.classList.add('medium');
+          return 'medium';
+        } else {
+          strengthMeter.classList.add('strong');
+          return 'strong';
+        }
+      } else {
+        strengthMeter.style.display = 'none';
+      }
+      return '';
+    }
+
+    // Add real-time validation listeners
+    document.getElementById('signupEmail').addEventListener('input', function (e) {
+      if (e.target.value) {
+        if (validateEmail(e.target.value)) {
+          e.target.classList.remove('invalid');
+          e.target.classList.add('valid');
+        } else {
+          e.target.classList.remove('valid');
+          e.target.classList.add('invalid');
+        }
+      } else {
+        e.target.classList.remove('valid', 'invalid');
+      }
+    });
+
+    document.getElementById('loginEmail').addEventListener('input', function (e) {
+      if (e.target.value) {
+        if (validateEmail(e.target.value)) {
+          e.target.classList.remove('invalid');
+          e.target.classList.add('valid');
+        } else {
+          e.target.classList.remove('valid');
+          e.target.classList.add('invalid');
+        }
+      } else {
+        e.target.classList.remove('valid', 'invalid');
+      }
+    });
+
+    document.getElementById('signupPassword').addEventListener('input', function (e) {
+      checkPasswordStrength(e.target.value);
+    });
+
+    // =============================================
+    // API HELPER
+    // =============================================
+
     async function callAPI(action, data = {}) {
-      const url = `${API_URL}?action=${action}&data=${encodeURIComponent(JSON.stringify(data))}`;
-      const response = await fetch(url);
-      return await response.json();
-    }
-
-    function showMessage(id, text, success) {
-      const el = document.getElementById(id);
-      el.textContent = text;
-      el.className = `message ${success ? 'success' : 'error'}`;
-      el.style.display = 'block';
-    }
-
-    async function handleSignUp(e) {
-      e.preventDefault();
-      const btn = document.getElementById('signupBtn');
-      const data = {
-        name: document.getElementById('signupName').value,
-        email: document.getElementById('signupEmail').value,
-        password: document.getElementById('signupPassword').value
-      };
-      btn.disabled = true;
-      btn.innerHTML = 'Processing... <span class="spinner"></span>';
+      // Use URLSearchParams (form-encoded) for compatibility with Code.gs
+      // Code.gs handleApiRequest expects 'action' and 'data' (JSON stringified)
+      const params = new URLSearchParams();
+      params.append('action', action);
+      params.append('data', JSON.stringify(data));
 
       try {
-        const res = await callAPI('signup', data);
-        btn.disabled = false;
-        btn.innerHTML = 'Sign Up';
-        showMessage('signupMessage', res.message, res.success);
-        if (res.success) setTimeout(() => container.classList.remove("active"), 2000);
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
       } catch (error) {
-        btn.disabled = false;
-        btn.innerHTML = 'Sign Up';
-        showMessage('signupMessage', 'Error: ' + error.toString(), false);
+        console.error('API Call failed:', error);
+        return { success: false, message: 'Connection Error: ' + error.message };
       }
     }
 
-    async function handleSignIn(e) {
-      e.preventDefault();
-      const btn = document.getElementById('signinBtn');
-      const data = {
-        email: document.getElementById('loginEmail').value,
-        password: document.getElementById('loginPassword').value
-      };
-      btn.disabled = true;
-      btn.innerHTML = 'Signing in... <span class="spinner"></span>';
+    // =============================================
+    // AUTHENTICATION LOGIC
+    // =============================================
+
+    async function handleSignUp(event) {
+      event.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const messageDiv = document.getElementById('signupMessage');
+      const btn = document.getElementById('signupBtn');
+
+      if (!validateEmail(email)) {
+        showMessage(messageDiv, 'Invalid Email Format', false);
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage(messageDiv, 'Password must be at least 8 characters', false);
+        return;
+      }
+
+      setLoading(btn, true);
 
       try {
-        const res = await callAPI('login', data);
-        btn.disabled = false;
-        btn.innerHTML = 'Sign In';
-        if (res.success) {
-          container.style.display = 'none';
-          dash.style.display = 'block';
-          document.getElementById('welcomeUser').textContent = "Welcome, " + res.userName;
-
-          // Trigger file loading on successful login
-          loadDriveFiles();
-
+        const result = await callAPI('signup', { name, email, password });
+        if (result.success) {
+          showMessage(messageDiv, 'Sign up successful! Please login.', true);
+          // Auto switch to login after 2 seconds
+          setTimeout(() => {
+            container.classList.remove("active");
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            messageDiv.style.display = 'none';
+          }, 2000);
         } else {
-          showMessage('signinMessage', res.message, false);
+          showMessage(messageDiv, result.message || 'Sign up failed', false);
         }
       } catch (error) {
-        btn.disabled = false;
-        btn.innerHTML = 'Sign In';
-        showMessage('signinMessage', 'Error: ' + error.toString(), false);
+        showMessage(messageDiv, 'Network error. Try again.', false);
+        console.error(error);
+      } finally {
+        setLoading(btn, false, 'Sign Up');
       }
     }
 
-    // File Upload logic
+    async function handleSignIn(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const messageDiv = document.getElementById('signinMessage');
+      const btn = document.getElementById('signinBtn');
+
+      setLoading(btn, true);
+
+      try {
+        const result = await callAPI('login', { email, password });
+        if (result.success) {
+          showMessage(messageDiv, 'Login successful!', true);
+          saveSession(result.userName, email); // Save session
+          setTimeout(() => {
+            location.reload(); // Reload to show dashboard
+          }, 1000);
+        } else {
+          showMessage(messageDiv, result.message || 'Invalid credentials', false);
+        }
+      } catch (error) {
+        showMessage(messageDiv, 'Network error. Try again.', false);
+        console.error(error);
+      } finally {
+        setLoading(btn, false, 'Sign In');
+      }
+    }
+
+    // =============================================
+    // FILE MANAGEMENT LOGIC
+    // =============================================
+
     async function processFileUpload() {
       const fileInput = document.getElementById('fileInput');
-      const btn = document.getElementById('uploadBtn');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const statusDiv = document.getElementById('uploadStatus');
 
-      if (!fileInput.files[0]) {
-        showMessage('uploadStatus', 'Please select a file.', false);
+      if (fileInput.files.length === 0) {
+        showMessage(statusDiv, "Please select away file!", false);
         return;
       }
 
       const file = fileInput.files[0];
       const reader = new FileReader();
-      btn.disabled = true;
-      btn.innerHTML = 'Uploading... <span class="spinner"></span>';
 
       reader.onload = async function (e) {
+        const fullDataUrl = e.target.result;
+        setLoading(uploadBtn, true, "Uploading...");
+
         try {
-          const res = await callAPI('upload', {
-            base64Data: e.target.result,
-            fileName: file.name
+          // Get user from session
+          const session = JSON.parse(localStorage.getItem('staffPortalSession'));
+          const uploadedBy = session ? session.userName : 'Unknown';
+
+          const result = await callAPI('upload', {
+            fileName: file.name,
+            base64Data: fullDataUrl,
+            mimeType: file.type,
+            uploadedBy: uploadedBy
           });
-          btn.disabled = false;
-          btn.innerHTML = 'Upload to Drive';
-          if (res.success) {
-            showMessage('uploadStatus', 'File uploaded successfully!', true);
-            fileInput.value = '';
-            loadDriveFiles(); // Refresh list after upload
+
+          if (result.success) {
+            showMessage(statusDiv, "File uploaded successfully!", true);
+            fileInput.value = ""; // Clear input
+            loadDriveFiles(); // Refresh list
           } else {
-            showMessage('uploadStatus', 'Error: ' + res.message, false);
+            showMessage(statusDiv, "Upload failed: " + result.message, false);
           }
         } catch (error) {
-          btn.disabled = false;
-          btn.innerHTML = 'Upload to Drive';
-          showMessage('uploadStatus', 'Error: ' + error.toString(), false);
+          showMessage(statusDiv, "Error uploading file.", false);
+          console.error(error);
+        } finally {
+          setLoading(uploadBtn, false, "Upload to Drive");
         }
       };
+
       reader.readAsDataURL(file);
     }
 
-    // Load Drive Files
     async function loadDriveFiles() {
       const container = document.getElementById('fileContainer');
       const loader = document.getElementById('fileLoader');
@@ -597,77 +1270,199 @@
       loader.style.display = 'block';
 
       try {
-        const response = await callAPI('getFiles');
-        renderFiles(response);
+        const result = await callAPI('getFiles');
+
+        loader.style.display = 'none';
+
+        if (result.success && result.files && result.files.length > 0) {
+          result.files.forEach(file => {
+            const fileDiv = document.createElement('div');
+            fileDiv.className = 'file-item';
+
+            // Determine icon based on type (returned from Code.gs)
+            let iconClass = 'fa-file';
+            const mimeType = (file.type || '').toLowerCase();
+            if (mimeType.includes('pdf')) iconClass = 'fa-file-pdf';
+            else if (mimeType.includes('image')) iconClass = 'fa-file-image';
+            else if (mimeType.includes('word') || mimeType.includes('document')) iconClass = 'fa-file-word';
+            else if (mimeType.includes('sheet') || mimeType.includes('excel')) iconClass = 'fa-file-excel';
+
+            fileDiv.innerHTML = `
+                        <div class="file-name">
+                            <i class="fa-solid ${iconClass}"></i>
+                            <div>
+                                ${file.name}<br>
+                                <span style="font-size:10px; color:#999;">Type: ${file.type || 'File'}</span>
+                            </div>
+                        </div>
+                        <div class="file-actions">
+                            <a href="${file.url}" target="_blank" class="view-btn"><i class="fa-solid fa-eye"></i> View</a>
+                            <a href="${file.downloadUrl}" target="_blank" class="view-btn" style="background: var(--accent-red); margin-left: 5px;"><i class="fa-solid fa-download"></i></a>
+                        </div>
+                    `;
+            container.appendChild(fileDiv);
+          });
+        } else {
+          container.innerHTML = '<p style="text-align:center; color:#666; padding: 20px;">No files found in Drive.</p>';
+        }
       } catch (error) {
         loader.style.display = 'none';
-        container.innerHTML = '<p style="color:red; text-align:center;">Error loading files: ' + error.toString() + '</p>';
+        container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load files.</p>';
+        console.error(error);
       }
     }
 
-    // Render Files
-    function renderFiles(response) {
-      const container = document.getElementById('fileContainer');
-      const loader = document.getElementById('fileLoader');
-      loader.style.display = 'none';
 
-      if (!response.success) {
-        container.innerHTML = '<p style="color:red; text-align:center;">Error loading files.</p>';
-        return;
-      }
+    // =============================================
+    // UI UTILITIES
+    // =============================================
 
-      if (response.files.length === 0) {
-        container.innerHTML = '<p style="text-align:center; color:#666;">No files found in this folder.</p>';
-        return;
-      }
-
-      const fileHtml = response.files.map(file => `
-          <div class="file-item">
-            <div class="file-name">
-              <i class="fa-solid fa-file"></i> ${file.name}
-            </div>
-            <div class="file-actions">
-              <a href="${file.url}" target="_blank" class="view-btn"><i class="fa-solid fa-eye"></i> View</a>
-              <a href="${file.downloadUrl}" class="download-btn"><i class="fa-solid fa-download"></i> Download</a>
-            </div>
-          </div>
-        `).join('');
-
-      container.innerHTML = fileHtml;
+    function showMessage(element, text, isSuccess) {
+      element.textContent = text;
+      element.className = isSuccess ? 'message success' : 'message error';
+      element.style.display = 'block';
     }
 
-    // OTP Functions
-    async function handleForgotPassword() {
-      const email = prompt("Enter registered email:");
-      if (!email) return;
-      currentEmail = email;
+    function setLoading(button, isLoading, text = '') {
+      if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = '<div class="spinner"></div> Processing...';
+      } else {
+        button.disabled = false;
+        button.innerHTML = text;
+      }
+    }
+
+    // =============================================
+    // FORGOT PASSWORD MODAL LOGIC
+    // =============================================
+
+    function handleForgotPassword() {
+      const modal = document.getElementById('otpModal');
+      const emailStep = document.getElementById('emailStep');
+      const otpStep = document.getElementById('otpStep');
+      const passwordStep = document.getElementById('passwordStep');
+
+      // Reset
+      emailStep.classList.add('active');
+      otpStep.classList.remove('active');
+      passwordStep.classList.remove('active');
+      document.getElementById('forgotEmail').value = '';
+      document.getElementById('otpInput').value = '';
+      document.getElementById('emailMessage').style.display = 'none';
+      document.getElementById('otpMessage').style.display = 'none';
+
+      modal.style.display = 'block';
+    }
+
+    function closeOTPModal() {
+      document.getElementById('otpModal').style.display = 'none';
+    }
+
+    async function sendOTP() {
+      const email = document.getElementById('forgotEmail').value;
+      const messageDiv = document.getElementById('emailMessage');
+
+      if (!validateEmail(email)) {
+        showMessage(messageDiv, 'Please enter a valid email', false);
+        return;
+      }
+
+      currentEmail = email; // Store for verification step
+
+      // Show loading
+      const btn = document.querySelector('#emailStep button:first-of-type');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = "Sending...";
 
       try {
-        const res = await callAPI('forgotPassword', { email: email });
-        if (res.showOTPInput) document.getElementById('otpModal').style.display = 'block';
-        alert(res.message);
-      } catch (error) {
-        alert('Error: ' + error.toString());
+        const result = await callAPI('forgotPassword', { email: email });
+
+        if (result.success) {
+          // Switch to OTP step
+          document.getElementById('emailStep').classList.remove('active');
+          document.getElementById('otpStep').classList.add('active');
+        } else {
+          showMessage(messageDiv, result.message || 'Failed to send OTP', false);
+        }
+      } catch (e) {
+        showMessage(messageDiv, 'Error connecting to server', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = originalText;
       }
+    }
+
+    function goBackToEmail() {
+      document.getElementById('otpStep').classList.remove('active');
+      document.getElementById('emailStep').classList.add('active');
     }
 
     async function verifyOTP() {
       const otp = document.getElementById('otpInput').value;
+      const messageDiv = document.getElementById('otpMessage');
+
+      if (otp.length !== 6) {
+        showMessage(messageDiv, 'Please enter a 6-digit OTP', false);
+        return;
+      }
+
+      // Show loading
+      const btn = document.querySelector('#otpStep button:first-of-type');
+      const originalText = btn.innerText;
+      btn.disabled = true;
+      btn.innerText = "Verifying...";
 
       try {
-        const res = await callAPI('verifyOTP', { email: currentEmail, otp: otp });
-        if (res.success) {
-          alert("Your password is: " + res.password);
-          closeOTPModal();
+        const result = await callAPI('verifyOTP', { email: currentEmail, otp: otp });
+
+        if (result.success) {
+          retrievedPassword = result.password;
+          document.getElementById('retrievedPassword').textContent = retrievedPassword;
+
+          // Switch to Password step
+          document.getElementById('otpStep').classList.remove('active');
+          document.getElementById('passwordStep').classList.add('active');
         } else {
-          showMessage('otpMessage', res.message, false);
+          showMessage(messageDiv, result.message || 'Invalid OTP', false);
         }
-      } catch (error) {
-        showMessage('otpMessage', 'Error: ' + error.toString(), false);
+      } catch (e) {
+        showMessage(messageDiv, 'Error verifying OTP', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerText = originalText;
       }
     }
 
-    function closeOTPModal() { document.getElementById('otpModal').style.display = 'none'; }
+    function copyPassword() {
+      navigator.clipboard.writeText(retrievedPassword).then(() => {
+        const copyBtn = document.getElementById('copyBtn');
+        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+        copyBtn.classList.add('copied');
+
+        setTimeout(() => {
+          copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      });
+    }
+
+    function closePasswordModal() {
+      closeOTPModal();
+      // Auto-fill login
+      document.getElementById('loginEmail').value = currentEmail;
+      document.getElementById('loginPassword').value = retrievedPassword;
+      container.classList.remove("active"); // Switch to sign in view
+    }
+
+    // Close modal if clicked outside
+    window.onclick = function (event) {
+      const modal = document.getElementById('otpModal');
+      if (event.target == modal) {
+        modal.style.display = "none";
+      }
+    }
   </script>
 </body>
 

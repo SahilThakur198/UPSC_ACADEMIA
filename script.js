@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (contactForm) {
     contactForm.addEventListener("submit", function (e) {
       e.preventDefault()
-      alert("Thank you for your message! We will get back to you soon.")
+      showPopup("Thank you for your message! We will get back to you soon.", "success")
       this.reset()
     })
   }
@@ -249,27 +249,41 @@ function initParticleAnimation() {
     let mouseX = 0
     let mouseY = 0
 
-    window.addEventListener("mousemove", (e) => {
+    const throttle = (func, limit) => {
+      let inThrottle
+      return function () {
+        const args = arguments
+        const context = this
+        if (!inThrottle) {
+          func.apply(context, args)
+          inThrottle = true
+          setTimeout(() => (inThrottle = false), limit)
+        }
+      }
+    }
+
+    const throttledBackgroundUpdate = throttle((e) => {
       mouseX = e.clientX / window.innerWidth
       mouseY = e.clientY / window.innerHeight
-
       bgDecoration.style.background = `
                   linear-gradient(135deg, 
                   rgba(10, 43, 87, ${0.05 + mouseX * 0.05}) 0%, 
                   rgba(216, 27, 33, ${0.05 + mouseY * 0.05}) 100%)
               `
-    })
+    }, 100)
 
-    window.addEventListener("mousemove", (e) => {
+    const throttledParticleUpdate = throttle((e) => {
       const particles = particlesContainer.querySelectorAll(".particle")
       particles.forEach((particle, index) => {
         const speed = ((index % 3) + 1) * 0.5
         const x = (e.clientX - window.innerWidth / 2) * speed * 0.01
         const y = (e.clientY - window.innerHeight / 2) * speed * 0.01
-
         particle.style.transform = `translate(${x}px, ${y}px)`
       })
-    })
+    }, 50)
+
+    window.addEventListener("mousemove", throttledBackgroundUpdate)
+    window.addEventListener("mousemove", throttledParticleUpdate)
   }
 }
 
@@ -304,11 +318,10 @@ function initHomePage() {
   initScrollEffects()
   initMapLoader()
   initFAQ()
-  debugContactSection()
 }
 
 function initScrollEffects() {
-  const observer = new IntersectionObserver(
+  const scrollObserver = new IntersectionObserver(
     (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -318,11 +331,25 @@ function initScrollEffects() {
     },
     { threshold: 0.1 },
   )
-  document.querySelectorAll(".fade-in").forEach((el) => observer.observe(el))
+  document.querySelectorAll(".fade-in").forEach((el) => scrollObserver.observe(el))
 
   const sections = document.querySelectorAll("section[id]")
   const navLinks = document.querySelectorAll(".nav-menu a.nav-link")
-  window.addEventListener("scroll", () => {
+
+  const throttle = (func, limit) => {
+    let inThrottle
+    return function () {
+      const args = arguments
+      const context = this
+      if (!inThrottle) {
+        func.apply(context, args)
+        inThrottle = true
+        setTimeout(() => (inThrottle = false), limit)
+      }
+    }
+  }
+
+  const handleScroll = throttle(() => {
     let current = ""
     const navbarEl = document.querySelector(".navbar")
     const navbarHeight = navbarEl ? navbarEl.offsetHeight : 0
@@ -339,7 +366,9 @@ function initScrollEffects() {
         link.classList.add("active")
       }
     })
-  })
+  }, 100)
+
+  window.addEventListener("scroll", handleScroll)
 }
 
 function initMapLoader() {
@@ -387,63 +416,7 @@ function initMapLoader() {
 }
 
 function debugContactSection() {
-  console.log("[v0] Debugging contact section layout")
-
-  const contactSection = document.getElementById("contact")
-  const contactContent = document.querySelector(".contact-content")
-  const contactDetails = document.querySelector(".contact-details")
-  const contactFormWrapper = document.querySelector(".contact-form-wrapper")
-  const chatbotContainer = document.querySelector(".chatbot-container")
-  const mapContainer = document.querySelector(".map-container")
-
-  if (contactSection) {
-    const rect = contactSection.getBoundingClientRect()
-    console.log("[v0] Contact section dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Contact section position:", rect.left, rect.top)
-  }
-
-  if (contactContent) {
-    const rect = contactContent.getBoundingClientRect()
-    console.log("[v0] Contact content dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Contact content overflow:", rect.right > window.innerWidth ? "YES" : "NO")
-  }
-
-  if (contactDetails) {
-    const rect = contactDetails.getBoundingClientRect()
-    console.log("[v0] Contact details dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Contact details overflow:", rect.right > window.innerWidth ? "YES" : "NO")
-  }
-
-  if (contactFormWrapper) {
-    const rect = contactFormWrapper.getBoundingClientRect()
-    console.log("[v0] Contact form wrapper dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Contact form wrapper overflow:", rect.right > window.innerWidth ? "YES" : "NO")
-  }
-
-  if (chatbotContainer) {
-    const rect = chatbotContainer.getBoundingClientRect()
-    console.log("[v0] Chatbot container dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Chatbot container overflow:", rect.right > window.innerWidth ? "YES" : "NO")
-  }
-
-  if (mapContainer) {
-    const rect = mapContainer.getBoundingClientRect()
-    console.log("[v0] Map container dimensions:", rect.width, "x", rect.height)
-    console.log("[v0] Map container overflow:", rect.right > window.innerWidth ? "YES" : "NO")
-  }
-
-  // Check for horizontal scrolling
-  const bodyWidth = document.body.scrollWidth
-  const windowWidth = window.innerWidth
-  console.log("[v0] Body scroll width:", bodyWidth)
-  console.log("[v0] Window inner width:", windowWidth)
-  console.log("[v0] Horizontal overflow:", bodyWidth > windowWidth ? "YES" : "NO")
-
-  // Monitor resize events for debugging
-  window.addEventListener("resize", () => {
-    console.log("[v0] Window resized to:", window.innerWidth, "x", window.innerHeight)
-    setTimeout(() => debugContactSection(), 100)
-  })
+  // Production cleanup: removed debug logs and listeners
 }
 
 function optimizeForMobile() {

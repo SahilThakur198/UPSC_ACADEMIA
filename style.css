@@ -1600,12 +1600,29 @@ a[href^="mailto:"]:hover,
   }
 
   /* Improved mobile chatbot sizing */
-  .mobile-friendly-chatbot .chatbot-container {
-    height: 300px;
+  .contact-form-wrapper {
+    padding: 1.25rem;
+    min-height: 350px;
+    order: 1;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  .contact-form-wrapper {
-    height: 400px;
+  .mobile-friendly-chatbot .chatbot-container {
+    height: 250px;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    border-radius: 12px;
+  }
+
+  .contact-form-wrapper iframe {
+    height: 200px;
+    width: 100%;
+    max-width: 100%;
+    border-radius: 15px;
   }
 
   /* Contact section mobile fixes */
@@ -1636,32 +1653,14 @@ a[href^="mailto:"]:hover,
     flex: 1;
   }
 
-  .contact-form-wrapper {
-    padding: 1.25rem;
-    min-height: 350px;
-    order: 1;
-    width: 100%;
-  }
-
-  .mobile-friendly-chatbot .chatbot-container {
-    height: 250px;
-    width: 100%;
-    max-width: 100%;
-  }
-
-  .contact-form-wrapper iframe {
-    height: 200px;
-    width: 100%;
-    max-width: 100%;
-  }
-
   /* Fix Let's Talk button positioning */
   .contact-form-wrapper .cta-button {
-    width: calc(100% - 2rem);
+    width: 100%;
     margin: 1rem auto 0;
     padding: 0.75rem;
     font-size: 0.9rem;
     box-sizing: border-box;
+    text-align: center;
   }
 
   /* Map container mobile optimization */
@@ -1674,21 +1673,6 @@ a[href^="mailto:"]:hover,
 @media (max-width: 480px) {
 
   /* Extra small screen optimizations */
-  .navbar {
-    height: 65px;
-  }
-
-  .navbar-spacer {
-    height: 65px;
-  }
-
-  .nav-menu {
-    top: 65px;
-    height: calc(100vh - 65px);
-    height: calc(100dvh - 65px);
-    padding: 1.5rem;
-  }
-
   .hero {
     height: calc(var(--vh, 1vh) * 100 - 65px);
     min-height: 380px;
@@ -1718,16 +1702,9 @@ a[href^="mailto:"]:hover,
   }
 
   /* Better small screen layouts */
-  .about-features {
+  .about-features, .facilities-grid, .resources-grid {
     grid-template-columns: 1fr;
-  }
-
-  .facilities-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .resources-grid {
-    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .nav-container {
@@ -1747,13 +1724,18 @@ a[href^="mailto:"]:hover,
     height: 24px;
   }
 
-  /* Improved mobile chatbot sizing */
+  /* Improved mobile chatbot sizing for tiny screens */
+  .contact-form-wrapper {
+    padding: 0.75rem;
+    min-height: 320px;
+  }
+
   .mobile-friendly-chatbot .chatbot-container {
     height: 220px;
   }
 
-  .contact-form-wrapper {
-    height: 320px;
+  .contact-form-wrapper iframe {
+    height: 180px;
   }
 
   .contact-details {
@@ -1769,19 +1751,6 @@ a[href^="mailto:"]:hover,
   .contact-item i {
     margin-bottom: 0.5rem;
     align-self: flex-start;
-  }
-
-  .contact-form-wrapper {
-    padding: 0.75rem;
-    height: 320px;
-  }
-
-  .mobile-friendly-chatbot .chatbot-container {
-    height: 220px;
-  }
-
-  .contact-form-wrapper iframe {
-    height: 180px;
   }
 
   .map-container {
