@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Enroll Now - Book Demo Class | UPSC Academia Pune</title>
+  <meta name="description"
+    content="Register for a free demo class at UPSC Academia. Expert UPSC and MPSC coaching in Pune with proven results. Book your demo session now.">
+  <meta name="keywords"
+    content="UPSC demo class, MPSC demo class, enroll UPSC coaching Pune, civil services demo, UPSC Academia enrollment">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Enroll Now | UPSC Academia">
+  <meta property="og:description" content="Secure your spot and start your UPSC/MPSC journey with UPSC Academia.">
+  <meta property="og:url" content="https://academiaclass.in/enroll.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://academiaclass.in/img/logo.png">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Enroll Now | UPSC Academia">
+  <meta name="twitter:description" content="Join UPSC Academia and start your journey for UPSC and MPSC preparation.">
+  <meta name="twitter:image" content="https://academiaclass.in/img/logo.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://academiaclass.in/enroll.html">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://academiaclass.in/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Enroll",
+        "item": "https://academiaclass.in/enroll.html"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts + Icons -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Your Styles -->
+  <link rel="stylesheet" href="style.css" />
+  <script src="config.js"></script>
+</head>
+
+<body id="enroll-page">
+  <div class="bg-decoration"></div>
+
+  <!-- Header Component -->
+  <div id="site-header"></div>
+  <div class="navbar-spacer"></div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Enrollment Form -->
+    <div class="page-container">
+      <div class="enrollment-form-container">
+        <h1>Request a Demo Class</h1>
+        <form id="enrollForm">
+          <div class="form-group">
+            <label for="enrollName">Full Name</label>
+            <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name" />
+          </div>
+
+          <div class="form-group">
+            <label for="enrollEmail">Email Address</label>
+            <input type="email" id="enrollEmail" name="enrollEmail" required placeholder="example@email.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="enrollPhone">Phone Number</label>
+            <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your phone number" />
+          </div>
+
+          <div class="form-group">
+            <label for="course">Course of Interest</label>
+            <select id="course" name="course" required>
+              <option value="" disabled selected>Select a Course</option>
+              <option value="UPSC (Pre/Mains)">UPSC (Pre/Mains)</option>
+              <option value="MPSC">MPSC (पूर्व/मुख्य)</option>
+              <option value="Rajyaseva">Rajyaseva Pariksha</option>
+              <option value="PSI/STI">PSI/STI/Asst./Saral Seva</option>
+              <option value="Test Series">Comprehensive Test Series</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Submit Enrollment</button>
+          <div id="formMessage" class="form-message"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Component -->
+  <div id="site-footer"></div>
+
+  <!-- Global Chatbot Container -->
+  <div id="chatbot-container"></div>
+
+  <style>
+    .spinner {
+      border: 3px solid #f3f3f3;
+      border-top: 3px solid var(--primary-blue);
+      border-radius: 50%;
+      width: 16px;
+      height: 16px;
+      animation: spin 1s linear infinite;
+      display: inline-block;
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .form-message {
+      padding: 12px;
+      margin-top: 15px;
+      border-radius: 8px;
+      font-size: 14px;
+      display: none;
+      text-align: center;
+    }
+
+    .form-message.success {
+      background-color: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+
+    .form-message.error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+  </style>
+
+  <script>
+    // Unified API URL (Same as login.html and from centralized config)
+    const API_URL = window.UPSC_CONFIG ? window.UPSC_CONFIG.API_URL : 'https://script.google.com/macros/s/AKfycbzNSSpvoi82o0xO7dGP2dKwuVz77FieXcbJUPnBy18gGltp84A0_bVYH7iJZ6ZV7Him/exec';
+
+    async function callAPI(action, data = {}) {
+      const params = new URLSearchParams();
+      params.append('action', action);
+      params.append('data', JSON.stringify(data));
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('API Call failed:', error);
+        return { success: false, message: 'Connection Error: ' + error.message };
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const enrollForm = document.getElementById('enrollForm');
+      const submitBtn = document.getElementById('submitBtn');
+      const formMessage = document.getElementById('formMessage');
+
+      if (enrollForm) {
+        enrollForm.addEventListener('submit', async function (e) {
+          e.preventDefault();
+
+          const formData = {
+            name: document.getElementById('enrollName').value,
+            email: document.getElementById('enrollEmail').value,
+            phone: document.getElementById('enrollPhone').value,
+            course: document.getElementById('course').value
+          };
+
+          // Loading state
+          submitBtn.disabled = true;
+          const originalBtnText = submitBtn.innerHTML;
+          submitBtn.innerHTML = '<div class="spinner"></div> Processing...';
+          formMessage.style.display = 'none';
+
+          try {
+            const result = await callAPI('enroll', formData);
+
+            if (result.success) {
+              formMessage.textContent = result.message || 'Enrollment submitted successfully!';
+              formMessage.className = 'form-message success';
+              formMessage.style.display = 'block';
+              enrollForm.reset();
+            } else {
+              formMessage.textContent = result.message || 'Enrollment failed. Please try again.';
+              formMessage.className = 'form-message error';
+              formMessage.style.display = 'block';
+            }
+          } catch (error) {
+            formMessage.textContent = 'Network error. Please try again later.';
+            formMessage.className = 'form-message error';
+            formMessage.style.display = 'block';
+          } finally {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalBtnText;
+          }
+        });
+      }
+    });
+  </script>
+
+  <!-- Main Script -->
+  <script src="script.js" defer></script>
+</body>
+
+</html>

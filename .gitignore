@@ -1,0 +1,10 @@
+# System files
+.DS_Store
+Thumbs.db
+
+# Documentation
+Things to be used by antigravity/
+
+# Potential sensitive files
+.env
+config_local.js
