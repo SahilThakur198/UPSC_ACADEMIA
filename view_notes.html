@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Student Notes & Study Materials - UPSC Academia</title>
+  <meta name="description"
+    content="Access comprehensive study notes and resources for UPSC and MPSC preparation at UPSC Academia. Expert curated materials for civil services success.">
+  <meta name="keywords"
+    content="UPSC notes, MPSC notes, civil services study material, UPSC preparation notes, MPSC study resources, Pune coaching notes">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Student Notes & Study Materials - UPSC Academia">
+  <meta property="og:description"
+    content="Comprehensive study notes and resources for UPSC and MPSC civil services preparation.">
+  <meta property="og:url" content="https://upscacademia.com/view_notes.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://upscacademia.com/img/logo.png">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Student Notes - UPSC Academia">
+  <meta name="twitter:description" content="Access study notes and materials for civil services preparation.">
+  <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://upscacademia.com/view_notes.html">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://upscacademia.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Student Notes",
+        "item": "https://upscacademia.com/view_notes.html"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Font Awesome for Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .notes-hero {
+      padding: 8rem 0 4rem;
+      text-align: center;
+      background: linear-gradient(135deg, rgba(10, 43, 87, 0.05) 0%, rgba(216, 27, 33, 0.05) 100%);
+    }
+
+    .notes-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      padding: 2rem 0;
+    }
+
+    .note-row {
+      background: var(--white);
+      padding: 1.5rem 2.5rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 15px var(--shadow);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 2rem;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border: 1px solid rgba(0, 0, 0, 0.03);
+      border-left: 5px solid var(--accent-blue);
+    }
+
+    .note-row:hover {
+      transform: translateX(10px);
+      box-shadow: 0 8px 25px var(--shadow-hover);
+      border-left-color: var(--accent-red);
+    }
+
+    .note-info {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      flex: 1;
+    }
+
+    .note-icon {
+      font-size: 2rem;
+      color: var(--primary-blue);
+      width: 50px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .note-content h3 {
+      font-size: 1.2rem;
+      color: var(--primary-blue);
+      margin-bottom: 0.25rem;
+    }
+
+    .note-content p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    .note-meta-row {
+      display: flex;
+      gap: 1.5rem;
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      min-width: 250px;
+    }
+
+    .note-meta-row span {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .note-actions {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .btn-view,
+    .btn-download {
+      padding: 0.6rem 1.2rem;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-view {
+      background: transparent;
+      color: var(--primary-blue);
+      border: 2px solid var(--primary-blue);
+    }
+
+    .btn-view:hover {
+      background: var(--primary-blue);
+      color: var(--white);
+      transform: translateY(-2px);
+    }
+
+    .btn-download {
+      background: var(--accent-red);
+      color: var(--white);
+      box-shadow: 0 4px 10px rgba(216, 27, 33, 0.2);
+    }
+
+    .btn-download:hover {
+      background: #a10f14;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(216, 27, 33, 0.3);
+    }
+
+    .btn-download.loading {
+      pointer-events: none;
+      opacity: 0.7;
+    }
+
+    .btn-download.loading i {
+      animation: spin 1s linear infinite;
+    }
+
+    .loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 4px solid var(--light-gray);
+      border-top: 4px solid var(--accent-red);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .note-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+        gap: 1.5rem;
+      }
+
+      .note-meta-row {
+        width: 100%;
+        justify-content: space-between;
+        min-width: auto;
+      }
+
+      .note-actions {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+      }
+
+      .btn-view,
+      .btn-download {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    .search-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      position: relative;
+    }
+
+    .search-input {
+      width: 100%;
+      padding: 1rem 1.5rem;
+      border-radius: 30px;
+      border: 2px solid var(--border-color);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--primary-blue);
+    }
+  </style>
+</head>
+
+<body id="notes-page" class="mobile-optimized">
+  <!-- Background Decoration -->
+  <div class="bg-decoration"></div>
+
+  <!-- Layout Components -->
+  <div id="site-header"></div>
+  <div class="navbar-spacer"></div>
+
+  <!-- Main Content -->
+  <main>
+    <section class="notes-hero">
+      <div class="container">
+        <h1 class="section-title fade-in">Students <span class="academia">Notes</span> Repository</h1>
+        <p class="tagline fade-in">Premium resources curated by Rahul Khandare Sir and Team</p>
+
+        <div class="search-container fade-in">
+          <input type="text" class="search-input" placeholder="Search for notes (e.g. History, Polity, Geography)...">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div id="notes-loader" class="fade-in" style="text-align: center; padding: 4rem 0;">
+          <div class="loading-spinner"></div>
+          <p style="margin-top: 1rem; color: var(--text-secondary);">Fetching latest notes from Drive...</p>
+        </div>
+        <div id="notes-list" class="notes-list fade-in" style="display: none;">
+          <!-- Data will be injected here via script.js -->
+        </div>
+        <div id="no-notes" class="fade-in" style="display: none; text-align: center; padding: 4rem 0;">
+          <i class="fas fa-search" style="font-size: 3rem; color: var(--border-color); margin-bottom: 1rem;"></i>
+          <p style="color: var(--text-secondary);">No notes found matching your search.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div id="site-footer"></div>
+
+
+  <script src="config.js"></script>
+  <script src="script.js" defer></script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Enroll Now - Book Demo Class | UPSC Academia Pune</title>
+  <meta name="description"
+    content="Register for a free demo class at UPSC Academia. Expert UPSC and MPSC coaching in Pune with proven results. Book your demo session now.">
+  <meta name="keywords"
+    content="UPSC demo class, MPSC demo class, enroll UPSC coaching Pune, civil services demo, UPSC Academia enrollment">
+  <meta name="robots" content="index, follow">
+
+  <!-- Open Graph Meta Tags -->
+  <meta property="og:title" content="Enroll at UPSC Academia - Book Your Demo Class">
+  <meta property="og:description"
+    content="Start your civil services journey with UPSC Academia. Book a free demo class today.">
+  <meta property="og:url" content="https://upscacademia.com/enroll.html">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://upscacademia.com/img/logo.png">
+
+  <!-- Twitter Card Meta Tags -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Enroll at UPSC Academia - Book Your Demo Class">
+  <meta name="twitter:description"
+    content="Start your civil services journey with UPSC Academia. Book a free demo class today.">
+  <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://upscacademia.com/enroll.html">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://upscacademia.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Enroll",
+        "item": "https://upscacademia.com/enroll.html"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Fonts + Icons -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+  <!-- Your Styles -->
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body id="enroll-page">
+  <div class="bg-decoration"></div>
+
+  <!-- Header Component -->
+  <div id="site-header"></div>
+  <div class="navbar-spacer"></div>
+
+  <!-- Main Content -->
+  <main>
+    <!-- Enrollment Form -->
+    <div class="page-container">
+      <div class="enrollment-form-container">
+        <h1>Request a Demo Class</h1>
+        <form id="enrollForm">
+          <div class="form-group">
+            <label for="enrollName">Full Name</label>
+            <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name" />
+          </div>
+
+          <div class="form-group">
+            <label for="enrollEmail">Email Address</label>
+            <input type="email" id="enrollEmail" name="enrollEmail" required placeholder="example@email.com" />
+          </div>
+
+          <div class="form-group">
+            <label for="enrollPhone">Phone Number</label>
+            <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your phone number" />
+          </div>
+
+          <div class="form-group">
+            <label for="course">Course of Interest</label>
+            <select id="course" name="course" required>
+              <option value="" disabled selected>Select a Course</option>
+              <option value="UPSC (Pre/Mains)">UPSC (Pre/Mains)</option>
+              <option value="MPSC">MPSC (पूर्व/मुख्य)</option>
+              <option value="Rajyaseva">Rajyaseva Pariksha</option>
+              <option value="PSI/STI">PSI/STI/Asst./Saral Seva</option>
+              <option value="Test Series">Comprehensive Test Series</option>
+            </select>
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">Submit Enrollment</button>
+          <div id="formMessage" style="margin-top:10px;"></div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer Component -->
+  <div id="site-footer"></div>
+
+  <!-- Main Script -->
+  <script src="config.js"></script>
+  <script src="script.js" defer></script>
+</body>
+
+</html>
