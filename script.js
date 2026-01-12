@@ -2,7 +2,8 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Apply mobile optimizations ASAP to stabilize viewport on Android
   optimizeForMobile()
 
-  await loadLayoutComponents()
+  // Load layout components (non-blocking for other initializations)
+  loadLayoutComponents().catch(err => console.error("Layout loading error:", err));
 
   // --- Shared Logic for All Pages ---
   initParticleAnimation()
@@ -47,15 +48,29 @@ async function loadLayoutComponents() {
 
     // Load components from files
     const [headerRes, footerRes] = await Promise.all([
-      fetch("components/header.html"),
-      fetch("components/footer.html"),
+      fetch("header.html").catch(() => fetch("components/header.html")),
+      fetch("footer.html").catch(() => fetch("components/footer.html")),
     ])
 
-    if (headerHost && headerRes.ok) {
-      headerHost.outerHTML = await headerRes.text()
+    if (headerHost && headerRes && headerRes.ok) {
+      headerHost.innerHTML = await headerRes.text()
+    } else if (headerHost) {
+      // Fallback if fetch fails (e.g. local file access)
+      console.warn("[layout] Header fetch failed, trying fallback path...")
+      const fallbackHeader = await fetch("components/header.html").catch(() => null);
+      if (fallbackHeader && fallbackHeader.ok) {
+        headerHost.innerHTML = await fallbackHeader.text();
+      }
     }
-    if (footerHost && footerRes.ok) {
-      footerHost.outerHTML = await footerRes.text()
+
+    if (footerHost && footerRes && footerRes.ok) {
+      footerHost.innerHTML = await footerRes.text()
+    } else if (footerHost) {
+      console.warn("[layout] Footer fetch failed, trying fallback path...")
+      const fallbackFooter = await fetch("components/footer.html").catch(() => null);
+      if (fallbackFooter && fallbackFooter.ok) {
+        footerHost.innerHTML = await fallbackFooter.text();
+      }
     }
 
     // After inject, normalize active link based on current hash or page
@@ -72,12 +87,12 @@ function verifyLayoutLoaded() {
   if (!header) {
     console.warn("[layout] Header not found in DOM after injection")
   } else {
-    console.log("[layout] Header loaded ✓")
+    // Header loaded
   }
   if (!footer) {
     console.warn("[layout] Footer not found in DOM after injection")
   } else {
-    console.log("[layout] Footer loaded ✓")
+    // Footer loaded
   }
 }
 
@@ -128,7 +143,7 @@ function initMobileMenu() {
     return
   }
 
-  console.log("[v0] Initializing mobile menu for Android compatibility")
+
 
   // Toggle mobile menu
   mobileMenuBtn.addEventListener("click", (e) => {
@@ -249,20 +264,7 @@ function initParticleAnimation() {
     let mouseX = 0
     let mouseY = 0
 
-    const throttle = (func, limit) => {
-      let inThrottle
-      return function () {
-        const args = arguments
-        const context = this
-        if (!inThrottle) {
-          func.apply(context, args)
-          inThrottle = true
-          setTimeout(() => (inThrottle = false), limit)
-        }
-      }
-    }
-
-    const throttledBackgroundUpdate = throttle((e) => {
+    window.addEventListener("mousemove", throttle((e) => {
       mouseX = e.clientX / window.innerWidth
       mouseY = e.clientY / window.innerHeight
       bgDecoration.style.background = `
@@ -270,9 +272,9 @@ function initParticleAnimation() {
                   rgba(10, 43, 87, ${0.05 + mouseX * 0.05}) 0%, 
                   rgba(216, 27, 33, ${0.05 + mouseY * 0.05}) 100%)
               `
-    }, 100)
+    }, 100))
 
-    const throttledParticleUpdate = throttle((e) => {
+    window.addEventListener("mousemove", throttle((e) => {
       const particles = particlesContainer.querySelectorAll(".particle")
       particles.forEach((particle, index) => {
         const speed = ((index % 3) + 1) * 0.5
@@ -280,10 +282,23 @@ function initParticleAnimation() {
         const y = (e.clientY - window.innerHeight / 2) * speed * 0.01
         particle.style.transform = `translate(${x}px, ${y}px)`
       })
-    }, 50)
+    }, 50))
+  }
+}
 
-    window.addEventListener("mousemove", throttledBackgroundUpdate)
-    window.addEventListener("mousemove", throttledParticleUpdate)
+/**
+ * Global Throttle Utility
+ */
+function throttle(func, limit) {
+  let inThrottle
+  return function () {
+    const args = arguments
+    const context = this
+    if (!inThrottle) {
+      func.apply(context, args)
+      inThrottle = true
+      setTimeout(() => (inThrottle = false), limit)
+    }
   }
 }
 
@@ -335,19 +350,6 @@ function initScrollEffects() {
 
   const sections = document.querySelectorAll("section[id]")
   const navLinks = document.querySelectorAll(".nav-menu a.nav-link")
-
-  const throttle = (func, limit) => {
-    let inThrottle
-    return function () {
-      const args = arguments
-      const context = this
-      if (!inThrottle) {
-        func.apply(context, args)
-        inThrottle = true
-        setTimeout(() => (inThrottle = false), limit)
-      }
-    }
-  }
 
   const handleScroll = throttle(() => {
     let current = ""
@@ -420,13 +422,8 @@ function debugContactSection() {
 }
 
 function optimizeForMobile() {
-  console.log("[v0] Optimizing for mobile device")
-  console.log("[v0] Hardware concurrency:", navigator.hardwareConcurrency)
-  console.log("[v0] Device memory:", navigator.deviceMemory)
-
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
     document.documentElement.style.setProperty("--animation-duration", "0.2s")
-    console.log("[v0] Reduced animation duration for low-end device")
   }
 
   if (window.innerWidth < 480 || (navigator.deviceMemory && navigator.deviceMemory < 2)) {
@@ -437,11 +434,7 @@ function optimizeForMobile() {
     }
   }
 
-  // Performance Fix: Disable Spline robot on mobile/low-end
-  if (window.innerWidth < 768) {
-    document.body.classList.add("spline-reduced-motion")
-    console.log("[v0] Spline robot disabled for mobile performance")
-  }
+
 
   const isAndroid = /Android/i.test(navigator.userAgent)
   if (isAndroid) {
@@ -565,7 +558,7 @@ function initNotesPage() {
            <a href="${note.url || '#'}" target="_blank" class="btn-view" title="View in Drive">
              <i class="fas fa-eye"></i> View
            </a>
-           <button class="btn-download" onclick="window.downloadNote('${note.id}', '${note.name}')" title="Download PDF">
+           <button class="btn-download" onclick="window.downloadNote('${note.id}', '${note.name}', event)" title="Download PDF">
              <i class="fas fa-download"></i> Download
            </button>
         </div>
@@ -578,8 +571,8 @@ function initNotesPage() {
   }
 
   // Global download function for the buttons
-  window.downloadNote = async (id, fileName) => {
-    const btn = event?.currentTarget
+  window.downloadNote = async (id, fileName, event) => {
+    const btn = event ? event.currentTarget : null
     if (btn) btn.classList.add("loading")
 
     try {
@@ -703,7 +696,21 @@ function showPopup(message, type = "success") {
 
   const container = document.createElement("div")
   container.id = "popupMessage"
-  container.innerHTML = `\n    <div class="popup-content ${type}">\n      <span class="popup-icon">${type === "success" ? "✅" : "❌"}</span>\n      <p>${message}</p>\n    </div>\n  `
+
+  const content = document.createElement("div")
+  content.className = `popup-content ${type}`
+
+  const icon = document.createElement("span")
+  icon.className = "popup-icon"
+  icon.textContent = type === "success" ? "✅" : "❌"
+
+  const text = document.createElement("p")
+  text.textContent = message // SECURE: textContent prevents XSS
+
+  content.appendChild(icon)
+  content.appendChild(text)
+  container.appendChild(content)
+
   document.body.appendChild(container)
   setTimeout(() => container.classList.add("show"), 100)
   setTimeout(() => container.classList.remove("show"), 4000)
@@ -827,4 +834,6 @@ function initMobileStickyCTA() {
     }
   })
 }
+
+
 

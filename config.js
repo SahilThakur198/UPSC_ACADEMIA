@@ -3,11 +3,11 @@ const CONFIG = {
     // The Web App URL from Google Apps Script deployment
     SCRIPT_URL: "https://script.google.com/macros/s/AKfycbwDmnGxubYk2TMst8buujlJvIPCth2w_VjFd-Mdo0wJZIEHLOGLWmAT5RLw1KUv2qfB/exec",
 
-    // Model configuration for the chatbot
-    CHATBOT_MODEL: "openai/gpt-oss-120b:free",
 
-    // OpenRouter API Key (Requested by user to be here)
-    OPENROUTER_API_KEY: "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"
+
+    // Admin API Key for securing sensitive backend actions (e.g., delete, view leads)
+    // Set this to a secure random string and match it in your Code.gs settings (or pass it from admin portal)
+    ADMIN_API_KEY: "CHANGE_ME_TO_A_SECURE_TOKEN"
 };
 
 // Also expose as window global if needed

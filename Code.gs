@@ -13,6 +13,7 @@
 
 const FOLDER_ID = '1ycN3omGZu0Pn1eQk8EANnJiWZnLmVqAE';
 const SPREADSHEET_ID = '1ghHCPuhcbnAAk9eK3wF8KTXui3qt6yL_kKzEV7oczZU';
+const ADMIN_API_KEY = 'CHANGE_ME_TO_A_SECURE_TOKEN'; // MUST MATCH config.js
 
 /**
  * Main entry point: Handles API Calls
@@ -71,12 +72,15 @@ function handleApiRequest(e) {
         result = processEnrollment(data);
         break;
       case 'getLeads':
+        if (!isAuthorized(data)) return unauthorizedResponse();
         result = getLeadsFromSheet();
         break;
       case 'upload':
+        if (!isAuthorized(data)) return unauthorizedResponse();
         result = uploadFileToFolder(data.base64Data, data.fileName);
         break;
       case 'deleteFile':
+        if (!isAuthorized(data)) return unauthorizedResponse();
         result = deleteFileFromDrive(data.fileId);
         break;
       case 'getFiles':
@@ -123,10 +127,10 @@ function processEnrollment(data) {
     
     sheet.appendRow([
       new Date(),
-      data.name || data.enrollName,
-      data.email || data.enrollEmail,
-      String(data.phone || data.enrollPhone),
-      data.course,
+      sanitize(data.name || data.enrollName || 'Unknown'),
+      sanitize(data.email || data.enrollEmail || 'No Email'),
+      "'" + String(data.phone || data.enrollPhone || ''), // Leading apostrophe prevents number truncation/formatting
+      sanitize(data.course || 'N/A'),
       'New'
     ]);
     
@@ -475,4 +479,31 @@ function sendOTPEmail(email, otp, userName) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+/**
+ * Simple data sanitization to prevent formula injection in Sheets
+ */
+function sanitize(input) {
+  if (typeof input !== 'string') return input;
+  // If the string starts with characters that could trigger a formula, escape it
+  if (['=', '+', '-', '@'].indexOf(input.charAt(0)) !== -1) {
+    return "'" + input;
+  }
+  return input;
+}
+
+/**
+ * Check if the request is authorized with the Admin API Key
+ */
+function isAuthorized(data) {
+  if (!data || !data.adminKey) return false;
+  return data.adminKey === ADMIN_API_KEY;
+}
+
+/**
+ * Standard unauthorized response
+ */
+function unauthorizedResponse() {
+  return { success: false, message: 'Unauthorized access. Invalid Admin API Key.' };
 }

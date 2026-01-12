@@ -173,6 +173,8 @@
       background: var(--accent-red);
       color: var(--white);
       box-shadow: 0 4px 10px rgba(216, 27, 33, 0.2);
+      position: relative;
+      overflow: hidden;
     }
 
     .btn-download:hover {
@@ -181,13 +183,34 @@
       box-shadow: 0 6px 15px rgba(216, 27, 33, 0.3);
     }
 
+    .btn-download i {
+      transition: transform 0.3s ease;
+    }
+
+    .btn-download:hover i {
+      transform: translateY(2px);
+    }
+
     .btn-download.loading {
       pointer-events: none;
-      opacity: 0.7;
+      opacity: 0.8;
+      background: #777;
     }
 
     .btn-download.loading i {
-      animation: spin 1s linear infinite;
+      animation: downloadIconPulse 1s infinite alternate;
+    }
+
+    @keyframes downloadIconPulse {
+      from {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      to {
+        transform: scale(1.4);
+        opacity: 0.3;
+      }
     }
 
     .loading-spinner {
