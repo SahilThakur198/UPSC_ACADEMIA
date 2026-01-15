@@ -307,8 +307,13 @@
     <section class="section">
       <div class="container">
         <div id="notes-loader" class="fade-in" style="text-align: center; padding: 4rem 0;">
-          <div class="loading-spinner"></div>
-          <p style="margin-top: 1rem; color: var(--text-secondary);">Fetching latest notes from Drive...</p>
+          <div class="quantum-spinner">
+            <div class="inner one"></div>
+            <div class="inner two"></div>
+            <div class="inner three"></div>
+          </div>
+          <p style="margin-top: 2rem; color: var(--text-secondary); font-weight: 500;">Accessing Secure Repository...
+          </p>
         </div>
         <div id="notes-list" class="notes-list fade-in" style="display: none;">
           <!-- Data will be injected here via script.js -->
