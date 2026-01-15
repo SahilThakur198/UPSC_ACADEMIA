@@ -17,6 +17,40 @@
     content="Access your UPSC Academia student portal for course materials and progress tracking.">
   <meta property="og:image" content="https://upscacademia.com/img/logo.png">
 
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://upscacademia.com/login.html">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://upscacademia.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Portal",
+        "item": "https://upscacademia.com/login.html"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://upscacademia.com/login.html">
+  <meta name="twitter:title" content="Academia Portal | UPSC Academia">
+  <meta name="twitter:description"
+    content="Access your UPSC Academia student portal for course materials and progress tracking.">
+  <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+
   <link
     href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -229,7 +263,8 @@
       margin-bottom: 30px;
     }
 
-    .welcome-text h1 {
+    .welcome-text h1,
+    .welcome-text h2 {
       color: var(--primary-color);
       font-size: 24px;
       font-weight: 700;
@@ -935,7 +970,8 @@
       text-align: center;
     }
 
-    form h1 {
+    form h1,
+    form h2 {
       font-weight: 800;
       margin-bottom: 15px;
       color: var(--primary-blue);
@@ -1202,7 +1238,8 @@
       transition: all 0.6s ease-in-out;
     }
 
-    .toggle-panel h1 {
+    .toggle-panel h1,
+    .toggle-panel h2 {
       color: white;
       font-size: 2.2rem;
     }
@@ -1786,7 +1823,7 @@
     <div class="container" id="login-container">
       <div class="form-container sign-up">
         <form onsubmit="handleSignUp(event)">
-          <h1>Create Account</h1>
+          <h2>Create Account</h2>
           <div class="social-icons">
             <a href="index.html" class="home-icon-link" title="Back to Home">
               <i class="fa-solid fa-home"></i>
@@ -1811,7 +1848,7 @@
 
       <div class="form-container sign-in">
         <form onsubmit="handleSignIn(event)">
-          <h1>Sign In</h1>
+          <h2>Sign In</h2>
           <div class="social-icons">
             <a href="index.html" class="home-icon-link" title="Back to Home">
               <i class="fa-solid fa-home"></i>
@@ -1834,12 +1871,12 @@
       <div class="toggle-container">
         <div class="toggle">
           <div class="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
+            <h2>Welcome Back!</h2>
             <p>To access your dashboard and manage student files, please login with your personal info.</p>
             <button id="login">Sign In</button>
           </div>
           <div class="toggle-panel toggle-right">
-            <h1>Hello, Teacher!</h1>
+            <h2>Hello, Teacher!</h2>
             <p>Enter your personal details to create an account and start your journey with UPSC Academia.</p>
             <button id="register">Sign Up</button>
           </div>
@@ -1876,7 +1913,7 @@
         <div class="main-content">
           <header>
             <div class="welcome-text">
-              <h1 id="welcomeUser">Welcome, Teacher</h1>
+              <h2 id="welcomeUser">Welcome, Teacher</h2>
               <p>Manage your classroom materials and requests</p>
             </div>
             <div class="social-icons" style="margin:0;">
