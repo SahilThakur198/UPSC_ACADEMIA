@@ -8,12 +8,12 @@
  * 3. File uploads to Google Drive
  * 4. File listing from Google Drive
  * 5. Password recovery with OTP
+ * 6. Enrollment Emails with Auto-Scheduling
  * ============================================
  */
 
 const FOLDER_ID = '1ycN3omGZu0Pn1eQk8EANnJiWZnLmVqAE';
 const SPREADSHEET_ID = '1ghHCPuhcbnAAk9eK3wF8KTXui3qt6yL_kKzEV7oczZU';
-const ADMIN_API_KEY = 'CHANGE_ME_TO_A_SECURE_TOKEN'; // MUST MATCH config.js
 
 /**
  * Main entry point: Handles API Calls
@@ -72,15 +72,12 @@ function handleApiRequest(e) {
         result = processEnrollment(data);
         break;
       case 'getLeads':
-        if (!isAuthorized(data)) return unauthorizedResponse();
         result = getLeadsFromSheet();
         break;
       case 'upload':
-        if (!isAuthorized(data)) return unauthorizedResponse();
         result = uploadFileToFolder(data.base64Data, data.fileName);
         break;
       case 'deleteFile':
-        if (!isAuthorized(data)) return unauthorizedResponse();
         result = deleteFileFromDrive(data.fileId);
         break;
       case 'getFiles':
@@ -94,9 +91,6 @@ function handleApiRequest(e) {
         break;
       case 'verifyOTP':
         result = verifyOTP(data.email, data.otp);
-        break;
-      case 'chatbot':
-        result = processChatbot(data);
         break;
       default:
         result = { success: false, message: 'Invalid action: ' + action };
@@ -127,12 +121,16 @@ function processEnrollment(data) {
     
     sheet.appendRow([
       new Date(),
-      sanitize(data.name || data.enrollName || 'Unknown'),
-      sanitize(data.email || data.enrollEmail || 'No Email'),
-      "'" + String(data.phone || data.enrollPhone || ''), // Leading apostrophe prevents number truncation/formatting
-      sanitize(data.course || 'N/A'),
+      data.name || data.enrollName,
+      data.email || data.enrollEmail,
+      String(data.phone || data.enrollPhone),
+      data.course,
       'New'
     ]);
+
+    // --- Send Confirmation Email with Nearest Saturday ---
+    sendEnrollmentConfirmation(data);
+    // ---------------------------------------------------
     
     return { success: true, message: 'Enrollment successful!' };
   } catch (err) {
@@ -396,80 +394,187 @@ function verifyOTP(email, otp) {
 }
 
 // =============================================
-// CHATBOT PROXY FUNCTIONS
+// UTILITY FUNCTIONS & EMAILS
 // =============================================
 
-function processChatbot(data) {
-  try {
-    const url = 'https://openrouter.ai/api/v1/chat/completions';
-    
-    const payload = {
-      model: data.model || 'openai/gpt-oss-120b:free',
-      messages: [
-        {
-          role: 'system',
-          content: data.systemPrompt || 'You are a helpful assistant.'
-        },
-        {
-          role: 'user',
-          content: data.message
-        }
-      ]
-    };
-
-    const options = {
-      method: 'post',
-      contentType: 'application/json',
-      headers: {
-        'Authorization': 'Bearer ' + (data.apiKey || ''),
-        'HTTP-Referer': 'https://upscacademia.com',
-        'X-Title': 'UPSC Academia Chatbot'
-      },
-      payload: JSON.stringify(payload),
-      muteHttpExceptions: true
-    };
-
-    const response = UrlFetchApp.fetch(url, options);
-    const responseCode = response.getResponseCode();
-    const content = response.getContentText();
-    
-    if (responseCode !== 200) {
-      return { 
-        success: false, 
-        message: 'OpenRouter API Error: ' + responseCode,
-        detail: content
-      };
-    }
-
-    const json = JSON.parse(content);
-    return { 
-      success: true, 
-      response: json.choices[0].message.content 
-    };
-    
-  } catch (err) {
-    return { success: false, message: 'Chatbot Error: ' + err.toString() };
+/**
+ * Calculates the date of the next Saturday
+ * Returns an array or object to be formatted in Marathi
+ */
+function getNextSaturdayDate() {
+  const date = new Date();
+  const dayOfWeek = date.getDay(); // Sunday - Saturday : 0 - 6
+  const daysUntilSat = 6 - dayOfWeek;
+  
+  if (daysUntilSat === 0) {
+    date.setDate(date.getDate() + 7);
+  } else {
+    date.setDate(date.getDate() + daysUntilSat);
   }
+  return date;
 }
 
-// =============================================
-// UTILITY FUNCTIONS
-// =============================================
+/**
+ * Sends Confirmation Email to Student & BCC Admin
+ */
+function sendEnrollmentConfirmation(data) {
+  var email = data.email || data.enrollEmail;
+  var name = data.name || data.enrollName || 'Student';
+  var course = data.course || 'the course';
+  
+  if (!isValidEmail(email)) return;
+  
+  var subject = "Demo Class Invitation - UPSC Academia";
+  var mapLink = "https://google.com/maps?q=18.51725828295656,73.85547900935163&utm_source=email&utm_medium=student&utm_campaign=maps_click";
+  
+  // Specific phone number requested
+  var phoneNumber = "7666818376";
+  var phoneLink = "tel:+91" + phoneNumber;
+  
+  // Dynamic Date Calculation with Marathi Formatting
+  var nextSat = getNextSaturdayDate();
+  var marathiMonths = [
+    "जानेवारी", "फेब्रुवारी", "मार्च", "एप्रिल", "मे", "जून", 
+    "जुलै", "ऑगस्ट", "सप्टेंबर", "ऑक्टोबर", "नोव्हेंबर", "डिसेंबर"
+  ];
+  
+  // Format: "10 जानेवारी 2026"
+  var displayDate = nextSat.getDate() + " " + marathiMonths[nextSat.getMonth()] + " " + nextSat.getFullYear();
+  
+  // Brand Colors
+  var primaryBlue = "#081f3d"; 
+  var accentRed = "#c62828";   
+  
+  var htmlBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        @import url('https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Gotu&display=swap');
+        
+        /* Base Reset */
+        body { margin: 0; padding: 0; background-color: #f4f4f4; }
+        
+        .email-container { 
+          font-family: 'Gotu', 'Segoe UI', sans-serif; 
+          max-width: 600px; 
+          margin: 0 auto; 
+          background-color: #ffffff; 
+          border: 1px solid #e0e0e0; 
+        }
+        
+        .header { background-color: ${primaryBlue}; padding: 25px; text-align: center; display: block; }
+        
+        .logo-text { font-size: 28px; font-weight: 700; text-decoration: none; }
+        .upsc { color: ${accentRed}; font-family: "Times New Roman", serif; font-weight: 900; }
+        .academia { color: #ffffff; font-family: "Kalam", cursive, sans-serif; font-style: italic; margin-left: 5px; }
+        .tagline { color: #cfd8dc; font-size: 14px; margin-top: 10px; font-weight: normal; line-height: 1.4; }
+
+        .content { padding: 30px; color: #333333; line-height: 1.6; }
+        .highlight-box { background-color: #f8f9fa; border-left: 5px solid ${accentRed}; padding: 20px; margin: 25px 0; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .info-row { margin-bottom: 8px; font-size: 15px; }
+        .info-label { font-weight: bold; color: ${primaryBlue}; width: 60px; display: inline-block; }
+        
+        .btn { display: inline-block; padding: 12px 25px; margin: 10px 5px; text-decoration: none; border-radius: 5px; font-weight: bold; font-size: 14px; text-align: center; }
+        .btn-blue { background-color: ${primaryBlue}; color: #ffffff; }
+        .btn-green { background-color: #28a745; color: #ffffff; }
+        
+        .footer { background-color: #082245; padding: 20px; text-align: center; font-size: 12px; color: rgba(255, 255, 255, 0.8); border-top: 4px solid ${accentRed}; }
+        .phone-display { font-size: 20px; font-weight: bold; color: ${accentRed}; display: inline-block; }
+        
+        /* RESPONSIVE DESIGN FOR MOBILE DEVICES */
+        @media only screen and (max-width: 600px) {
+          .email-container { width: 100% !important; border: none !important; }
+          .content { padding: 20px !important; }
+          .header { padding: 20px !important; }
+          .logo-text { font-size: 24px !important; }
+          .tagline { font-size: 12px !important; }
+          .highlight-box { padding: 15px !important; margin: 20px 0 !important; }
+          .info-label { display: block; width: 100%; margin-bottom: 2px; color: ${accentRed}; }
+          .btn { display: block !important; width: auto !important; margin: 10px 0 !important; }
+          .info-row { margin-bottom: 12px; }
+        }
+      </style>
+    </head>
+    <body>
+      <div class="email-container">
+        
+        <!-- HEADER -->
+        <div class="header">
+          <div class="logo-text">
+            <span class="upsc">UPSC</span><span class="academia">Academia</span>
+          </div>
+          <div class="tagline">Pioneering civil services coaching in Pune,<br>nurturing the nation's future leaders.</div>
+        </div>
+        
+        <!-- CONTENT BODY -->
+        <div class="content">
+          <p>नमस्कार <strong>${name}</strong> 🙏🏻 ,</p>
+          <p><strong>UPSC Academia</strong> मध्ये <strong>${course}</strong> साठी स्वारस्य दाखवल्याबद्दल धन्यवाद.</p>
+          <p>आम्ही तुम्हाला आमच्या <strong>मोफत डेमो लेक्चर (Free Demo Lecture)</strong> साठी आमंत्रित करीत आहोत .</p>
+
+          <!-- DETAILS BOX -->
+          <div class="highlight-box">
+            <div class="info-row"><span class="info-label">📅 दिनांक:</span> ${displayDate}</div>
+            <div class="info-row"><span class="info-label">⏰ वेळ:</span> सकाळी 11:00 ते दुपारी 1:00</div>
+            <div class="info-row" style="margin-top: 15px;">
+                <span class="info-label">📍 स्थळ:</span>
+                ३ रा मजला, शान ब्रह्मा कॉम्प्लेक्स, श्रीमंत दगडूशेठ गणपतीच्या मागे, फरासखाना पोलीस स्टेशन समोर, पुणे.
+            </div>
+          </div>
+          
+          <div style="text-align: center; margin-top: 30px; border-top: 1px dashed #ddd; padding-top: 20px;">
+            <p style="margin-bottom: 5px; font-size: 15px;">मदत हवी आहे? आम्हाला कॉल करा किंवा या ईमेलला उत्तर द्या.</p>
+            
+            <a href="${phoneLink}" style="text-decoration: none;">
+              <span class="phone-display">📞 ${phoneNumber}</span>
+            </a>
+            
+            <div style="margin-top: 15px;">
+               <a href="${mapLink}" class="btn btn-blue">📍 Google Maps वर पहा</a>
+            </div>
+          </div>
+        </div>
+        
+        <!-- FOOTER -->
+        <div class="footer">
+          <p>&copy; ${new Date().getFullYear()} UPSC Academia. All rights reserved.</p>
+          <p>Pune, Maharashtra</p>
+        </div>
+        
+      </div>
+    </body>
+    </html>
+  `;
+  
+  MailApp.sendEmail({
+    to: email,
+    bcc: 'sahiluselessfellow@gmail.com',
+    subject: subject,
+    htmlBody: htmlBody
+  });
+}
 
 function sendOTPEmail(email, otp, userName) {
+  var primaryBlue = "#081f3d"; 
+  var accentRed = "#c62828";   
+  
   var subject = 'UPSC Academia - Password Reset OTP';
   var htmlBody = `
-    <div style="font-family: 'Montserrat', sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 30px; border-radius: 15px; background: linear-gradient(135deg, #b890e6 0%, #8e44ad 100%);">
-      <div style="background: white; padding: 30px; border-radius: 10px;">
-        <h2 style="color: #2b1369; text-align: center;">Password Reset Request</h2>
+    <div style="font-family: 'Segoe UI', sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; padding: 0; border-radius: 8px; overflow: hidden; background-color: #ffffff;">
+      <div style="background-color: ${primaryBlue}; padding: 20px; text-align: center;">
+         <h2 style="color: #ffffff; margin: 0; font-size: 20px;">Password Reset</h2>
+      </div>
+      <div style="padding: 30px; text-align: center;">
         <p style="font-size: 16px; color: #333;">Hello <strong>${userName}</strong>,</p>
-        <p style="font-size: 14px; color: #555;">Use the OTP below to recover your account:</p>
-        <div style="background: #fcfaff; border: 2px dashed #b890e6; padding: 20px; margin: 20px 0; text-align: center; border-radius: 10px;">
-          <h1 style="color: #2b1369; font-size: 36px; margin: 0; letter-spacing: 5px;">${otp}</h1>
+        <p style="font-size: 14px; color: #666;">Use the OTP below to recover your account:</p>
+        
+        <div style="background: #fcfaff; border: 2px dashed ${accentRed}; padding: 15px; margin: 20px auto; width: 80%; border-radius: 8px;">
+          <h1 style="color: ${primaryBlue}; font-size: 32px; margin: 0; letter-spacing: 4px;">${otp}</h1>
         </div>
-        <p style="font-size: 13px; color: #999;">⚠️ Valid for 10 minutes.</p>
-        <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
-        <p style="font-size: 12px; color: #999; text-align: center;">UPSC Academia Portal</p>
+        
+        <p style="font-size: 12px; color: #999;">⚠️ Valid for 10 minutes.</p>
       </div>
     </div>
   `;
@@ -479,31 +584,4 @@ function sendOTPEmail(email, otp, userName) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-}
-
-/**
- * Simple data sanitization to prevent formula injection in Sheets
- */
-function sanitize(input) {
-  if (typeof input !== 'string') return input;
-  // If the string starts with characters that could trigger a formula, escape it
-  if (['=', '+', '-', '@'].indexOf(input.charAt(0)) !== -1) {
-    return "'" + input;
-  }
-  return input;
-}
-
-/**
- * Check if the request is authorized with the Admin API Key
- */
-function isAuthorized(data) {
-  if (!data || !data.adminKey) return false;
-  return data.adminKey === ADMIN_API_KEY;
-}
-
-/**
- * Standard unauthorized response
- */
-function unauthorizedResponse() {
-  return { success: false, message: 'Unauthorized access. Invalid Admin API Key.' };
 }

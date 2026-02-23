@@ -20,6 +20,7 @@
   <link
     href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
   <script src="config.js"></script>
   <style>
     :root {
@@ -54,6 +55,7 @@
       --gradient-accent: linear-gradient(45deg, #cb65f4, #e099fc);
     }
 
+
     * {
       margin: 0;
       padding: 0;
@@ -65,7 +67,8 @@
       background: linear-gradient(135deg, #fdfbff 0%, #e6e9f0 100%);
       display: flex;
       align-items: center;
-      justify-content: center;
+      justify-content: flex-start;
+      /* FIX: Start from top to respect header */
       flex-direction: column;
       min-height: 100vh;
       position: relative;
@@ -117,7 +120,23 @@
       width: 100%;
       max-width: 850px;
       min-height: 550px;
+      /* Ensure sufficient height */
       transition: all 0.4s ease;
+      margin: 40px 0;
+      /* Add margin for spacing from header/footer */
+      animation: containerEntrance 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes containerEntrance {
+      from {
+        opacity: 0;
+        transform: translateY(50px) scale(0.95);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
     }
 
     /* Dashboard Styling - Redesigned */
@@ -666,23 +685,49 @@
       text-transform: uppercase;
       margin-top: 15px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      box-shadow: 0 5px 15px rgba(203, 101, 244, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 0;
+      height: 0;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      transform: translate(-50%, -50%);
+      transition: width 0.6s, height 0.6s;
+    }
+
+    button:hover::before {
+      width: 300px;
+      height: 300px;
     }
 
     button:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(198, 40, 40, 0.4);
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 8px 25px rgba(203, 101, 244, 0.5);
     }
 
     button:active {
-      transform: scale(0.98);
+      transform: scale(0.98) translateY(-1px);
+      transition: all 0.1s ease;
     }
 
     button:disabled {
-      background: #ccc;
+      background: linear-gradient(135deg, #ccc 0%, #999 100%);
       cursor: not-allowed;
       box-shadow: none;
+      transform: none;
+    }
+
+    button:disabled:hover {
+      transform: none;
     }
 
     form {
@@ -715,27 +760,48 @@
       border-radius: 12px;
       width: 100%;
       outline: none;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       color: var(--text-primary);
       box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
     input:focus {
       background-color: #fff;
-      border-color: var(--accent-blue);
-      box-shadow: 0 0 0 3px rgba(30, 136, 229, 0.1), 0 1px 3px rgba(0, 0, 0, 0.1);
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px rgba(203, 101, 244, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
     }
 
-    input:hover {
-      border-color: #a8b3c1;
+    input:hover:not(:focus) {
+      border-color: var(--primary-light);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     }
 
     input.valid {
       border-color: #28a745;
+      background: linear-gradient(to right, #f8fff9 0%, #ffffff 100%);
     }
 
     input.invalid {
       border-color: #dc3545;
+      background: linear-gradient(to right, #fff8f9 0%, #ffffff 100%);
+      animation: shake 0.3s ease;
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0);
+      }
+
+      25% {
+        transform: translateX(-10px);
+      }
+
+      75% {
+        transform: translateX(10px);
+      }
     }
 
     /* Password Input Wrapper */
@@ -796,6 +862,25 @@
     .password-strength.strong .password-strength-bar {
       width: 100%;
       background: #28a745;
+    }
+
+    /* FIX: Main content layout for footer push */
+    #main-content {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      /* Center login container vertically relative to main content area */
+      flex: 1;
+      /* Expand to fill available vertical space */
+      padding: 0 20px;
+    }
+
+    /* FIX: Ensure footer sticks to bottom if content is short */
+    #site-footer {
+      width: 100%;
+      margin-top: auto;
+      /* Push to bottom in flex container */
     }
 
     .form-container {
@@ -1014,50 +1099,112 @@
       top: 0;
       width: 100%;
       height: 100%;
-      background: rgba(8, 31, 61, 0.6);
-      backdrop-filter: blur(5px);
+      background: rgba(43, 19, 105, 0.7);
+      backdrop-filter: blur(10px);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+
+      to {
+        opacity: 1;
+      }
     }
 
     .modal-content {
-      background: #fff;
-      margin: 10% auto;
-      padding: 40px;
-      border-radius: 20px;
+      background: linear-gradient(135deg, #ffffff 0%, #fdfbff 100%);
+      margin: 8% auto;
+      padding: 50px 40px;
+      border-radius: 25px;
       width: 90%;
-      max-width: 450px;
+      max-width: 500px;
       text-align: center;
-      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.2);
-      animation: slideDown 0.4s ease;
+      box-shadow: 0 30px 60px rgba(43, 19, 105, 0.3);
+      animation: slideDown 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+      border: 1px solid rgba(184, 144, 230, 0.2);
     }
 
     @keyframes slideDown {
       from {
         opacity: 0;
-        transform: translateY(-50px);
+        transform: translateY(-100px) scale(0.9);
       }
 
       to {
         opacity: 1;
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
       }
     }
 
     .modal-content h2 {
-      color: var(--primary-blue);
-      margin-bottom: 20px;
+      color: var(--primary-color);
+      margin-bottom: 15px;
       font-weight: 700;
+      font-size: 26px;
     }
 
-    .modal-content input {
+    .modal-content h2 i {
+      margin-right: 10px;
+      color: var(--accent-color);
+    }
+
+    .modal-content p {
+      color: var(--text-secondary);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    /* Consistent Modal Input Styling */
+    .modal-content input[type="email"],
+    .modal-content input[type="text"] {
+      background-color: #ffffff;
+      border: 2px solid #d0d7de;
       margin: 15px 0;
+      padding: 14px 20px;
+      font-size: 14px;
+      border-radius: 12px;
+      width: 100%;
+      outline: none;
+      transition: all 0.3s ease;
+      color: var(--text-primary);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      font-family: 'Inter', sans-serif;
+    }
+
+    .modal-content input:focus {
+      background-color: #fff;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 4px rgba(203, 101, 244, 0.15), 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .modal-content input::placeholder {
+      color: #a0a0a0;
+      font-weight: 400;
     }
 
     .modal-step {
       display: none;
+      animation: stepFadeIn 0.4s ease;
     }
 
     .modal-step.active {
       display: block;
+    }
+
+    @keyframes stepFadeIn {
+      from {
+        opacity: 0;
+        transform: translateX(-20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
     }
 
     #main-content {
@@ -1077,6 +1224,19 @@
       width: 100%;
       border-bottom: 1px solid rgba(255, 255, 255, 0.3);
       z-index: 10;
+      animation: slideInTop 0.6s ease;
+    }
+
+    @keyframes slideInTop {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
     }
 
     .welcome-heading h1 {
@@ -1088,51 +1248,153 @@
       text-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     }
 
-    /* Password Display in Modal */
+    /* Password Display in Modal - Enhanced */
     .password-display {
-      background: #fcfaff;
-      border: 2px dashed var(--accent-blue);
-      padding: 20px;
-      margin: 20px 0;
-      border-radius: 12px;
+      background: linear-gradient(135deg, #f3e5f5 0%, #fce4ec 100%);
+      border: 2px solid var(--accent-color);
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 15px;
       text-align: center;
+      box-shadow: 0 8px 20px rgba(203, 101, 244, 0.2);
+      animation: pulse 0.5s ease;
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.02);
+      }
     }
 
     .password-display h3 {
-      color: var(--primary-blue);
+      color: var(--primary-color);
       margin-bottom: 15px;
-      font-size: 16px;
+      font-size: 15px;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
+      font-weight: 700;
     }
 
     .password-text {
       background: white;
-      padding: 15px;
-      border-radius: 8px;
+      padding: 18px;
+      border-radius: 10px;
       font-family: 'Courier New', monospace;
-      font-size: 22px;
-      color: var(--accent-red);
+      font-size: 20px;
+      color: var(--primary-color);
       font-weight: bold;
       letter-spacing: 3px;
       margin-bottom: 15px;
       word-break: break-all;
-      border: 1px solid #eee;
+      border: 2px solid var(--accent-color);
+      box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.05);
+      user-select: all;
     }
 
     .copy-btn {
-      background: #28a745;
+      background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
       margin-top: 10px;
       width: auto;
-      padding: 10px 25px;
+      padding: 12px 30px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
     }
 
     .copy-btn:hover {
-      background: #218838;
+      background: linear-gradient(135deg, #218838 0%, #1aa179 100%);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(40, 167, 69, 0.4);
     }
 
     .copy-btn.copied {
-      background: #6c757d;
+      background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+      cursor: default;
+    }
+
+    .copy-btn i {
+      font-size: 16px;
+    }
+
+    /* Loading State for OTP */
+    .otp-loading {
+      display: none;
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .otp-loading.active {
+      display: block;
+    }
+
+    .loading-dots {
+      display: inline-flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .loading-dots span {
+      width: 12px;
+      height: 12px;
+      background: var(--accent-color);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+
+    .loading-dots span:nth-child(1) {
+      animation-delay: -0.32s;
+    }
+
+    .loading-dots span:nth-child(2) {
+      animation-delay: -0.16s;
+    }
+
+    @keyframes bounce {
+
+      0%,
+      80%,
+      100% {
+        transform: scale(0);
+      }
+
+      40% {
+        transform: scale(1);
+      }
+    }
+
+    /* Success Icon Animation */
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+      color: #2ecc71;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      font-size: 36px;
+      box-shadow: 0 8px 20px rgba(46, 204, 113, 0.3);
+      animation: scaleIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    @keyframes scaleIn {
+      from {
+        transform: scale(0) rotate(-180deg);
+        opacity: 0;
+      }
+
+      to {
+        transform: scale(1) rotate(0deg);
+        opacity: 1;
+      }
     }
 
     /* Responsive Design */
@@ -1217,10 +1479,16 @@
         min-width: 800px;
       }
     }
+
+
+
+    @media (max-width: 768px) {}
   </style>
 </head>
 
 <body id="login-page">
+  <!-- Dark Mode Toggle Button Removed -->
+
   <div class="bg-decoration"></div>
   <div id="site-header"></div>
   <div class="navbar-spacer"></div>
@@ -1245,8 +1513,6 @@
           <input type="email" id="signupEmail" placeholder="Email Address" required />
           <div class="password-field-wrapper">
             <input type="password" id="signupPassword" placeholder="Password (min 8 chars)" required />
-            <i class="fa-solid fa-eye-slash toggle-password"
-              onclick="togglePasswordVisibility('signupPassword', this)"></i>
           </div>
           <div class="password-strength" id="passwordStrength">
             <div class="password-strength-bar"></div>
@@ -1271,8 +1537,6 @@
           <input type="email" id="loginEmail" placeholder="Email Address" required />
           <div class="password-field-wrapper">
             <input type="password" id="loginPassword" placeholder="Password" required />
-            <i class="fa-solid fa-eye-slash toggle-password"
-              onclick="togglePasswordVisibility('loginPassword', this)"></i>
           </div>
           <a href="#" onclick="handleForgotPassword()">Forgot Your Password?</a>
           <div class="message" id="signinMessage"></div>
@@ -1313,9 +1577,6 @@
           <!-- "Upload Note" replaces My Files -->
           <a class="nav-item" onclick="switchTab('files')" id="nav-files">
             <i class="fa-solid fa-file-pdf"></i> Upload Note
-          </a>
-          <a class="nav-item">
-            <i class="fa-solid fa-gear"></i> Settings
           </a>
           <div style="margin-top: auto;">
             <a href="#" class="nav-item" onclick="clearSession()">
@@ -1372,7 +1633,7 @@
             <div class="table-container">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <h3>Recent Uploads</h3>
-                <button onclick="loadDriveFiles()" class="refresh-btn">
+                <button onclick="loadDriveFiles()" class="refresh-btn" aria-label="Refresh file list">
                   <i class="fa-solid fa-rotate-right"></i> Refresh
                 </button>
               </div>
@@ -1401,7 +1662,7 @@
             <div class="table-container">
               <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                 <h3><i class="fa-solid fa-users"></i> Demo Requests</h3>
-                <button onclick="loadLeads()" class="refresh-btn">
+                <button onclick="loadLeads()" class="refresh-btn" aria-label="Refresh leads data">
                   <i class="fa-solid fa-rotate-right"></i> Refresh
                 </button>
               </div>
@@ -1418,8 +1679,12 @@
             </div>
           </div>
         </div>
+
       </div>
     </div>
+
+
+
 
     <!-- Forgot Password Modal -->
     <div id="otpModal" class="modal">
@@ -1427,43 +1692,66 @@
         <!-- Step 1: Email Entry -->
         <div id="emailStep" class="modal-step active">
           <h2><i class="fa-solid fa-lock"></i> Forgot Password</h2>
-          <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Enter your registered email address to
-            receive a
+          <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Enter your registered email address to receive a
             secure OTP.</p>
           <input type="email" id="forgotEmail" placeholder="Enter your email" />
           <div id="emailMessage" class="message"></div>
-          <button onclick="sendOTP()">Send OTP</button>
-          <button style="background:transparent; color:#666; box-shadow:none; margin-top:5px;"
-            onclick="closeOTPModal()">Cancel</button>
+          <button onclick="sendOTP()" id="sendOtpBtn"><i class="fa-solid fa-paper-plane"></i> Send OTP</button>
+          <button style="background:transparent; color:#666; box-shadow:none; margin-top:10px;"
+            onclick="closeOTPModal()"><i class="fa-solid fa-xmark"></i> Cancel</button>
         </div>
 
         <!-- Step 2: OTP Verification -->
         <div id="otpStep" class="modal-step">
           <h2><i class="fa-solid fa-shield-halved"></i> Verify OTP</h2>
-          <p style="font-size: 14px; color: #666; margin-bottom: 20px;">We've sent a 6-digit code to your email.
-            Please
+          <p style="font-size: 14px; color: #666; margin-bottom: 10px;">We've sent a 6-digit code to your email. Please
             enter it below.</p>
-          <input type="text" id="otpInput" placeholder="Enter 6-digit OTP" maxlength="6"
-            style="text-align: center; letter-spacing: 5px; font-size: 18px; font-weight: bold;" />
+
+          <!-- Loading Animation -->
+          <div class="otp-loading" id="otpLoading">
+            <p style="color: var(--accent-color); font-weight: 500; margin-bottom: 5px;">Waiting for OTP...</p>
+            <div class="loading-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <input type="text" id="otpInput" placeholder="• • • • • •" maxlength="6"
+            style="text-align: center; letter-spacing: 8px; font-size: 22px; font-weight: bold;" />
           <div id="otpMessage" class="message"></div>
-          <button onclick="verifyOTP()">Verify Code</button>
-          <button style="background:transparent; color:#666; box-shadow:none;" onclick="goBackToEmail()">Back</button>
+          <button onclick="verifyOTP()" id="verifyOtpBtn"><i class="fa-solid fa-check-circle"></i> Verify Code</button>
+          <button style="background:transparent; color:#666; box-shadow:none; margin-top:10px;"
+            onclick="goBackToEmail()"><i class="fa-solid fa-arrow-left"></i> Back</button>
         </div>
 
         <!-- Step 3: Password Display -->
         <div id="passwordStep" class="modal-step">
-          <h2><i class="fa-solid fa-key"></i> Password Retrieved</h2>
-          <div class="password-display">
-            <h3>Your Password</h3>
-            <div class="password-text" id="retrievedPassword">••••••••</div>
-            <button class="copy-btn" onclick="copyPassword()" id="copyBtn">
-              <i class="fa-solid fa-copy"></i> Copy
+          <div style="text-align: center; padding: 10px 0;">
+            <div class="success-icon">
+              <i class="fa-solid fa-check"></i>
+            </div>
+            <h2 style="margin-bottom: 10px;">Password Retrieved!</h2>
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Your password has been successfully retrieved.
+            </p>
+
+            <!-- Password Display Box -->
+            <div class="password-display">
+              <h3><i class="fa-solid fa-key"></i> Your Password</h3>
+              <div class="password-text" id="retrievedPasswordText">••••••••</div>
+              <button class="copy-btn" id="copyPasswordBtn" onclick="copyPassword()">
+                <i class="fa-solid fa-copy"></i> Copy Password
+              </button>
+            </div>
+
+            <p style="font-size: 13px; color: #999; margin-top: 15px; margin-bottom: 20px;">
+              <i class="fa-solid fa-info-circle"></i> For security reasons, please consider changing your password after
+              logging in.
+            </p>
+            <button style="background:var(--primary-color); margin-top: 10px;" onclick="closePasswordModal()">
+              <i class="fa-solid fa-right-to-bracket"></i> Back to Login
             </button>
           </div>
-          <p style="font-size: 13px; color: #666; margin-top: 15px;">Your password has been auto-filled in the
-            login form.
-          </p>
-          <button style="background:var(--primary-blue)" onclick="closePasswordModal()">Login Now</button>
         </div>
       </div>
     </div>
@@ -1483,465 +1771,483 @@
       </div>
     </div>
 
-    <script>
-      // ═══════════════════════════════════════════════════════════════════════════
-      // Google Apps Script Backend URL (From config.js)
-      // ═══════════════════════════════════════════════════════════════════════════
-      const API_URL = CONFIG.SCRIPT_URL;
+  </main>
 
-      const container = document.getElementById('login-container');
-      const dash = document.getElementById('dashboard');
-      const registerBtn = document.getElementById('register');
-      const loginBtn = document.getElementById('login');
-      const mobileToRegister = document.getElementById('mobileToRegister');
-      const mobileToLogin = document.getElementById('mobileToLogin');
+  <script>
+    // ═══════════════════════════════════════════════════════════════════════════
+    // Google Apps Script Backend URL (From config.js)
+    // ═══════════════════════════════════════════════════════════════════════════
+    const API_URL = CONFIG.SCRIPT_URL;
 
-      let currentEmail = '';
-      let retrievedPassword = '';
-      let fileToDelete = null;
+    const container = document.getElementById('login-container');
+    const dash = document.getElementById('dashboard');
+    const registerBtn = document.getElementById('register');
+    const loginBtn = document.getElementById('login');
+    const mobileToRegister = document.getElementById('mobileToRegister');
+    const mobileToLogin = document.getElementById('mobileToLogin');
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // TAB MANAGEMENT
-      // ═══════════════════════════════════════════════════════════════════════════
+    let currentEmail = '';
+    let retrievedPassword = '';
+    let fileToDelete = null;
+    let currentUser = null; // Session data stored in memory only
 
-      function switchTab(tabName) {
-        // Update sidebar nav items
-        document.querySelectorAll('.nav-item').forEach(btn => {
-          btn.classList.remove('active');
-        });
 
-        // Determine which nav item to set active
-        if (tabName === 'leads') {
-          document.getElementById('nav-leads').classList.add('active');
-          document.getElementById('leadsTab').classList.add('active');
-          document.getElementById('filesTab').classList.remove('active');
-          loadLeads();
-        } else if (tabName === 'files') {
-          document.getElementById('nav-files').classList.add('active');
-          document.getElementById('filesTab').classList.add('active');
-          document.getElementById('leadsTab').classList.remove('active');
-          loadDriveFiles();
-        }
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // TAB MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function switchTab(tabName) {
+      // Update sidebar nav items
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.classList.remove('active');
+      });
+
+      // Determine which nav item to set active
+      if (tabName === 'leads') {
+        document.getElementById('nav-leads').classList.add('active');
+        document.getElementById('leadsTab').classList.add('active');
+        document.getElementById('filesTab').classList.remove('active');
+        loadLeads();
+      } else if (tabName === 'files') {
+        document.getElementById('nav-files').classList.add('active');
+        document.getElementById('filesTab').classList.add('active');
+        document.getElementById('leadsTab').classList.remove('active');
+        loadDriveFiles();
       }
+    }
 
-      function updateFileName() {
-        const input = document.getElementById('pdfFile');
-        const display = document.getElementById('fileNameDisplay');
-        display.innerText = input.files[0] ? input.files[0].name : "Choose PDF";
+    function updateFileName() {
+      const input = document.getElementById('pdfFile');
+      const display = document.getElementById('fileNameDisplay');
+      display.innerText = input.files[0] ? input.files[0].name : "Choose PDF";
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MOBILE DETECTION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function checkMobile() {
+      if (window.innerWidth <= 768) {
+        document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'block');
+      } else {
+        document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'none');
       }
+    }
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // MOBILE DETECTION
-      // ═══════════════════════════════════════════════════════════════════════════
+    window.addEventListener('resize', checkMobile);
+    checkMobile();
 
-      function checkMobile() {
-        if (window.innerWidth <= 768) {
-          document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'block');
-        } else {
-          document.querySelectorAll('.mobile-toggle').forEach(el => el.style.display = 'none');
-        }
+    // ═══════════════════════════════════════════════════════════════════════════
+    // PASSWORD VISIBILITY TOGGLE
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function togglePasswordVisibility(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('fa-eye-slash');
+        icon.classList.add('fa-eye');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('fa-eye');
+        icon.classList.add('fa-eye-slash');
       }
+    }
 
-      window.addEventListener('resize', checkMobile);
+    // ═══════════════════════════════════════════════════════════════════════════
+    // SESSION MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    window.addEventListener('DOMContentLoaded', function () {
       checkMobile();
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // PASSWORD VISIBILITY TOGGLE
-      // ═══════════════════════════════════════════════════════════════════════════
+      // Removed auto-login check for strict per-session login requirement
+      checkMobile();
 
-      function togglePasswordVisibility(inputId, icon) {
-        const input = document.getElementById(inputId);
-        if (input.type === 'password') {
-          input.type = 'text';
-          icon.classList.remove('fa-eye-slash');
-          icon.classList.add('fa-eye');
+    });
+
+    function saveSession(userName, email) {
+      // PROD-FIX: Do not store in localStorage. Keep in memory only.
+      currentUser = { userName, email, timestamp: Date.now() };
+    }
+
+    function clearSession() {
+      currentUser = null;
+      location.reload(); // Reloading clears the memory state effectively
+    }
+
+    // Toggle Logic
+    registerBtn.addEventListener('click', () => container.classList.add("active"));
+    loginBtn.addEventListener('click', () => container.classList.remove("active"));
+
+    if (mobileToRegister) {
+      mobileToRegister.addEventListener('click', () => container.classList.add("active"));
+    }
+
+    if (mobileToLogin) {
+      mobileToLogin.addEventListener('click', () => container.classList.remove("active"));
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // CLIENT-SIDE VALIDATION
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function checkPasswordStrength(password) {
+      const strengthMeter = document.getElementById('passwordStrength');
+      let strength = 0;
+
+      if (password.length >= 8) strength++;
+      if (password.length >= 12) strength++;
+      if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
+      if (/\d/.test(password)) strength++;
+      if (/[^a-zA-Z0-9]/.test(password)) strength++;
+
+      strengthMeter.classList.remove('weak', 'medium', 'strong');
+
+      if (password.length > 0) {
+        strengthMeter.style.display = 'block';
+        if (strength <= 2) {
+          strengthMeter.classList.add('weak');
+          return 'weak';
+        } else if (strength <= 4) {
+          strengthMeter.classList.add('medium');
+          return 'medium';
         } else {
-          input.type = 'password';
-          icon.classList.remove('fa-eye');
-          icon.classList.add('fa-eye-slash');
+          strengthMeter.classList.add('strong');
+          return 'strong';
         }
+      } else {
+        strengthMeter.style.display = 'none';
       }
+      return '';
+    }
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // SESSION MANAGEMENT
-      // ═══════════════════════════════════════════════════════════════════════════
-
-      window.addEventListener('DOMContentLoaded', function () {
-        checkMobile();
-
-        const session = localStorage.getItem('staffPortalSession');
-        if (session) {
-          try {
-            const userData = JSON.parse(session);
-            container.style.display = 'none';
-            document.querySelector('.welcome-heading').style.display = 'none';
-            dash.style.display = 'block';
-            document.getElementById('welcomeUser').textContent = "Welcome back, " + userData.userName;
-            loadDriveFiles();
-          } catch (e) {
-            localStorage.removeItem('staffPortalSession');
-          }
-        }
-      });
-
-      function saveSession(userName, email) {
-        const sessionData = { userName, email, timestamp: Date.now() };
-        localStorage.setItem('staffPortalSession', JSON.stringify(sessionData));
-      }
-
-      function clearSession() {
-        localStorage.removeItem('staffPortalSession');
-        location.reload();
-      }
-
-      // Toggle Logic
-      registerBtn.addEventListener('click', () => container.classList.add("active"));
-      loginBtn.addEventListener('click', () => container.classList.remove("active"));
-
-      if (mobileToRegister) {
-        mobileToRegister.addEventListener('click', () => container.classList.add("active"));
-      }
-
-      if (mobileToLogin) {
-        mobileToLogin.addEventListener('click', () => container.classList.remove("active"));
-      }
-
-      // ═══════════════════════════════════════════════════════════════════════════
-      // CLIENT-SIDE VALIDATION
-      // ═══════════════════════════════════════════════════════════════════════════
-
-      function validateEmail(email) {
-        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-      }
-
-      function checkPasswordStrength(password) {
-        const strengthMeter = document.getElementById('passwordStrength');
-        let strength = 0;
-
-        if (password.length >= 8) strength++;
-        if (password.length >= 12) strength++;
-        if (/[a-z]/.test(password) && /[A-Z]/.test(password)) strength++;
-        if (/\d/.test(password)) strength++;
-        if (/[^a-zA-Z0-9]/.test(password)) strength++;
-
-        strengthMeter.classList.remove('weak', 'medium', 'strong');
-
-        if (password.length > 0) {
-          strengthMeter.style.display = 'block';
-          if (strength <= 2) {
-            strengthMeter.classList.add('weak');
-            return 'weak';
-          } else if (strength <= 4) {
-            strengthMeter.classList.add('medium');
-            return 'medium';
-          } else {
-            strengthMeter.classList.add('strong');
-            return 'strong';
-          }
+    // Real-time validation
+    document.getElementById('signupEmail').addEventListener('input', function (e) {
+      if (e.target.value) {
+        if (validateEmail(e.target.value)) {
+          e.target.classList.remove('invalid');
+          e.target.classList.add('valid');
         } else {
-          strengthMeter.style.display = 'none';
+          e.target.classList.remove('valid');
+          e.target.classList.add('invalid');
         }
-        return '';
+      } else {
+        e.target.classList.remove('valid', 'invalid');
+      }
+    });
+
+    document.getElementById('loginEmail').addEventListener('input', function (e) {
+      if (e.target.value) {
+        if (validateEmail(e.target.value)) {
+          e.target.classList.remove('invalid');
+          e.target.classList.add('valid');
+        } else {
+          e.target.classList.remove('valid');
+          e.target.classList.add('invalid');
+        }
+      } else {
+        e.target.classList.remove('valid', 'invalid');
+      }
+    });
+
+    document.getElementById('signupPassword').addEventListener('input', function (e) {
+      checkPasswordStrength(e.target.value);
+    });
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // API HELPER
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function callAPI(action, data = {}) {
+      // Add Admin Key for sensitive actions
+      if (['getLeads', 'upload', 'deleteFile'].includes(action)) {
+        data.adminKey = CONFIG.ADMIN_API_KEY;
       }
 
-      // Real-time validation
-      document.getElementById('signupEmail').addEventListener('input', function (e) {
-        if (e.target.value) {
-          if (validateEmail(e.target.value)) {
-            e.target.classList.remove('invalid');
-            e.target.classList.add('valid');
-          } else {
-            e.target.classList.remove('valid');
-            e.target.classList.add('invalid');
-          }
+      const params = new URLSearchParams();
+      params.append('action', action);
+      params.append('data', JSON.stringify(data));
+
+      try {
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          body: params
+        });
+
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        return await response.json();
+      } catch (error) {
+        console.error('API Call failed:', error);
+        return { success: false, message: 'Connection Error: ' + error.message };
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // AUTHENTICATION LOGIC
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    async function handleSignUp(event) {
+      event.preventDefault();
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const messageDiv = document.getElementById('signupMessage');
+      const btn = document.getElementById('signupBtn');
+
+      if (!validateEmail(email)) {
+        showMessage(messageDiv, 'Invalid Email Format', false);
+        return;
+      }
+
+      if (password.length < 8) {
+        showMessage(messageDiv, 'Password must be at least 8 characters', false);
+        return;
+      }
+
+      setLoading(btn, true);
+
+      try {
+        const result = await callAPI('signup', { name, email, password });
+        if (result.success) {
+          showMessage(messageDiv, 'Sign up successful! Please login.', true);
+          setTimeout(() => {
+            container.classList.remove("active");
+            document.getElementById('signupName').value = '';
+            document.getElementById('signupEmail').value = '';
+            document.getElementById('signupPassword').value = '';
+            messageDiv.style.display = 'none';
+          }, 2000);
         } else {
-          e.target.classList.remove('valid', 'invalid');
+          showMessage(messageDiv, result.message || 'Sign up failed', false);
         }
-      });
+      } catch (error) {
+        showMessage(messageDiv, 'Network error. Try again.', false);
+        console.error(error);
+      } finally {
+        setLoading(btn, false, 'Sign Up');
+      }
+    }
 
-      document.getElementById('loginEmail').addEventListener('input', function (e) {
-        if (e.target.value) {
-          if (validateEmail(e.target.value)) {
-            e.target.classList.remove('invalid');
-            e.target.classList.add('valid');
-          } else {
-            e.target.classList.remove('valid');
-            e.target.classList.add('invalid');
+    async function handleSignIn(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      const messageDiv = document.getElementById('signinMessage');
+      const btn = document.getElementById('signinBtn');
+
+      setLoading(btn, true);
+
+      try {
+        const result = await callAPI('login', { email, password });
+        if (result.success) {
+
+          // Prioritize 'name' or 'fullName' as they are more likely to be the actual name
+          // Fallback to identifiers if name is missing
+          let rawName = result.name || result.fullName || result.userName || result.username || "User";
+
+          // Format: If the name looks like an email, take the part before '@'
+          if (rawName.includes('@')) {
+            rawName = rawName.split('@')[0];
           }
+
+          // Capitalize first letter of each word for better aesthetics
+          const userName = rawName.replace(/\b\w/g, l => l.toUpperCase());
+
+          showMessage(messageDiv, 'Login successful!', true);
+          saveSession(userName, email);
+
+          // Switch to dashboard immediately without reload
+          container.style.display = 'none';
+          document.querySelector('.welcome-heading').style.display = 'none';
+          dash.style.display = 'block';
+          document.getElementById('welcomeUser').textContent = "Welcome back, " + userName;
+          loadDriveFiles();
+
         } else {
-          e.target.classList.remove('valid', 'invalid');
+          showMessage(messageDiv, result.message || 'Invalid credentials', false);
         }
-      });
+      } catch (error) {
+        showMessage(messageDiv, 'Network error. Try again.', false);
+        console.error(error);
+      } finally {
+        setLoading(btn, false, 'Sign In');
+      }
+    }
 
-      document.getElementById('signupPassword').addEventListener('input', function (e) {
-        checkPasswordStrength(e.target.value);
-      });
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FILE MANAGEMENT LOGIC
+    // ═══════════════════════════════════════════════════════════════════════════
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // API HELPER
-      // ═══════════════════════════════════════════════════════════════════════════
+    async function processFileUpload() {
+      const fileInput = document.getElementById('pdfFile');
+      const uploadBtn = document.getElementById('uploadBtn');
+      const statusDiv = document.getElementById('uploadStatus');
 
-      async function callAPI(action, data = {}) {
-        // Add Admin Key for sensitive actions
-        if (['getLeads', 'upload', 'deleteFile'].includes(action)) {
-          data.adminKey = CONFIG.ADMIN_API_KEY;
-        }
+      if (fileInput.files.length === 0) {
+        showMessage(statusDiv, "Please select a file!", false);
+        return;
+      }
 
-        const params = new URLSearchParams();
-        params.append('action', action);
-        params.append('data', JSON.stringify(data));
+      const file = fileInput.files[0];
+      const reader = new FileReader();
+
+      reader.onload = async function (e) {
+        const fullDataUrl = e.target.result;
+        setLoading(uploadBtn, true, "Uploading...");
 
         try {
-          const response = await fetch(API_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: params
+          // Use in-memory user
+          const uploadedBy = currentUser ? currentUser.userName : 'Unknown';
+
+
+          const result = await callAPI('upload', {
+            fileName: file.name,
+            base64Data: fullDataUrl,
+            mimeType: file.type,
+            uploadedBy: uploadedBy
           });
 
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-
-          return await response.json();
-        } catch (error) {
-          console.error('API Call failed:', error);
-          return { success: false, message: 'Connection Error: ' + error.message };
-        }
-      }
-
-      // ═══════════════════════════════════════════════════════════════════════════
-      // AUTHENTICATION LOGIC
-      // ═══════════════════════════════════════════════════════════════════════════
-
-      async function handleSignUp(event) {
-        event.preventDefault();
-        const name = document.getElementById('signupName').value;
-        const email = document.getElementById('signupEmail').value;
-        const password = document.getElementById('signupPassword').value;
-        const messageDiv = document.getElementById('signupMessage');
-        const btn = document.getElementById('signupBtn');
-
-        if (!validateEmail(email)) {
-          showMessage(messageDiv, 'Invalid Email Format', false);
-          return;
-        }
-
-        if (password.length < 8) {
-          showMessage(messageDiv, 'Password must be at least 8 characters', false);
-          return;
-        }
-
-        setLoading(btn, true);
-
-        try {
-          const result = await callAPI('signup', { name, email, password });
           if (result.success) {
-            showMessage(messageDiv, 'Sign up successful! Please login.', true);
-            setTimeout(() => {
-              container.classList.remove("active");
-              document.getElementById('signupName').value = '';
-              document.getElementById('signupEmail').value = '';
-              document.getElementById('signupPassword').value = '';
-              messageDiv.style.display = 'none';
-            }, 2000);
+            showMessage(statusDiv, "File uploaded successfully!", true);
+            fileInput.value = "";
+            updateFileName();
+            loadDriveFiles();
           } else {
-            showMessage(messageDiv, result.message || 'Sign up failed', false);
+            showMessage(statusDiv, "Upload failed: " + result.message, false);
           }
         } catch (error) {
-          showMessage(messageDiv, 'Network error. Try again.', false);
+          showMessage(statusDiv, "Error uploading file.", false);
           console.error(error);
         } finally {
-          setLoading(btn, false, 'Sign Up');
+          setLoading(uploadBtn, false, "Upload to Drive");
         }
-      }
+      };
 
-      async function handleSignIn(event) {
-        event.preventDefault();
-        const email = document.getElementById('loginEmail').value;
-        const password = document.getElementById('loginPassword').value;
-        const messageDiv = document.getElementById('signinMessage');
-        const btn = document.getElementById('signinBtn');
+      reader.readAsDataURL(file);
+    }
 
-        setLoading(btn, true);
+    async function loadDriveFiles() {
+      const tbody = document.getElementById('fileListBody');
+      const loader = document.getElementById('fileLoader');
+      const fileCountDisplay = document.getElementById('fileCount');
 
-        try {
-          const result = await callAPI('login', { email, password });
-          if (result.success) {
-            showMessage(messageDiv, 'Login successful!', true);
-            saveSession(result.userName, email);
-            setTimeout(() => {
-              location.reload();
-            }, 1000);
-          } else {
-            showMessage(messageDiv, result.message || 'Invalid credentials', false);
-          }
-        } catch (error) {
-          showMessage(messageDiv, 'Network error. Try again.', false);
-          console.error(error);
-        } finally {
-          setLoading(btn, false, 'Sign In');
-        }
-      }
+      tbody.innerHTML = '';
+      loader.style.display = 'block';
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // FILE MANAGEMENT LOGIC
-      // ═══════════════════════════════════════════════════════════════════════════
+      try {
+        const result = await callAPI('getFiles');
 
-      async function processFileUpload() {
-        const fileInput = document.getElementById('pdfFile');
-        const uploadBtn = document.getElementById('uploadBtn');
-        const statusDiv = document.getElementById('uploadStatus');
+        loader.style.display = 'none';
 
-        if (fileInput.files.length === 0) {
-          showMessage(statusDiv, "Please select a file!", false);
-          return;
-        }
+        if (result.success && result.files) {
+          fileCountDisplay.innerText = result.files.length; // Update stats
 
-        const file = fileInput.files[0];
-        const reader = new FileReader();
+          if (result.files.length > 0) {
+            result.files.forEach(file => {
+              const row = document.createElement('tr');
 
-        reader.onload = async function (e) {
-          const fullDataUrl = e.target.result;
-          setLoading(uploadBtn, true, "Uploading...");
+              let iconClass = 'fa-file';
+              const mime = (file.mimeType || '').toLowerCase();
+              if (mime.includes('pdf')) iconClass = 'fa-file-pdf';
+              else if (mime.includes('word') || mime.includes('document')) iconClass = 'fa-file-word';
+              else if (mime.includes('image')) iconClass = 'fa-file-image';
 
-          try {
-            const session = JSON.parse(localStorage.getItem('staffPortalSession'));
-            const uploadedBy = session ? session.userName : 'Unknown';
-
-            const result = await callAPI('upload', {
-              fileName: file.name,
-              base64Data: fullDataUrl,
-              mimeType: file.type,
-              uploadedBy: uploadedBy
-            });
-
-            if (result.success) {
-              showMessage(statusDiv, "File uploaded successfully!", true);
-              fileInput.value = "";
-              updateFileName();
-              loadDriveFiles();
-            } else {
-              showMessage(statusDiv, "Upload failed: " + result.message, false);
-            }
-          } catch (error) {
-            showMessage(statusDiv, "Error uploading file.", false);
-            console.error(error);
-          } finally {
-            setLoading(uploadBtn, false, "Upload to Drive");
-          }
-        };
-
-        reader.readAsDataURL(file);
-      }
-
-      async function loadDriveFiles() {
-        const tbody = document.getElementById('fileListBody');
-        const loader = document.getElementById('fileLoader');
-        const fileCountDisplay = document.getElementById('fileCount');
-
-        tbody.innerHTML = '';
-        loader.style.display = 'block';
-
-        try {
-          const result = await callAPI('getFiles');
-
-          loader.style.display = 'none';
-
-          if (result.success && result.files) {
-            fileCountDisplay.innerText = result.files.length; // Update stats
-
-            if (result.files.length > 0) {
-              result.files.forEach(file => {
-                const row = document.createElement('tr');
-
-                let iconClass = 'fa-file';
-                if (file.type && file.type.includes('pdf')) iconClass = 'fa-file-pdf';
-
-                row.innerHTML = `
+              row.innerHTML = `
                       <td><i class="fa-regular ${iconClass}" style="color: #e74c3c; margin-right: 10px;"></i> ${escapeHTML(file.name)}</td>
                       <td>${escapeHTML(file.type || 'File')}</td>
                       <td>
-                          <button class="action-btn download-btn" style="background:#e8f5e9; color:#2e7d32;" onclick="window.open('${file.downloadUrl}', '_blank')">
+                          <button class="action-btn download-btn" style="background:#e8f5e9; color:#2e7d32;" onclick="window.open('${file.downloadUrl}', '_blank')" aria-label="Download ${escapeHTML(file.name)}">
                               <i class="fa-solid fa-download"></i>
                           </button>
-                          <button class="action-btn delete-btn" style="background:#ffebee; color:#c62828;" onclick="showDeleteModal('${file.id}', '${file.name.replace(/'/g, "\\'")}')">
+                          <button class="action-btn delete-btn" style="background:#ffebee; color:#c62828;" onclick="showDeleteModal('${file.id}', '${file.name.replace(/'/g, "\\'")}')" aria-label="Delete ${escapeHTML(file.name)}">
                               <i class="fa-solid fa-trash"></i>
                           </button>
                       </td>
                   `;
-                tbody.appendChild(row);
-              });
-            } else {
-              tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No files found.</td></tr>';
-            }
+              tbody.appendChild(row);
+            });
           } else {
             tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No files found.</td></tr>';
           }
-        } catch (error) {
-          loader.style.display = 'none';
-          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Failed to load files.</td></tr>';
-          console.error(error);
+        } else {
+          tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No files found.</td></tr>';
         }
+      } catch (error) {
+        loader.style.display = 'none';
+        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:red;">Failed to load files.</td></tr>';
+        console.error(error);
       }
+    }
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // FILE DELETION
-      // ═══════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FILE DELETION
+    // ═══════════════════════════════════════════════════════════════════════════
 
-      function showDeleteModal(fileId, fileName) {
-        fileToDelete = fileId;
-        document.getElementById('deleteFileName').textContent = fileName;
-        document.getElementById('deleteModal').style.display = 'block';
-      }
+    function showDeleteModal(fileId, fileName) {
+      fileToDelete = fileId;
+      document.getElementById('deleteFileName').textContent = fileName;
+      document.getElementById('deleteModal').style.display = 'block';
+    }
 
-      function closeDeleteModal() {
-        fileToDelete = null;
-        document.getElementById('deleteModal').style.display = 'none';
-      }
+    function closeDeleteModal() {
+      fileToDelete = null;
+      document.getElementById('deleteModal').style.display = 'none';
+    }
 
-      async function confirmDelete() {
-        if (!fileToDelete) return;
+    async function confirmDelete() {
+      if (!fileToDelete) return;
 
-        try {
-          const result = await callAPI('deleteFile', { fileId: fileToDelete });
+      try {
+        const result = await callAPI('deleteFile', { fileId: fileToDelete });
 
-          if (result.success) {
-            alert('File deleted successfully!');
-            closeDeleteModal();
-            loadDriveFiles(); // Refresh file list
-          } else {
-            alert('Failed to delete file: ' + result.message);
-          }
-        } catch (error) {
-          alert('Error deleting file');
-          console.error(error);
+        if (result.success) {
+          alert('File deleted successfully!');
+          closeDeleteModal();
+          loadDriveFiles(); // Refresh file list
+        } else {
+          alert('Failed to delete file: ' + result.message);
         }
+      } catch (error) {
+        alert('Error deleting file');
+        console.error(error);
       }
+    }
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // LEADS MANAGEMENT
-      // ═══════════════════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════════════════
+    // LEADS MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
 
-      async function loadLeads() {
-        const container = document.getElementById('leadsContainer');
-        const loader = document.getElementById('leadsLoader');
+    async function loadLeads() {
+      const container = document.getElementById('leadsContainer');
+      const loader = document.getElementById('leadsLoader');
 
-        container.innerHTML = '';
-        loader.style.display = 'block';
+      container.innerHTML = '';
+      loader.style.display = 'block';
 
-        try {
-          const result = await callAPI('getLeads');
+      try {
+        const result = await callAPI('getLeads');
 
-          loader.style.display = 'none';
+        loader.style.display = 'none';
 
-          if (result.success && result.leads && result.leads.length > 0) {
-            const table = document.createElement('table');
-            table.className = 'leads-table';
+        if (result.success && result.leads && result.leads.length > 0) {
+          const table = document.createElement('table');
+          table.className = 'leads-table';
 
-            // Table header
-            table.innerHTML = `
+          // Table header
+          table.innerHTML = `
             <thead>
               <tr>
                 <th>Timestamp</th>
@@ -1966,180 +2272,229 @@
             </tbody>
           `;
 
-            container.appendChild(table);
-          } else {
-            container.innerHTML = `
+          container.appendChild(table);
+        } else {
+          container.innerHTML = `
             <div class="empty-state">
               <i class="fa-solid fa-inbox"></i>
               <p>No leads data available yet.</p>
             </div>
           `;
-          }
-        } catch (error) {
-          loader.style.display = 'none';
-          container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load leads data.</p>';
-          console.error(error);
         }
+      } catch (error) {
+        loader.style.display = 'none';
+        container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load leads data.</p>';
+        console.error(error);
+      }
+    }
+
+
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // UI UTILITIES
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function escapeHTML(str) {
+      if (!str) return '';
+      const div = document.createElement('div');
+      div.textContent = str;
+      return div.innerHTML;
+    }
+
+    function showMessage(element, text, isSuccess) {
+      element.textContent = text;
+      element.className = isSuccess ? 'message success' : 'message error';
+      element.style.display = 'block';
+    }
+
+    function setLoading(button, isLoading, text = '') {
+      if (isLoading) {
+        button.disabled = true;
+        button.innerHTML = '<div class="spinner"></div> Processing...';
+      } else {
+        button.disabled = false;
+        button.innerHTML = text;
+      }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // FORGOT PASSWORD MODAL LOGIC
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    function handleForgotPassword() {
+      const modal = document.getElementById('otpModal');
+      const emailStep = document.getElementById('emailStep');
+      const otpStep = document.getElementById('otpStep');
+      const passwordStep = document.getElementById('passwordStep');
+
+      // Reset all steps
+      emailStep.classList.add('active');
+      otpStep.classList.remove('active');
+      passwordStep.classList.remove('active');
+
+      // Clear inputs and messages
+      document.getElementById('forgotEmail').value = '';
+      document.getElementById('otpInput').value = '';
+      document.getElementById('emailMessage').style.display = 'none';
+      document.getElementById('otpMessage').style.display = 'none';
+      document.getElementById('otpLoading').classList.remove('active');
+
+      // Reset password display
+      retrievedPassword = '';
+      document.getElementById('retrievedPasswordText').textContent = '••••••••';
+
+      modal.style.display = 'block';
+    }
+
+    function closeOTPModal() {
+      const modal = document.getElementById('otpModal');
+      modal.style.opacity = '0';
+      setTimeout(() => {
+        modal.style.display = 'none';
+        modal.style.opacity = '1';
+      }, 300);
+    }
+
+    async function sendOTP() {
+      const email = document.getElementById('forgotEmail').value;
+      const messageDiv = document.getElementById('emailMessage');
+
+      if (!validateEmail(email)) {
+        showMessage(messageDiv, 'Please enter a valid email', false);
+        return;
       }
 
-      // ═══════════════════════════════════════════════════════════════════════════
-      // UI UTILITIES
-      // ═══════════════════════════════════════════════════════════════════════════
+      currentEmail = email;
 
-      function escapeHTML(str) {
-        if (!str) return '';
-        const div = document.createElement('div');
-        div.textContent = str;
-        return div.innerHTML;
-      }
+      const btn = document.getElementById('sendOtpBtn');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="width: 14px; height: 14px; margin-right: 8px;"></div> Sending...';
 
-      function showMessage(element, text, isSuccess) {
-        element.textContent = text;
-        element.className = isSuccess ? 'message success' : 'message error';
-        element.style.display = 'block';
-      }
+      try {
+        const result = await callAPI('forgotPassword', { email: email });
 
-      function setLoading(button, isLoading, text = '') {
-        if (isLoading) {
-          button.disabled = true;
-          button.innerHTML = '<div class="spinner"></div> Processing...';
-        } else {
-          button.disabled = false;
-          button.innerHTML = text;
-        }
-      }
-
-      // ═══════════════════════════════════════════════════════════════════════════
-      // FORGOT PASSWORD MODAL LOGIC
-      // ═══════════════════════════════════════════════════════════════════════════
-
-      function handleForgotPassword() {
-        const modal = document.getElementById('otpModal');
-        const emailStep = document.getElementById('emailStep');
-        const otpStep = document.getElementById('otpStep');
-        const passwordStep = document.getElementById('passwordStep');
-
-        emailStep.classList.add('active');
-        otpStep.classList.remove('active');
-        passwordStep.classList.remove('active');
-        document.getElementById('forgotEmail').value = '';
-        document.getElementById('otpInput').value = '';
-        document.getElementById('emailMessage').style.display = 'none';
-        document.getElementById('otpMessage').style.display = 'none';
-
-        modal.style.display = 'block';
-      }
-
-      function closeOTPModal() {
-        document.getElementById('otpModal').style.display = 'none';
-      }
-
-      async function sendOTP() {
-        const email = document.getElementById('forgotEmail').value;
-        const messageDiv = document.getElementById('emailMessage');
-
-        if (!validateEmail(email)) {
-          showMessage(messageDiv, 'Please enter a valid email', false);
-          return;
-        }
-
-        currentEmail = email;
-
-        const btn = document.querySelector('#emailStep button:first-of-type');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerText = "Sending...";
-
-        try {
-          const result = await callAPI('forgotPassword', { email: email });
-
-          if (result.success) {
+        if (result.success) {
+          showMessage(messageDiv, 'OTP sent successfully!', true);
+          setTimeout(() => {
             document.getElementById('emailStep').classList.remove('active');
             document.getElementById('otpStep').classList.add('active');
-          } else {
-            showMessage(messageDiv, result.message || 'Failed to send OTP', false);
-          }
-        } catch (e) {
-          showMessage(messageDiv, 'Error connecting to server', false);
-        } finally {
-          btn.disabled = false;
-          btn.innerText = originalText;
+            // Show loading animation briefly
+            document.getElementById('otpLoading').classList.add('active');
+            setTimeout(() => {
+              document.getElementById('otpLoading').classList.remove('active');
+            }, 2000);
+          }, 800);
+        } else {
+          showMessage(messageDiv, result.message || 'Failed to send OTP', false);
         }
+      } catch (e) {
+        showMessage(messageDiv, 'Error connecting to server', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
+      }
+    }
+
+    function goBackToEmail() {
+      document.getElementById('otpStep').classList.remove('active');
+      document.getElementById('emailStep').classList.add('active');
+      document.getElementById('otpInput').value = '';
+      document.getElementById('otpMessage').style.display = 'none';
+    }
+
+    async function verifyOTP() {
+      const otp = document.getElementById('otpInput').value;
+      const messageDiv = document.getElementById('otpMessage');
+
+      if (otp.length !== 6) {
+        showMessage(messageDiv, 'Please enter a 6-digit OTP', false);
+        return;
       }
 
-      function goBackToEmail() {
-        document.getElementById('otpStep').classList.remove('active');
-        document.getElementById('emailStep').classList.add('active');
-      }
+      const btn = document.getElementById('verifyOtpBtn');
+      const originalHTML = btn.innerHTML;
+      btn.disabled = true;
+      btn.innerHTML = '<div class="spinner" style="width: 14px; height: 14px; margin-right: 8px;"></div> Verifying...';
 
-      async function verifyOTP() {
-        const otp = document.getElementById('otpInput').value;
-        const messageDiv = document.getElementById('otpMessage');
+      try {
+        const result = await callAPI('verifyOTP', { email: currentEmail, otp: otp });
 
-        if (otp.length !== 6) {
-          showMessage(messageDiv, 'Please enter a 6-digit OTP', false);
-          return;
-        }
+        if (result.success) {
+          // Store the retrieved password
+          retrievedPassword = result.password || 'Unable to retrieve password';
 
-        const btn = document.querySelector('#otpStep button:first-of-type');
-        const originalText = btn.innerText;
-        btn.disabled = true;
-        btn.innerText = "Verifying...";
-
-        try {
-          const result = await callAPI('verifyOTP', { email: currentEmail, otp: otp });
-
-          if (result.success) {
-            retrievedPassword = result.password;
-            document.getElementById('retrievedPassword').textContent = retrievedPassword;
-
-            document.getElementById('otpStep').classList.remove('active');
-            document.getElementById('passwordStep').classList.add('active');
-          } else {
-            showMessage(messageDiv, result.message || 'Invalid OTP', false);
-          }
-        } catch (e) {
-          showMessage(messageDiv, 'Error verifying OTP', false);
-        } finally {
-          btn.disabled = false;
-          btn.innerText = originalText;
-        }
-      }
-
-      function copyPassword() {
-        navigator.clipboard.writeText(retrievedPassword).then(() => {
-          const copyBtn = document.getElementById('copyBtn');
-          copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-          copyBtn.classList.add('copied');
+          showMessage(messageDiv, 'OTP verified successfully!', true);
 
           setTimeout(() => {
-            copyBtn.innerHTML = '<i class="fa-solid fa-copy"></i> Copy';
-            copyBtn.classList.remove('copied');
-          }, 2000);
-        });
-      }
+            // Update password display
+            document.getElementById('retrievedPasswordText').textContent = retrievedPassword;
 
-      function closePasswordModal() {
-        closeOTPModal();
-        document.getElementById('loginEmail').value = currentEmail;
-        document.getElementById('loginPassword').value = retrievedPassword;
-        container.classList.remove("active");
-      }
-
-      // Close modals if clicked outside
-      window.onclick = function (event) {
-        const otpModal = document.getElementById('otpModal');
-        const deleteModal = document.getElementById('deleteModal');
-        if (event.target == otpModal) {
-          otpModal.style.display = "none";
+            // Switch to password display step
+            document.getElementById('otpStep').classList.remove('active');
+            document.getElementById('passwordStep').classList.add('active');
+          }, 800);
+        } else {
+          showMessage(messageDiv, result.message || 'Invalid OTP', false);
         }
-        if (event.target == deleteModal) {
-          closeDeleteModal();
-        }
+      } catch (e) {
+        showMessage(messageDiv, 'Error verifying OTP', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = originalHTML;
       }
-    </script>
+    }
 
-    <div id="site-footer"></div>
+    function copyPassword() {
+      if (!retrievedPassword || retrievedPassword === '••••••••') {
+        return;
+      }
+
+      navigator.clipboard.writeText(retrievedPassword).then(() => {
+        const copyBtn = document.getElementById('copyPasswordBtn');
+        const originalHTML = copyBtn.innerHTML;
+
+        copyBtn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+        copyBtn.classList.add('copied');
+        copyBtn.disabled = true;
+
+        setTimeout(() => {
+          copyBtn.innerHTML = originalHTML;
+          copyBtn.classList.remove('copied');
+          copyBtn.disabled = false;
+        }, 2500);
+      }).catch(err => {
+        console.error('Failed to copy password:', err);
+        alert('Failed to copy password. Please select and copy manually.');
+      });
+    }
+
+    function closePasswordModal() {
+      closeOTPModal();
+      // Pre-fill email in login form
+      document.getElementById('loginEmail').value = currentEmail;
+      // Focus on password field for quick login
+      setTimeout(() => {
+        document.getElementById('loginPassword').focus();
+      }, 400);
+      container.classList.remove("active");
+    }
+
+    // Close modals if clicked outside
+    window.onclick = function (event) {
+      const otpModal = document.getElementById('otpModal');
+      const deleteModal = document.getElementById('deleteModal');
+      if (event.target == otpModal) {
+        otpModal.style.display = "none";
+      }
+      if (event.target == deleteModal) {
+        closeDeleteModal();
+      }
+    }
+  </script>
+
+  <script src="script.js" defer></script>
 </body>
 
 </html>

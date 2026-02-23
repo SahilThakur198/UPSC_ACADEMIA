@@ -141,22 +141,21 @@ body {
   }
 }
 
-/* Improved navbar with Glassmorphism */
+/* Glassmorphism Navbar */
 .navbar {
   background: var(--glass-bg);
-  padding: 0.75rem 0;
+  backdrop-filter: blur(12px);
+  /* Blur effect */
+  -webkit-backdrop-filter: blur(12px);
   position: fixed;
   top: 0;
   width: 100%;
+  height: 70px;
   z-index: 1000;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--glass-border);
-  height: 70px;
   display: flex;
   align-items: center;
-  overflow: visible;
   transition: var(--transition);
 }
 
@@ -306,34 +305,21 @@ body {
   box-shadow: 0 6px 20px rgba(10, 43, 87, 0.2);
 }
 
+
 /* Added mobile menu button styles for Android compatibility */
+
+/* Hamburger Menu Button Animation */
 .mobile-menu-btn {
   display: none;
+  /* Hidden on desktop */
   background: none;
   border: none;
   cursor: pointer;
   padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
-  position: relative;
-  z-index: 1002;
-  /* Ensure proper touch target size for Android */
   min-width: 44px;
   min-height: 44px;
-  justify-content: center;
-  align-items: center;
-  /* Enhanced visibility for Android */
-  background-color: rgba(255, 255, 255, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.mobile-menu-btn:hover {
-  background: rgba(10, 43, 87, 0.1);
-}
-
-.mobile-menu-btn:active {
-  transform: scale(0.95);
-  background: rgba(10, 43, 87, 0.2);
+  /* Touch target fix */
+  z-index: 1002;
 }
 
 .menu-icon {
@@ -342,7 +328,6 @@ body {
   justify-content: space-between;
   width: 24px;
   height: 18px;
-  position: relative;
 }
 
 .menu-line {
@@ -354,7 +339,7 @@ body {
   transform-origin: center;
 }
 
-/* Menu button animation when active */
+/* Animation State: Active/Open */
 .mobile-menu-btn.active .menu-line:nth-child(1) {
   transform: translateY(7.5px) rotate(45deg);
   background: var(--accent-red);
@@ -363,11 +348,70 @@ body {
 .mobile-menu-btn.active .menu-line:nth-child(2) {
   opacity: 0;
   transform: scaleX(0);
+  /* Fade out middle line */
 }
 
 .mobile-menu-btn.active .menu-line:nth-child(3) {
   transform: translateY(-7.5px) rotate(-45deg);
   background: var(--accent-red);
+}
+
+/* Mobile Dropdown Menu Styling */
+@media (max-width: 768px) {
+
+  /* Show Mobile Button */
+  .mobile-menu-btn {
+    display: flex;
+  }
+
+  /* Hide Desktop Items */
+  .desktop-only {
+    display: none !important;
+  }
+
+  /* Mobile Dropdown Menu Styling */
+  .nav-menu {
+    display: none;
+    /* Hidden by default */
+    position: fixed;
+    top: 70px;
+    /* Below navbar */
+    left: 0;
+    width: 100%;
+    background: white;
+    flex-direction: column;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    gap: 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+  }
+
+  /* Open State for Menu */
+  .nav-menu.active {
+    display: flex;
+    /* Show when active */
+    animation: slideDown 0.3s ease forwards;
+  }
+
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .nav-menu a {
+    font-size: 1.1rem;
+    padding: 10px 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
 }
 
 .hero {
@@ -764,6 +808,97 @@ body {
   font-weight: 600;
   transition: all 0.3s ease;
   box-shadow: 0 4px 15px rgba(216, 27, 33, 0.2);
+}
+
+/* ========================================
+   QUANTUM SPINNER ANIMATION
+   ======================================== */
+.quantum-spinner {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  perspective: 800px;
+  margin: 0 auto;
+}
+
+.quantum-spinner .inner {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.quantum-spinner .inner.one {
+  left: 0%;
+  top: 0%;
+  animation: rotate-one 1s linear infinite;
+  border-bottom: 3px solid var(--accent-red);
+}
+
+.quantum-spinner .inner.two {
+  right: 0%;
+  top: 0%;
+  animation: rotate-two 1s linear infinite;
+  border-right: 3px solid var(--accent-blue);
+}
+
+.quantum-spinner .inner.three {
+  right: 0%;
+  bottom: 0%;
+  animation: rotate-three 1s linear infinite;
+  border-top: 3px solid var(--primary-blue);
+}
+
+@keyframes rotate-one {
+  0% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(35deg) rotateY(-45deg) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-two {
+  0% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(50deg) rotateY(10deg) rotateZ(360deg);
+  }
+}
+
+@keyframes rotate-three {
+  0% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(0deg);
+  }
+
+  100% {
+    transform: rotateX(35deg) rotateY(55deg) rotateZ(360deg);
+  }
+}
+
+/* Button Loader Variant (Small) */
+.btn-spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 .resource-link:hover {
@@ -1544,6 +1679,15 @@ a[href^="mailto:"]:hover,
     display: flex !important;
     visibility: visible !important;
     opacity: 1 !important;
+    background-color: var(--light-gray);
+    /* Better contrast */
+    color: var(--primary-blue);
+  }
+
+  .nav-actions {
+    display: flex !important;
+    align-items: center;
+    z-index: 1002;
   }
 }
 
@@ -1574,6 +1718,10 @@ a[href^="mailto:"]:hover,
 
   /* Ensure mobile menu button is visible on mobile */
   .mobile-menu-btn {
+    display: flex !important;
+  }
+
+  .nav-actions {
     display: flex !important;
   }
 
@@ -2156,4 +2304,65 @@ a[href^="mailto:"]:hover,
   .contact-item:hover {
     transform: translateY(-5px);
   }
+}
+
+/* Switch Toggle Styles */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 50px;
+  height: 26px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked+.slider {
+  background-color: var(--accent-red);
+}
+
+input:focus+.slider {
+  box-shadow: 0 0 1px var(--accent-red);
+}
+
+input:checked+.slider:before {
+  -webkit-transform: translateX(24px);
+  -ms-transform: translateX(24px);
+  transform: translateX(24px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
 }

@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   loadLayoutComponents().catch(err => console.error("Layout loading error:", err));
 
   // --- Shared Logic for All Pages ---
+
   initParticleAnimation()
   initMobileMenu()
   verifyLayoutLoaded()
@@ -42,57 +43,38 @@ document.addEventListener("DOMContentLoaded", async () => {
 })
 
 async function loadLayoutComponents() {
+  const headerHost = document.getElementById("site-header");
+  const footerHost = document.getElementById("site-footer");
+  if (!headerHost && !footerHost) return;
+
   try {
-    const headerHost = document.getElementById("site-header")
-    const footerHost = document.getElementById("site-footer")
-
-    // Load components from files
     const [headerRes, footerRes] = await Promise.all([
-      fetch("header.html").catch(() => fetch("components/header.html")),
-      fetch("footer.html").catch(() => fetch("components/footer.html")),
-    ])
+      fetch("header.html"),
+      fetch("footer.html"),
+    ]);
 
-    if (headerHost && headerRes && headerRes.ok) {
-      headerHost.innerHTML = await headerRes.text()
-    } else if (headerHost) {
-      // Fallback if fetch fails (e.g. local file access)
-      console.warn("[layout] Header fetch failed, trying fallback path...")
-      const fallbackHeader = await fetch("components/header.html").catch(() => null);
-      if (fallbackHeader && fallbackHeader.ok) {
-        headerHost.innerHTML = await fallbackHeader.text();
-      }
+    if (headerHost && headerRes.ok) {
+      headerHost.outerHTML = await headerRes.text();
+    }
+    if (footerHost && footerRes.ok) {
+      footerHost.outerHTML = await footerRes.text();
     }
 
-    if (footerHost && footerRes && footerRes.ok) {
-      footerHost.innerHTML = await footerRes.text()
-    } else if (footerHost) {
-      console.warn("[layout] Footer fetch failed, trying fallback path...")
-      const fallbackFooter = await fetch("components/footer.html").catch(() => null);
-      if (fallbackFooter && fallbackFooter.ok) {
-        footerHost.innerHTML = await fallbackFooter.text();
-      }
-    }
-
-    // After inject, normalize active link based on current hash or page
-    markActiveNavLink()
-    enableInPageSmoothScroll()
+    // specialized post-load initialization
+    initMobileMenu();
+    markActiveNavLink();
+    enableInPageSmoothScroll();
   } catch (err) {
-    console.error("[layout] Failed to load layout components", err)
+    console.error("[Performance] Layout components failed to load:", err);
   }
 }
 
 function verifyLayoutLoaded() {
+  // Silent verification for production
   const header = document.querySelector(".navbar")
   const footer = document.querySelector(".footer")
-  if (!header) {
-    console.warn("[layout] Header not found in DOM after injection")
-  } else {
-    // Header loaded
-  }
-  if (!footer) {
-    console.warn("[layout] Footer not found in DOM after injection")
-  } else {
-    // Footer loaded
+  if (!header || !footer) {
+    console.warn("[layout] Core components missing from DOM");
   }
 }
 
@@ -134,114 +116,67 @@ function enableInPageSmoothScroll() {
 }
 
 function initMobileMenu() {
-  const mobileMenuBtn = document.getElementById("mobile-menu-btn")
-  const navMenu = document.getElementById("nav-menu")
-  const navLinks = document.querySelectorAll(".nav-link")
-
-  if (!mobileMenuBtn || !navMenu) {
-    console.log("[v0] Mobile menu elements not found")
-    return
+  const mobileMenuBtn = document.getElementById("mobile-menu-btn");
+  const navMenu = document.getElementById("nav-menu");
+  const navLinks = document.querySelectorAll(".nav-link");
+  if (!mobileMenuBtn || !navMenu) return;
+  // Toggle Function
+  function toggleMenu() {
+    const isActive = mobileMenuBtn.classList.contains("active");
+    if (isActive) closeMobileMenu();
+    else openMobileMenu();
   }
-
-
-
-  // Toggle mobile menu
-  mobileMenuBtn.addEventListener("click", (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    const isActive = mobileMenuBtn.classList.contains("active")
-
-    if (isActive) {
-      closeMobileMenu()
-    } else {
-      openMobileMenu()
-    }
-
-    console.log("[v0] Mobile menu toggled:", !isActive ? "opened" : "closed")
-  })
-
-  // Close menu when clicking nav links
-  navLinks.forEach((link) => {
-    link.addEventListener("click", () => {
-      if (window.innerWidth <= 768) {
-        closeMobileMenu()
-        console.log("[v0] Nav link clicked, closing mobile menu on mobile")
-      }
-    })
-  })
-
-  // Close menu when clicking outside
-  document.addEventListener("click", (e) => {
-    if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
-      closeMobileMenu()
-    }
-  })
-
-  // Close menu on escape key
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape") {
-      closeMobileMenu()
-    }
-  })
-
-  // Handle orientation change
-  window.addEventListener("orientationchange", () => {
-    setTimeout(() => {
-      closeMobileMenu()
-      console.log("[v0] Orientation changed, closing mobile menu")
-    }, 100)
-  })
-
   function openMobileMenu() {
-    mobileMenuBtn.classList.add("active")
-    navMenu.classList.add("active")
-    navMenu.style.display = "flex"
-    document.body.style.overflow = "hidden"
-
-    // Add haptic feedback for Android
-    if (navigator.vibrate) {
-      navigator.vibrate(50)
-    }
+    mobileMenuBtn.classList.add("active");
+    navMenu.classList.add("active");
+    navMenu.style.display = "flex"; // Force display flex for animation
+    document.body.style.overflow = "hidden"; // Prevent background scrolling
   }
-
   function closeMobileMenu() {
-    mobileMenuBtn.classList.remove("active")
-    navMenu.classList.remove("active")
-    document.body.style.overflow = ""
-
-    // Delay hiding to allow animation to complete
+    mobileMenuBtn.classList.remove("active");
+    navMenu.classList.remove("active");
+    document.body.style.overflow = ""; // Restore scrolling
+    // Use timeout to allow CSS animation to finish before hiding if needed
     setTimeout(() => {
       if (!navMenu.classList.contains("active") && window.innerWidth <= 768) {
-        navMenu.style.display = "none"
+        navMenu.style.display = "none";
       }
-    }, 300)
+    }, 300);
   }
-
-  // Show mobile menu button on mobile devices
-  if (window.innerWidth <= 768) {
-    mobileMenuBtn.style.display = "flex"
-    mobileMenuBtn.style.visibility = "visible"
-    mobileMenuBtn.style.opacity = "1"
-    console.log("[v0] Mobile menu button displayed for mobile device")
-  }
-
-  // Handle window resize
+  // Event Listeners
+  mobileMenuBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    toggleMenu();
+  });
+  // Close when clicking a link
+  navLinks.forEach(link => {
+    link.addEventListener("click", () => {
+      if (window.innerWidth <= 768) closeMobileMenu();
+    });
+  });
+  // Close on outside click
+  document.addEventListener("click", (e) => {
+    if (!navMenu.contains(e.target) && !mobileMenuBtn.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
+  // Reset on window resize (from mobile to desktop)
   window.addEventListener("resize", () => {
     if (window.innerWidth > 768) {
-      closeMobileMenu()
-      mobileMenuBtn.style.display = "none"
-      navMenu.style.display = "flex"
+      closeMobileMenu();
+      navMenu.style.display = "flex"; // Restore desktop display
+      mobileMenuBtn.style.display = "none";
     } else {
-      mobileMenuBtn.style.display = "flex"
-      mobileMenuBtn.style.visibility = "visible"
-      mobileMenuBtn.style.opacity = "1"
+      mobileMenuBtn.style.display = "flex";
       if (!navMenu.classList.contains("active")) {
-        navMenu.style.display = "none"
+        navMenu.style.display = "none";
       }
     }
-  })
+  });
 }
+
+
 
 function initParticleAnimation() {
   const bgDecoration = document.querySelector(".bg-decoration")
@@ -417,9 +352,7 @@ function initMapLoader() {
   }, 5000)
 }
 
-function debugContactSection() {
-  // Production cleanup: removed debug logs and listeners
-}
+// Production: Redundant debug functions removed
 
 function optimizeForMobile() {
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
@@ -543,7 +476,7 @@ function initNotesPage() {
       <div class="note-row fade-in">
         <div class="note-info">
           <div class="note-icon">
-            <i class="${getFileIcon(note.type || '')}"></i>
+            <i class="${getFileIcon(note.mimeType || note.type || '')}"></i>
           </div>
           <div class="note-content">
             <h3>${note.name || 'Untitled Document'}</h3>
@@ -551,8 +484,8 @@ function initNotesPage() {
           </div>
         </div>
         <div class="note-meta-row">
-          <span><i class="fas fa-file-alt"></i> ${note.type || "Document"}</span>
-          <span><i class="fas fa-calendar-alt"></i> Jan 2024</span>
+          <span><i class="fas fa-file-alt"></i> ${note.type || "PDF"}</span>
+          <span><i class="fas fa-calendar-alt"></i> ${note.dateCreated || "Recent"}</span>
         </div>
         <div class="note-actions">
            <a href="${note.url || '#'}" target="_blank" class="btn-view" title="View in Drive">
@@ -573,7 +506,14 @@ function initNotesPage() {
   // Global download function for the buttons
   window.downloadNote = async (id, fileName, event) => {
     const btn = event ? event.currentTarget : null
-    if (btn) btn.classList.add("loading")
+    let originalHtml = '';
+
+    if (btn) {
+      btn.classList.add("loading");
+      originalHtml = btn.innerHTML;
+      // Change to custom CSS spinner
+      btn.innerHTML = '<span class="btn-spinner"></span> Downloading...';
+    }
 
     try {
       if (!WEB_APP_URL || WEB_APP_URL.includes("replace")) {
@@ -601,14 +541,19 @@ function initNotesPage() {
       console.error("[v0] Download error:", err)
       alert("Error initiating download. Check your console for details.")
     } finally {
-      if (btn) btn.classList.remove("loading")
+      if (btn) {
+        btn.classList.remove("loading");
+        // Restore original state (or keep 'Downloaded' state if we wanted, but restore is safer for re-clicks)
+        btn.innerHTML = originalHtml;
+      }
     }
   }
 
   function getFileIcon(mimeType) {
-    if (mimeType.includes("pdf")) return "fas fa-file-pdf"
-    if (mimeType.includes("word") || mimeType.includes("document")) return "fas fa-file-word"
-    if (mimeType.includes("image")) return "fas fa-file-image"
+    const mime = (mimeType || "").toLowerCase()
+    if (mime.includes("pdf")) return "fas fa-file-pdf"
+    if (mime.includes("word") || mime.includes("document")) return "fas fa-file-word"
+    if (mime.includes("image")) return "fas fa-file-image"
     return "fas fa-file-alt"
   }
 
