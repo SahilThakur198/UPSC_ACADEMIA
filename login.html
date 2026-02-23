@@ -17,6 +17,40 @@
     content="Access your UPSC Academia student portal for course materials and progress tracking.">
   <meta property="og:image" content="https://upscacademia.com/img/logo.png">
 
+  <meta name="robots" content="noindex, nofollow">
+  <!-- Canonical URL -->
+  <link rel="canonical" href="https://upscacademia.com/login.html">
+
+  <!-- Breadcrumb Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://upscacademia.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Portal",
+        "item": "https://upscacademia.com/login.html"
+      }
+    ]
+  }
+  </script>
+
+  <!-- Twitter -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:url" content="https://upscacademia.com/login.html">
+  <meta name="twitter:title" content="Academia Portal | UPSC Academia">
+  <meta name="twitter:description"
+    content="Access your UPSC Academia student portal for course materials and progress tracking.">
+  <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+
   <link
     href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
     rel="stylesheet">
@@ -229,7 +263,8 @@
       margin-bottom: 30px;
     }
 
-    .welcome-text h1 {
+    .welcome-text h1,
+    .welcome-text h2 {
       color: var(--primary-color);
       font-size: 24px;
       font-weight: 700;
@@ -633,6 +668,200 @@
       border-bottom: none;
     }
 
+    /* Dark Mode Table Fixes */
+    body.dark-mode .leads-table {
+      background: #1e1e2f;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .leads-table td {
+      color: #e0e0e0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .leads-table tbody tr:hover {
+      background-color: rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .leads-table thead {
+      background: #2b1369;
+    }
+
+    /* Settings Grid */
+    .settings-grid {
+      display: grid;
+      gap: 25px;
+    }
+
+    .settings-card {
+      background: var(--white);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .settings-header {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .settings-header .icon-box {
+      width: 45px;
+      height: 45px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      color: var(--primary-color);
+      background: var(--primary-light);
+    }
+
+    .settings-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .setting-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 0;
+      border-bottom: 1px solid #f0f0f0;
+    }
+
+    .setting-row:last-child {
+      border-bottom: none;
+    }
+
+    .setting-info h4 {
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+
+    .setting-info p {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Toggle Switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-switch .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #ccc;
+      transition: 0.4s;
+    }
+
+    .toggle-switch .slider.round {
+      border-radius: 28px;
+    }
+
+    .toggle-switch .slider:before {
+      position: absolute;
+      content: "";
+      height: 22px;
+      width: 22px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.4s;
+      border-radius: 50%;
+    }
+
+    .toggle-switch input:checked+.slider {
+      background: var(--accent-color);
+    }
+
+    .toggle-switch input:checked+.slider:before {
+      transform: translateX(24px);
+    }
+
+    /* Dark Mode Styles */
+    body.dark-mode {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+
+    body.dark-mode .bg-decoration {
+      background: linear-gradient(135deg, rgba(43, 19, 105, 0.1) 0%, rgba(203, 101, 244, 0.08) 100%);
+    }
+
+    body.dark-mode .main-content {
+      background: #1a1a2e;
+    }
+
+    body.dark-mode .welcome-text h1 {
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .welcome-text p {
+      color: #aaa;
+    }
+
+    body.dark-mode .stat-card,
+    body.dark-mode .upload-section,
+    body.dark-mode .table-container,
+    body.dark-mode .settings-card {
+      background: #1e1e2f;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .stat-card h3,
+    body.dark-mode .upload-section h3,
+    body.dark-mode .table-container h3,
+    body.dark-mode .settings-header h3,
+    body.dark-mode .setting-info h4 {
+      color: #e0e0e0;
+    }
+
+    body.dark-mode th {
+      color: #aaa;
+      border-bottom-color: rgba(255, 255, 255, 0.1);
+    }
+
+    body.dark-mode td {
+      color: #e0e0e0;
+      border-bottom-color: rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .file-item {
+      background: #1e1e2f;
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    body.dark-mode .file-name {
+      color: #e0e0e0;
+    }
+
+    body.dark-mode .drag-drop-area {
+      background: #16213e;
+      border-color: var(--primary-light);
+    }
+
     .empty-state {
       text-align: center;
       padding: 60px 20px;
@@ -741,7 +970,8 @@
       text-align: center;
     }
 
-    form h1 {
+    form h1,
+    form h2 {
       font-weight: 800;
       margin-bottom: 15px;
       color: var(--primary-blue);
@@ -1008,7 +1238,8 @@
       transition: all 0.6s ease-in-out;
     }
 
-    .toggle-panel h1 {
+    .toggle-panel h1,
+    .toggle-panel h2 {
       color: white;
       font-size: 2.2rem;
     }
@@ -1478,6 +1709,100 @@
       .leads-table {
         min-width: 800px;
       }
+
+      /* Mobile Input Improvements */
+      input[type="text"],
+      input[type="email"],
+      input[type="password"],
+      input[type="file"] {
+        padding: 15px 20px;
+        font-size: 16px;
+        margin-bottom: 15px;
+        height: 50px;
+      }
+
+      button {
+        padding: 15px 45px;
+        font-size: 15px;
+        width: 100%;
+      }
+
+      /* Responsive Dashboard Layout - Bottom Navigation */
+      .dashboard-wrapper {
+        flex-direction: column;
+      }
+
+      .sidebar {
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        overflow-x: auto;
+        padding: 10px;
+        order: 2;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        justify-content: space-around;
+        background: var(--primary-color);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+        border-right: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .sidebar h2 {
+        display: none;
+      }
+
+      .nav-item {
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        padding: 8px;
+        font-size: 10px;
+        margin: 0;
+        border-radius: 8px;
+        flex: 1;
+      }
+
+      .nav-item i {
+        margin-right: 0;
+        margin-bottom: 5px;
+        font-size: 20px;
+        width: auto;
+      }
+
+      /* Fix Logout position in bottom nav */
+      .sidebar>div[style="margin-top: auto;"] {
+        margin-top: 0 !important;
+        display: flex;
+        flex: 1;
+      }
+
+      .sidebar>div[style="margin-top: auto;"] .nav-item {
+        width: 100%;
+      }
+
+      .main-content {
+        padding: 20px 20px 90px 20px;
+        width: 100%;
+        overflow-y: scroll;
+        height: 100vh;
+      }
+
+      .stats-container {
+        grid-template-columns: 1fr;
+      }
+
+      .upload-section {
+        padding: 20px;
+      }
+
+      .modal-content {
+        width: 95%;
+        margin: 10% auto;
+        padding: 25px;
+      }
     }
 
 
@@ -1502,7 +1827,7 @@
     <div class="container" id="login-container">
       <div class="form-container sign-up">
         <form onsubmit="handleSignUp(event)">
-          <h1>Create Account</h1>
+          <h2>Create Account</h2>
           <div class="social-icons">
             <a href="index.html" class="home-icon-link" title="Back to Home">
               <i class="fa-solid fa-home"></i>
@@ -1527,7 +1852,7 @@
 
       <div class="form-container sign-in">
         <form onsubmit="handleSignIn(event)">
-          <h1>Sign In</h1>
+          <h2>Sign In</h2>
           <div class="social-icons">
             <a href="index.html" class="home-icon-link" title="Back to Home">
               <i class="fa-solid fa-home"></i>
@@ -1550,12 +1875,12 @@
       <div class="toggle-container">
         <div class="toggle">
           <div class="toggle-panel toggle-left">
-            <h1>Welcome Back!</h1>
+            <h2>Welcome Back!</h2>
             <p>To access your dashboard and manage student files, please login with your personal info.</p>
             <button id="login">Sign In</button>
           </div>
           <div class="toggle-panel toggle-right">
-            <h1>Hello, Teacher!</h1>
+            <h2>Hello, Teacher!</h2>
             <p>Enter your personal details to create an account and start your journey with UPSC Academia.</p>
             <button id="register">Sign Up</button>
           </div>
@@ -1589,7 +1914,7 @@
         <div class="main-content">
           <header>
             <div class="welcome-text">
-              <h1 id="welcomeUser">Welcome, Teacher</h1>
+              <h2 id="welcomeUser">Welcome, Teacher</h2>
               <p>Manage your classroom materials and requests</p>
             </div>
             <div class="social-icons" style="margin:0;">
@@ -1675,6 +2000,32 @@
 
               <div id="leadsContainer">
                 <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- Settings Tab -->
+          <div id="settingsTab" class="tab-content">
+            <div class="settings-grid">
+              <!-- Appearance Settings -->
+              <div class="settings-card">
+                <div class="settings-header">
+                  <div class="icon-box" style="background: var(--primary-light);">
+                    <i class="fa-solid fa-palette"></i>
+                  </div>
+                  <h3>Appearance</h3>
+                </div>
+
+                <div class="setting-row">
+                  <div class="setting-info">
+                    <h4>Dark Mode</h4>
+                    <p>Switch between light and dark themes</p>
+                  </div>
+                  <label class="toggle-switch">
+                    <input type="checkbox" id="darkModeToggle" onchange="toggleDarkMode()">
+                    <span class="slider round"></span>
+                  </label>
+                </div>
               </div>
             </div>
           </div>
