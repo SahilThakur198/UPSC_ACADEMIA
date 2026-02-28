@@ -39,6 +39,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Mobile button
     const enrollMobile = document.querySelector(".enroll-mobile.mobile-only")
     if (enrollMobile) enrollMobile.parentElement.style.display = "none"
+  } else if (bodyId === "admitted-reg-page") {
+    initAdmittedRegistration()
   }
 })
 
@@ -719,6 +721,194 @@ function initEnrollSubmission() {
       submitBtn.textContent = originalText
     }
   })
+}
+
+// =============================================
+// ADMITTED STUDENT REGISTRATION
+// =============================================
+function initAdmittedRegistration() {
+  const verifySection = document.getElementById("verifySection")
+  const registrationSection = document.getElementById("registrationSection")
+  const successSection = document.getElementById("successSection")
+  const verifyBtn = document.getElementById("verifyBtn")
+  const verifyInput = document.getElementById("verifyMahajyotiId")
+  const verifyMessage = document.getElementById("verifyMessage")
+  const regForm = document.getElementById("admittedRegForm")
+  const regSubmitBtn = document.getElementById("regSubmitBtn")
+  const regMessage = document.getElementById("regMessage")
+  const stepDot1 = document.getElementById("stepDot1")
+  const stepDot2 = document.getElementById("stepDot2")
+  const stepConnector = document.getElementById("stepConnector")
+
+  if (!verifyBtn || !verifyInput) return
+
+  // Helper: show inline message
+  function showMessage(el, text, type) {
+    if (!el) return
+    el.className = "admitted-inline-message show " + type
+    el.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i><span>${text}</span>`
+  }
+
+  function hideMessage(el) {
+    if (!el) return
+    el.className = "admitted-inline-message"
+    el.innerHTML = ""
+  }
+
+  // Helper: set button loading state
+  function setLoading(btn, isLoading, originalHtml) {
+    if (!btn) return
+    if (isLoading) {
+      btn._originalHtml = btn.innerHTML
+      btn.innerHTML = '<span class="btn-spinner"></span> Processing...'
+      btn.classList.add("loading")
+      btn.disabled = true
+    } else {
+      btn.innerHTML = originalHtml || btn._originalHtml || "Submit"
+      btn.classList.remove("loading")
+      btn.disabled = false
+    }
+  }
+
+  // Helper: advance step indicator
+  function goToStep2() {
+    stepDot1.classList.remove("active")
+    stepDot1.classList.add("completed")
+    stepDot1.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    stepConnector.classList.add("active")
+    stepDot2.classList.add("active")
+  }
+
+  // VERIFY BUTTON CLICK
+  verifyBtn.addEventListener("click", async () => {
+    const mid = verifyInput.value.trim()
+    if (!mid) {
+      showMessage(verifyMessage, "Please enter your Mahajyoti ID.", "error")
+      verifyInput.focus()
+      return
+    }
+
+    hideMessage(verifyMessage)
+    setLoading(verifyBtn, true)
+
+    try {
+      const params = new URLSearchParams()
+      params.append("action", "verifyMahajyoti")
+      params.append("data", JSON.stringify({ mid: mid }))
+
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params
+      })
+
+      const text = await res.text()
+      let data
+      try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
+
+      if (data.exists) {
+        // SUCCESS: Prefill form and show step 2
+        const studentData = data.data || {}
+
+        document.getElementById("regMahajyotiId").value = mid
+        document.getElementById("regName").value = studentData.name || studentData.student_name || ""
+        document.getElementById("regCourse").value = studentData.course || studentData.batch || ""
+        document.getElementById("regAdmissionDate").value = studentData.admission_date || studentData.date || ""
+        document.getElementById("regPhone").value = studentData.phone || studentData.mobile || ""
+        document.getElementById("regEmail").value = studentData.email || ""
+        document.getElementById("regGuardian").value = studentData.father_name || studentData.guardian || studentData["father name"] || ""
+        document.getElementById("regAddress").value = studentData.address || ""
+
+        // Transition UI
+        goToStep2()
+        verifySection.style.display = "none"
+        registrationSection.style.display = "block"
+        registrationSection.scrollIntoView({ behavior: "smooth", block: "start" })
+
+        showPopup("✅ Mahajyoti ID verified! Please complete the form below.", "success")
+      } else {
+        showMessage(verifyMessage, data.message || "Mahajyoti ID not found. Please contact the office.", "error")
+      }
+    } catch (err) {
+      console.error("[admitted-reg] Verify error:", err)
+      showMessage(verifyMessage, "Network error. Please check your connection and try again.", "error")
+    } finally {
+      setLoading(verifyBtn, false, '<i class="fas fa-search"></i> Verify My ID')
+    }
+  })
+
+  // Allow pressing Enter in verify input
+  verifyInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      verifyBtn.click()
+    }
+  })
+
+  // REGISTRATION FORM SUBMIT
+  if (regForm) {
+    regForm.addEventListener("submit", async (e) => {
+      e.preventDefault()
+
+      // Honeypot check
+      const honeypot = regForm.querySelector('input[name="website"]')
+      if (honeypot && honeypot.value.trim() !== "") return
+
+      // Client-side validation
+      const phone = document.getElementById("regPhone").value.trim()
+      const email = document.getElementById("regEmail").value.trim()
+
+      if (!validatePhoneNumber(phone)) {
+        showMessage(regMessage, "Please enter a valid phone number (at least 10 digits).", "error")
+        return
+      }
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showMessage(regMessage, "Please enter a valid email address.", "error")
+        return
+      }
+
+      hideMessage(regMessage)
+      setLoading(regSubmitBtn, true)
+
+      try {
+        const formData = new FormData(regForm)
+        const regData = Object.fromEntries(formData.entries())
+        regData.mid = document.getElementById("regMahajyotiId").value
+
+        const params = new URLSearchParams()
+        params.append("action", "registerAdmitted")
+        params.append("data", JSON.stringify(regData))
+
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params
+        })
+
+        const text = await res.text()
+        let data
+        try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
+
+        if (data.success) {
+          // Show success state
+          registrationSection.style.display = "none"
+          successSection.style.display = "block"
+          stepDot2.classList.remove("active")
+          stepDot2.classList.add("completed")
+          stepDot2.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+          successSection.scrollIntoView({ behavior: "smooth", block: "start" })
+          showPopup("🎉 Registration completed successfully!", "success")
+        } else {
+          showMessage(regMessage, data.message || "Registration failed. Please try again.", "error")
+        }
+      } catch (err) {
+        console.error("[admitted-reg] Submit error:", err)
+        showMessage(regMessage, "Network error. Please check your connection and try again.", "error")
+      } finally {
+        setLoading(regSubmitBtn, false, '<i class="fas fa-paper-plane"></i> Complete Registration')
+      }
+    })
+  }
 }
 
 window.addEventListener("orientationchange", () => {

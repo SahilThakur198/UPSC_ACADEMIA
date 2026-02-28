@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+    <title>Admitted Student Registration | UPSC Academia Pune</title>
+    <meta name="description"
+        content="Already admitted at UPSC Academia? Complete your online registration by verifying your Mahajyoti ID. Quick and easy process for existing students.">
+    <meta name="keywords"
+        content="UPSC Academia registration, Mahajyoti ID, admitted student, online registration, UPSC coaching Pune">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph Meta Tags -->
+    <meta property="og:title" content="Admitted Student Registration - UPSC Academia">
+    <meta property="og:description"
+        content="Complete your online registration at UPSC Academia. Verify your Mahajyoti ID and update your details.">
+    <meta property="og:url" content="https://upscacademia.com/admitted-registration.html">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="https://upscacademia.com/img/logo.png">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="Admitted Student Registration - UPSC Academia">
+    <meta name="twitter:description"
+        content="Complete your online registration at UPSC Academia. Verify your Mahajyoti ID and update your details.">
+    <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://upscacademia.com/admitted-registration.html">
+
+    <!-- Breadcrumb Schema -->
+    <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      {
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Home",
+        "item": "https://upscacademia.com/"
+      },
+      {
+        "@type": "ListItem",
+        "position": 2,
+        "name": "Admitted Student Registration",
+        "item": "https://upscacademia.com/admitted-registration.html"
+      }
+    ]
+  }
+  </script>
+
+    <!-- Fonts + Icons -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kalam:wght@400;700&family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    <!-- Your Styles -->
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body id="admitted-reg-page">
+    <div class="bg-decoration"></div>
+
+    <!-- Header Component -->
+    <div id="site-header"></div>
+    <div class="navbar-spacer"></div>
+
+    <!-- Main Content -->
+    <main>
+        <div class="page-container">
+            <div class="enrollment-form-container admitted-reg-container">
+
+                <!-- Page Heading -->
+                <h1><i class="fas fa-user-check" style="margin-right: 10px; color: var(--accent-red);"></i>Mahajyoti Online Registration</h1>
+                <p class="admitted-reg-subtitle"> ही नोंदणी फक्त त्या विद्यार्थ्यांसाठी आहे, ज्यांचा महाज्योती अंतर्गत 'UPSC अकॅडेमिया' मध्ये आधीच प्रवेश निश्चित झाला आहे. कृपया खाली आपला महाज्योती आयडी (ID) टाका आणि आपली ऑनलाईन नोंदणी पूर्ण करा </p>
+
+                <!-- Step Indicator -->
+                <div class="admitted-steps-indicator">
+                    <div class="step-dot active" id="stepDot1">
+                        <span class="step-number">1</span>
+                        <span class="step-label">Verify ID</span>
+                    </div>
+                    <div class="step-connector" id="stepConnector"></div>
+                    <div class="step-dot" id="stepDot2">
+                        <span class="step-number">2</span>
+                        <span class="step-label">Register</span>
+                    </div>
+                </div>
+
+                <!-- STEP 1: Verify Mahajyoti ID -->
+                <div id="verifySection" class="admitted-step-section">
+                    <div class="form-group">
+                        <label for="verifyMahajyotiId"><i class="fas fa-id-card"></i> Mahajyoti ID</label>
+                        <input type="text" id="verifyMahajyotiId" name="verifyMahajyotiId" required
+                            placeholder="Enter your Mahajyoti ID" autocomplete="off" />
+                    </div>
+                    <button type="button" class="submit-btn" id="verifyBtn">
+                        <i class="fas fa-search"></i> Verify My ID
+                    </button>
+                    <div id="verifyMessage" class="admitted-inline-message" role="alert" aria-live="polite"></div>
+                </div>
+
+                <!-- STEP 2: Registration Form (hidden initially) -->
+                <div id="registrationSection" class="admitted-step-section" style="display: none;">
+                    <form id="admittedRegForm">
+                        <!-- Honeypot anti-spam field -->
+                        <div style="position: absolute; left: -9999px;" aria-hidden="true">
+                            <input type="text" name="website" tabindex="-1" autocomplete="off" />
+                        </div>
+
+                        <div class="admitted-prefill-banner">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Your details have been prefilled from our records. Please verify and update if
+                                needed.</span>
+                        </div>
+
+                        <!-- Mahajyoti ID (readonly) -->
+                        <div class="form-group">
+                            <label for="regMahajyotiId"><i class="fas fa-id-card"></i> Mahajyoti ID</label>
+                            <input type="text" id="regMahajyotiId" name="mahajyoti_id" readonly
+                                class="prefilled-readonly" />
+                        </div>
+
+                        <!-- Name (readonly) -->
+                        <div class="form-group">
+                            <label for="regName"><i class="fas fa-user"></i> Full Name</label>
+                            <input type="text" id="regName" name="name" readonly class="prefilled-readonly" />
+                        </div>
+
+                        <!-- Two-column row: Course + Admission Date -->
+                        <div class="admitted-form-row">
+                            <div class="form-group">
+                                <label for="regCourse"><i class="fas fa-book"></i> Course / Batch</label>
+                                <input type="text" id="regCourse" name="course" readonly class="prefilled-readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label for="regAdmissionDate"><i class="fas fa-calendar-alt"></i> Admission Date</label>
+                                <input type="text" id="regAdmissionDate" name="admission_date" readonly
+                                    class="prefilled-readonly" />
+                            </div>
+                        </div>
+
+                        <!-- Editable: Phone -->
+                        <div class="form-group">
+                            <label for="regPhone"><i class="fas fa-phone"></i> Phone Number <span
+                                    class="required-star">*</span></label>
+                            <input type="tel" id="regPhone" name="phone" required
+                                placeholder="Enter your phone number" />
+                        </div>
+
+                        <!-- Editable: Email -->
+                        <div class="form-group">
+                            <label for="regEmail"><i class="fas fa-envelope"></i> Email Address <span
+                                    class="required-star">*</span></label>
+                            <input type="email" id="regEmail" name="email" required placeholder="example@email.com" />
+                        </div>
+
+                        <!-- Editable: Guardian / Father Name -->
+                        <div class="form-group">
+                            <label for="regGuardian"><i class="fas fa-users"></i> Father / Guardian Name</label>
+                            <input type="text" id="regGuardian" name="father_name" placeholder="Enter guardian name" />
+                        </div>
+
+                        <!-- Editable: Address -->
+                        <div class="form-group">
+                            <label for="regAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
+                            <textarea id="regAddress" name="address" rows="3"
+                                placeholder="Enter your full address"></textarea>
+                        </div>
+
+                        <button type="submit" class="submit-btn" id="regSubmitBtn">
+                            <i class="fas fa-paper-plane"></i> Complete Registration
+                        </button>
+                        <div id="regMessage" class="admitted-inline-message" role="alert" aria-live="polite"></div>
+                    </form>
+                </div>
+
+                <!-- Success State (hidden initially) -->
+                <div id="successSection" class="admitted-step-section" style="display: none;">
+                    <div class="admitted-success-card">
+                        <div class="success-icon-wrapper">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h2>Registration Complete!</h2>
+                        <p>Your online registration has been saved successfully. Thank you for completing the process.
+                        </p>
+                        <a href="index.html" class="submit-btn"
+                            style="display: inline-block; width: auto; padding: 0.8rem 2rem; text-decoration: none;">
+                            <i class="fas fa-home"></i> Back to Home
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Component -->
+    <div id="site-footer"></div>
+
+    <!-- Main Script -->
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</body>
+
+</html>

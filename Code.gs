@@ -92,6 +92,15 @@ function handleApiRequest(e) {
       case 'verifyOTP':
         result = verifyOTP(data.email, data.otp);
         break;
+      case 'verifyMahajyoti':
+        result = verifyMahajyotiId(data.mid);
+        break;
+      case 'registerAdmitted':
+        result = processAdmittedRegistration(data);
+        break;
+      case 'getRegistrations':
+        result = getRegistrationsFromSheet();
+        break;
       default:
         result = { success: false, message: 'Invalid action: ' + action };
     }
@@ -580,6 +589,209 @@ function sendOTPEmail(email, otp, userName) {
   `;
   
   MailApp.sendEmail({ to: email, subject: subject, htmlBody: htmlBody });
+}
+
+// =============================================
+// ADMITTED STUDENT REGISTRATION FUNCTIONS
+// =============================================
+
+/**
+ * Get all online-registered students for the staff dashboard
+ */
+function getRegistrationsFromSheet() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('student_registration');
+
+    if (!sheet) {
+      return { success: false, message: 'student_registration sheet not found.' };
+    }
+
+    var data = sheet.getDataRange().getDisplayValues();
+    if (data.length < 2) {
+      return { success: true, registrations: [] };
+    }
+
+    var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+
+    // Find key column indices
+    var midCol = headers.indexOf('mahajyoti_id');
+    if (midCol === -1) midCol = headers.indexOf('mahajyoti id');
+    if (midCol === -1) midCol = 0;
+
+    var nameCol = headers.indexOf('name');
+    if (nameCol === -1) nameCol = headers.indexOf('student_name');
+
+    var phoneCol = headers.indexOf('phone');
+    if (phoneCol === -1) phoneCol = headers.indexOf('mobile');
+
+    var emailCol = headers.indexOf('email');
+    var courseCol = headers.indexOf('course');
+    if (courseCol === -1) courseCol = headers.indexOf('batch');
+
+    var regCol = headers.indexOf('online_registered');
+    if (regCol === -1) regCol = headers.indexOf('online registered');
+
+    var dateCol = headers.indexOf('online_registration_date');
+    if (dateCol === -1) dateCol = headers.indexOf('registration_date');
+
+    var registrations = [];
+
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      var isOnlineReg = regCol !== -1 ? String(row[regCol]).trim().toUpperCase() : '';
+
+      if (isOnlineReg === 'TRUE' || isOnlineReg === 'YES' || isOnlineReg === '1') {
+        registrations.push({
+          mahajyoti_id: midCol !== -1 ? row[midCol] : '',
+          name: nameCol !== -1 ? row[nameCol] : '',
+          phone: phoneCol !== -1 ? row[phoneCol] : '',
+          email: emailCol !== -1 ? row[emailCol] : '',
+          course: courseCol !== -1 ? row[courseCol] : '',
+          registration_date: dateCol !== -1 ? row[dateCol] : ''
+        });
+      }
+    }
+
+    return { success: true, registrations: registrations };
+  } catch (err) {
+    return { success: false, message: 'Error fetching registrations: ' + err.toString() };
+  }
+}
+
+/**
+ * Verify if a Mahajyoti ID exists in student_registration sheet
+ * Returns student data if found
+ */
+function verifyMahajyotiId(mid) {
+  try {
+    if (!mid || String(mid).trim() === '') {
+      return { success: false, exists: false, message: 'Please provide a valid Mahajyoti ID.' };
+    }
+
+    var sanitizedMid = String(mid).trim();
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('student_registration');
+
+    if (!sheet) {
+      return { success: false, exists: false, message: 'Student registration sheet not found. Contact admin.' };
+    }
+
+    var data = sheet.getDataRange().getDisplayValues();
+    if (data.length < 2) {
+      return { success: false, exists: false, message: 'No student records found.' };
+    }
+
+    // Find header row to get column indices
+    var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+    var midCol = headers.indexOf('mahajyoti_id');
+    if (midCol === -1) midCol = headers.indexOf('mahajyoti id');
+    if (midCol === -1) midCol = headers.indexOf('mahajyotiid');
+    if (midCol === -1) midCol = 0; // fallback: first column
+
+    // Search for the Mahajyoti ID
+    for (var i = 1; i < data.length; i++) {
+      if (String(data[i][midCol]).trim().toLowerCase() === sanitizedMid.toLowerCase()) {
+        // Build student data object from headers
+        var studentData = {};
+        for (var j = 0; j < headers.length; j++) {
+          studentData[headers[j]] = data[i][j] || '';
+        }
+
+        return {
+          success: true,
+          exists: true,
+          rowIndex: i + 1, // 1-indexed sheet row
+          data: studentData
+        };
+      }
+    }
+
+    return { success: true, exists: false, message: 'Mahajyoti ID not found. Please contact the office.' };
+  } catch (err) {
+    return { success: false, exists: false, message: 'Verification error: ' + err.toString() };
+  }
+}
+
+/**
+ * Process admitted student online registration
+ * Re-verifies ID and updates the sheet row
+ */
+function processAdmittedRegistration(data) {
+  try {
+    if (!data || !data.mid) {
+      return { success: false, message: 'Missing Mahajyoti ID.' };
+    }
+
+    // Anti-spam: check honeypot field
+    if (data.website && String(data.website).trim() !== '') {
+      return { success: false, message: 'Registration failed.' };
+    }
+
+    var sanitizedMid = String(data.mid).trim();
+
+    // Re-verify the ID exists (security re-check)
+    var verifyResult = verifyMahajyotiId(sanitizedMid);
+    if (!verifyResult.exists) {
+      return { success: false, message: 'Mahajyoti ID not found. Cannot register.' };
+    }
+
+    var rowIndex = verifyResult.rowIndex;
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('student_registration');
+    var headers = sheet.getDataRange().getDisplayValues()[0].map(function(h) {
+      return String(h).trim().toLowerCase();
+    });
+
+    // Sanitize all input values
+    function sanitize(val) {
+      if (!val) return '';
+      return String(val).replace(/<[^>]*>/g, '').trim().substring(0, 500);
+    }
+
+    // Map of fields to update (header name -> value)
+    var updates = {
+      'phone': sanitize(data.phone),
+      'email': sanitize(data.email),
+      'father_name': sanitize(data.father_name),
+      'address': sanitize(data.address),
+      'online_registered': 'TRUE',
+      'online_registration_date': new Date().toISOString()
+    };
+
+    // Also try common alternative header names
+    var altNames = {
+      'guardian': sanitize(data.father_name),
+      'father name': sanitize(data.father_name),
+      'father_name': sanitize(data.father_name),
+      'online registered': 'TRUE',
+      'online_registration_date': new Date().toISOString(),
+      'registration_date': new Date().toISOString()
+    };
+
+    // Merge alt names into updates
+    for (var key in altNames) {
+      if (!updates.hasOwnProperty(key)) {
+        updates[key] = altNames[key];
+      }
+    }
+
+    // Update each column that exists in the sheet
+    for (var colName in updates) {
+      var colIndex = headers.indexOf(colName);
+      if (colIndex !== -1 && updates[colName] !== '') {
+        sheet.getRange(rowIndex, colIndex + 1).setValue(updates[colName]);
+      }
+    }
+
+    return {
+      success: true,
+      message: 'Online registration completed successfully!',
+      rowIndex: rowIndex
+    };
+  } catch (err) {
+    return { success: false, message: 'Registration error: ' + err.toString() };
+  }
 }
 
 function isValidEmail(email) {
