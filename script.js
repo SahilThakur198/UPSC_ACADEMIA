@@ -825,7 +825,7 @@ function initAdmittedRegistration() {
         registrationSection.style.display = "block"
         registrationSection.scrollIntoView({ behavior: "smooth", block: "start" })
 
-        showPopup("✅ Mahajyoti ID verified! Please complete the form below.", "success")
+        showPopup("Mahajyoti ID verified! Please complete the form below.", "success")
       } else {
         showMessage(verifyMessage, data.message || "Mahajyoti ID not found. Please contact the office.", "error")
       }
