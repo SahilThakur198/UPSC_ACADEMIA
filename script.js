@@ -812,7 +812,7 @@ function initAdmittedRegistration() {
       if (data.exists) {
         // CHECK: Already registered online?
         if (data.already_registered) {
-          showMessage(verifyMessage, "तुमची ऑनलाईन नोंदणी आधीच पूर्ण झाली आहे. पुन्हा नोंदणीची आवश्यकता नाही. (Your online registration is already complete. No need to register again.)", "error")
+          showMessage(verifyMessage, "तुमची ऑनलाईन नोंदणी आधीच पूर्ण झाली आहे. पुन्हा नोंदणीची आवश्यकता नाही. <br> (Your online registration is already complete. No need to register again.)", "error")
           verifyInput.disabled = true
           verifyBtn.disabled = true
           verifyBtn.style.opacity = "0.5"
