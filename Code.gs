@@ -689,9 +689,20 @@ function verifyMahajyotiId(mid) {
     if (midCol === -1) midCol = headers.indexOf('mahajyotiid');
     if (midCol === -1) midCol = 0; // fallback: first column
 
+    // Find online_registered column index
+    var regCol = headers.indexOf('online_registered');
+    if (regCol === -1) regCol = headers.indexOf('online registered');
+
     // Search for the Mahajyoti ID
     for (var i = 1; i < data.length; i++) {
       if (String(data[i][midCol]).trim().toLowerCase() === sanitizedMid.toLowerCase()) {
+        // Check if already online registered
+        var isAlreadyRegistered = false;
+        if (regCol !== -1) {
+          var regValue = String(data[i][regCol]).trim().toUpperCase();
+          isAlreadyRegistered = (regValue === 'TRUE' || regValue === 'YES' || regValue === '1');
+        }
+
         // Build student data object from headers
         var studentData = {};
         for (var j = 0; j < headers.length; j++) {
@@ -701,6 +712,7 @@ function verifyMahajyotiId(mid) {
         return {
           success: true,
           exists: true,
+          already_registered: isAlreadyRegistered,
           rowIndex: i + 1, // 1-indexed sheet row
           data: studentData
         };
@@ -734,6 +746,11 @@ function processAdmittedRegistration(data) {
     var verifyResult = verifyMahajyotiId(sanitizedMid);
     if (!verifyResult.exists) {
       return { success: false, message: 'Mahajyoti ID not found. Cannot register.' };
+    }
+
+    // Block duplicate online registration
+    if (verifyResult.already_registered) {
+      return { success: false, message: 'This Mahajyoti ID has already been registered online. Duplicate registration is not allowed.' };
     }
 
     var rowIndex = verifyResult.rowIndex;

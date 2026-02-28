@@ -74,8 +74,11 @@
             <div class="enrollment-form-container admitted-reg-container">
 
                 <!-- Page Heading -->
-                <h1><i class="fas fa-user-check" style="margin-right: 10px; color: var(--accent-red);"></i>Mahajyoti Online Registration</h1>
-                <p class="admitted-reg-subtitle"> ही नोंदणी फक्त त्या विद्यार्थ्यांसाठी आहे, ज्यांचा महाज्योती अंतर्गत 'UPSC अकॅडेमिया' मध्ये आधीच प्रवेश निश्चित झाला आहे. कृपया खाली आपला महाज्योती आयडी (ID) टाका आणि आपली ऑनलाईन नोंदणी पूर्ण करा </p>
+                <h1><i class="fas fa-user-check" style="margin-right: 10px; color: var(--accent-red);"></i>Mahajyoti
+                    Online Registration</h1>
+                <p class="admitted-reg-subtitle"> ही नोंदणी फक्त त्या विद्यार्थ्यांसाठी आहे, ज्यांचा महाज्योती अंतर्गत
+                    'UPSC अकॅडेमिया' मध्ये आधीच प्रवेश निश्चित झाला आहे. कृपया खाली आपला महाज्योती आयडी (ID) टाका आणि
+                    आपली ऑनलाईन नोंदणी पूर्ण करा </p>
 
                 <!-- Step Indicator -->
                 <div class="admitted-steps-indicator">
@@ -148,7 +151,8 @@
                             <label for="regPhone"><i class="fas fa-phone"></i> WhatsApp Number <span
                                     class="required-star">*</span></label>
                             <input type="tel" id="regPhone" name="phone" required
-                                placeholder="Enter your WhatsApp number" />
+                                placeholder="Enter your WhatsApp number" pattern="[6-9][0-9]{9}" maxlength="10"
+                                title="Enter a valid 10-digit Indian mobile number starting with 6-9" />
                         </div>
 
                         <!-- Editable: Email -->
@@ -160,15 +164,18 @@
 
                         <!-- Editable: Guardian / Father Name -->
                         <div class="form-group">
-                            <label for="regGuardian"><i class="fas fa-users"></i> Father / Guardian Name</label>
-                            <input type="text" id="regGuardian" name="father_name" placeholder="Enter guardian name" />
+                            <label for="regGuardian"><i class="fas fa-users"></i> Father / Guardian Name <span
+                                    class="required-star">*</span></label>
+                            <input type="text" id="regGuardian" name="father_name" required
+                                placeholder="Enter guardian name" minlength="2" />
                         </div>
 
                         <!-- Editable: Address -->
                         <div class="form-group">
-                            <label for="regAddress"><i class="fas fa-map-marker-alt"></i> Address</label>
-                            <textarea id="regAddress" name="address" rows="3"
-                                placeholder="Enter your full address"></textarea>
+                            <label for="regAddress"><i class="fas fa-map-marker-alt"></i> Address <span
+                                    class="required-star">*</span></label>
+                            <textarea id="regAddress" name="address" rows="3" required
+                                placeholder="Enter your full address" minlength="10"></textarea>
                         </div>
 
                         <button type="submit" class="submit-btn" id="regSubmitBtn">

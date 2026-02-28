@@ -625,7 +625,10 @@ const APPS_SCRIPT_URL = CONFIG.SCRIPT_URL;
 
 function validatePhoneNumber(phone) {
   const digitsOnly = (phone || "").replace(/\D/g, "")
-  return digitsOnly.length >= 10
+  // Indian mobile: exactly 10 digits, starts with 6-9
+  if (digitsOnly.length !== 10) return false
+  if (!/^[6-9]/.test(digitsOnly)) return false
+  return true
 }
 
 function ensurePopupStyles() {
@@ -807,6 +810,16 @@ function initAdmittedRegistration() {
       try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
 
       if (data.exists) {
+        // CHECK: Already registered online?
+        if (data.already_registered) {
+          showMessage(verifyMessage, "तुमची ऑनलाईन नोंदणी आधीच पूर्ण झाली आहे. पुन्हा नोंदणीची आवश्यकता नाही. (Your online registration is already complete. No need to register again.)", "error")
+          verifyInput.disabled = true
+          verifyBtn.disabled = true
+          verifyBtn.style.opacity = "0.5"
+          verifyBtn.style.cursor = "not-allowed"
+          return
+        }
+
         // SUCCESS: Prefill form and show step 2
         const studentData = data.data || {}
 
@@ -857,13 +870,47 @@ function initAdmittedRegistration() {
       // Client-side validation
       const phone = document.getElementById("regPhone").value.trim()
       const email = document.getElementById("regEmail").value.trim()
+      const guardian = document.getElementById("regGuardian").value.trim()
+      const address = document.getElementById("regAddress").value.trim()
 
-      if (!validatePhoneNumber(phone)) {
-        showMessage(regMessage, "Please enter a valid phone number (at least 10 digits).", "error")
+      if (!phone) {
+        showMessage(regMessage, "WhatsApp number is required.", "error")
+        document.getElementById("regPhone").focus()
         return
       }
-      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showMessage(regMessage, "Please enter a valid email address.", "error")
+      if (!validatePhoneNumber(phone)) {
+        showMessage(regMessage, "कृपया वैध 10-अंकी मोबाईल नंबर टाका (6-9 ने सुरू होणारा). / Please enter a valid 10-digit mobile number (starting with 6-9).", "error")
+        document.getElementById("regPhone").focus()
+        return
+      }
+      if (!email) {
+        showMessage(regMessage, "Email address is required.", "error")
+        document.getElementById("regEmail").focus()
+        return
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showMessage(regMessage, "Please enter a valid email address (e.g. name@example.com).", "error")
+        document.getElementById("regEmail").focus()
+        return
+      }
+      if (!guardian) {
+        showMessage(regMessage, "Father / Guardian Name is required.", "error")
+        document.getElementById("regGuardian").focus()
+        return
+      }
+      if (guardian.length < 2) {
+        showMessage(regMessage, "Father / Guardian Name must be at least 2 characters.", "error")
+        document.getElementById("regGuardian").focus()
+        return
+      }
+      if (!address) {
+        showMessage(regMessage, "Address is required.", "error")
+        document.getElementById("regAddress").focus()
+        return
+      }
+      if (address.length < 10) {
+        showMessage(regMessage, "Please enter a complete address (at least 10 characters).", "error")
+        document.getElementById("regAddress").focus()
         return
       }
 
