@@ -660,13 +660,13 @@ function getRegistrationsFromSheet() {
 }
 
 /**
- * Verify if a Mahajyoti ID exists in student_registration sheet
- * Returns student data if found
+ * Verify if a Reg ID exists in student_registration sheet
+ * Returns student data if found (new columns: Reg Id, Candidates Name, Percentile Scores, DOB, Gender, Category, Mob No, Batch Name)
  */
 function verifyMahajyotiId(mid) {
   try {
     if (!mid || String(mid).trim() === '') {
-      return { success: false, exists: false, message: 'Please provide a valid Mahajyoti ID.' };
+      return { success: false, exists: false, message: 'Please provide a valid Reg ID.' };
     }
 
     var sanitizedMid = String(mid).trim();
@@ -684,16 +684,20 @@ function verifyMahajyotiId(mid) {
 
     // Find header row to get column indices
     var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
-    var midCol = headers.indexOf('mahajyoti_id');
+
+    // Find Reg Id column (supports multiple header naming conventions)
+    var midCol = headers.indexOf('reg id');
+    if (midCol === -1) midCol = headers.indexOf('reg_id');
+    if (midCol === -1) midCol = headers.indexOf('regid');
+    if (midCol === -1) midCol = headers.indexOf('mahajyoti_id');
     if (midCol === -1) midCol = headers.indexOf('mahajyoti id');
-    if (midCol === -1) midCol = headers.indexOf('mahajyotiid');
     if (midCol === -1) midCol = 0; // fallback: first column
 
     // Find online_registered column index
     var regCol = headers.indexOf('online_registered');
     if (regCol === -1) regCol = headers.indexOf('online registered');
 
-    // Search for the Mahajyoti ID
+    // Search for the Reg ID
     for (var i = 1; i < data.length; i++) {
       if (String(data[i][midCol]).trim().toLowerCase() === sanitizedMid.toLowerCase()) {
         // Check if already online registered
@@ -719,7 +723,7 @@ function verifyMahajyotiId(mid) {
       }
     }
 
-    return { success: true, exists: false, message: 'Mahajyoti ID not found. Please contact the office.' };
+    return { success: true, exists: false, message: 'Reg ID not found. Please contact the office.' };
   } catch (err) {
     return { success: false, exists: false, message: 'Verification error: ' + err.toString() };
   }
@@ -768,30 +772,17 @@ function processAdmittedRegistration(data) {
 
     // Map of fields to update (header name -> value)
     var updates = {
-      'phone': sanitize(data.phone),
+      'whatsapp_number': sanitize(data.whatsapp_number),
+      'whatsapp number': sanitize(data.whatsapp_number),
       'email': sanitize(data.email),
-      'father_name': sanitize(data.father_name),
+      'email id': sanitize(data.email),
       'address': sanitize(data.address),
+      'full address': sanitize(data.address),
       'online_registered': 'TRUE',
-      'online_registration_date': new Date().toISOString()
-    };
-
-    // Also try common alternative header names
-    var altNames = {
-      'guardian': sanitize(data.father_name),
-      'father name': sanitize(data.father_name),
-      'father_name': sanitize(data.father_name),
       'online registered': 'TRUE',
       'online_registration_date': new Date().toISOString(),
       'registration_date': new Date().toISOString()
     };
-
-    // Merge alt names into updates
-    for (var key in altNames) {
-      if (!updates.hasOwnProperty(key)) {
-        updates[key] = altNames[key];
-      }
-    }
 
     // Update each column that exists in the sheet
     for (var colName in updates) {

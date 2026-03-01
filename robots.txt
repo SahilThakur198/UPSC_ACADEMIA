@@ -15,7 +15,7 @@ Allow: /*.css
 Allow: /*.js
 
 # Sitemap location
-Sitemap: https://upscacademia.com/sitemap.xml
+Sitemap: https://upscacademia.in/sitemap.xml
 
 # Crawl rate (optional - helps prevent server overload)
 Crawl-delay: 1

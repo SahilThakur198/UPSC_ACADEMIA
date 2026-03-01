@@ -6,25 +6,33 @@
   
   <!-- Homepage - Highest Priority -->
   <url>
-    <loc>https://upscacademia.com/</loc>
-    <lastmod>2026-01-08</lastmod>
+    <loc>https://upscacademia.in/</loc>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
   
   <!-- Enrollment Page - High Priority -->
   <url>
-    <loc>https://upscacademia.com/enroll.html</loc>
-    <lastmod>2026-01-08</lastmod>
+    <loc>https://upscacademia.in/enroll.html</loc>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   
   <!-- Student Notes Page - Medium Priority -->
   <url>
-    <loc>https://upscacademia.com/view_notes.html</loc>
-    <lastmod>2026-01-08</lastmod>
+    <loc>https://upscacademia.in/view_notes.html</loc>
+    <lastmod>2026-03-02</lastmod>
     <changefreq>weekly</changefreq>
+    <priority>0.6</priority>
+  </url>
+
+  <!-- Admitted Registration Page - Medium Priority -->
+  <url>
+    <loc>https://upscacademia.in/admitted-registration.html</loc>
+    <lastmod>2026-03-02</lastmod>
+    <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   

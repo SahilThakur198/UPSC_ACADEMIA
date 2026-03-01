@@ -727,11 +727,12 @@ function initEnrollSubmission() {
 }
 
 // =============================================
-// ADMITTED STUDENT REGISTRATION
+// ADMITTED STUDENT REGISTRATION (3-Step Flow)
 // =============================================
 function initAdmittedRegistration() {
   const verifySection = document.getElementById("verifySection")
   const registrationSection = document.getElementById("registrationSection")
+  const joinGroupSection = document.getElementById("joinGroupSection")
   const successSection = document.getElementById("successSection")
   const verifyBtn = document.getElementById("verifyBtn")
   const verifyInput = document.getElementById("verifyMahajyotiId")
@@ -741,9 +742,15 @@ function initAdmittedRegistration() {
   const regMessage = document.getElementById("regMessage")
   const stepDot1 = document.getElementById("stepDot1")
   const stepDot2 = document.getElementById("stepDot2")
-  const stepConnector = document.getElementById("stepConnector")
+  const stepDot3 = document.getElementById("stepDot3")
+  const stepConnector1 = document.getElementById("stepConnector1")
+  const stepConnector2 = document.getElementById("stepConnector2")
 
   if (!verifyBtn || !verifyInput) return
+
+  // Track group join clicks
+  let whatsappJoined = false
+  let telegramJoined = false
 
   // Helper: show inline message
   function showMessage(el, text, type) {
@@ -773,20 +780,56 @@ function initAdmittedRegistration() {
     }
   }
 
-  // Helper: advance step indicator
+  // Helper: advance step indicator to step 2
   function goToStep2() {
     stepDot1.classList.remove("active")
     stepDot1.classList.add("completed")
     stepDot1.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
-    stepConnector.classList.add("active")
+    stepConnector1.classList.add("active")
     stepDot2.classList.add("active")
+  }
+
+  // Helper: advance step indicator to step 3
+  function goToStep3() {
+    stepDot2.classList.remove("active")
+    stepDot2.classList.add("completed")
+    stepDot2.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    stepConnector1.classList.add("completed")
+    stepConnector2.classList.add("active")
+    stepDot3.classList.add("active")
+  }
+
+  // Helper: complete all steps (final success)
+  function completeAllSteps() {
+    stepDot3.classList.remove("active")
+    stepDot3.classList.add("completed")
+    stepDot3.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    stepConnector2.classList.add("completed")
+  }
+
+  // Check if both groups are joined and show success
+  function checkGroupJoinCompletion() {
+    const joinProgress = document.getElementById("joinProgress")
+    if (whatsappJoined && telegramJoined) {
+      // Both joined — show final success
+      setTimeout(() => {
+        joinGroupSection.style.display = "none"
+        successSection.style.display = "block"
+        completeAllSteps()
+        successSection.scrollIntoView({ behavior: "smooth", block: "start" })
+        showPopup("🎉 Registration Successful! Admission process complete.", "success")
+      }, 800)
+    } else if (whatsappJoined || telegramJoined) {
+      const remaining = whatsappJoined ? "Telegram" : "WhatsApp"
+      if (joinProgress) joinProgress.textContent = `Almost done! Please also join the ${remaining} group.`
+    }
   }
 
   // VERIFY BUTTON CLICK
   verifyBtn.addEventListener("click", async () => {
     const mid = verifyInput.value.trim()
     if (!mid) {
-      showMessage(verifyMessage, "Please enter your Mahajyoti ID.", "error")
+      showMessage(verifyMessage, "Please enter your Reg ID.", "error")
       verifyInput.focus()
       return
     }
@@ -820,17 +863,33 @@ function initAdmittedRegistration() {
           return
         }
 
-        // SUCCESS: Prefill form and show step 2
+        // SUCCESS: Prefill form with new column mapping
         const studentData = data.data || {}
 
+        // Map new Google Sheet columns to form fields
         document.getElementById("regMahajyotiId").value = mid
-        document.getElementById("regName").value = studentData.name || studentData.student_name || ""
-        document.getElementById("regCourse").value = studentData.course || studentData.batch || ""
-        document.getElementById("regAdmissionDate").value = studentData.admission_date || studentData.date || ""
-        document.getElementById("regPhone").value = studentData.phone || studentData.mobile || ""
-        document.getElementById("regEmail").value = studentData.email || ""
-        document.getElementById("regGuardian").value = studentData.father_name || studentData.guardian || studentData["father name"] || ""
-        document.getElementById("regAddress").value = studentData.address || ""
+        document.getElementById("regName").value =
+          studentData["candidates name"] || studentData["candidates_name"] ||
+          studentData.name || studentData.student_name || ""
+        document.getElementById("regPercentile").value =
+          studentData["percentile scores"] || studentData["percentile_scores"] ||
+          studentData.percentile || ""
+        document.getElementById("regDob").value =
+          studentData.dob || studentData["date of birth"] || studentData["d.o.b"] || ""
+        document.getElementById("regGender").value =
+          studentData.gender || ""
+        document.getElementById("regCategory").value =
+          studentData.category || ""
+        document.getElementById("regMobNo").value =
+          studentData["mob no"] || studentData["mob_no"] || studentData.mobile ||
+          studentData.phone || ""
+        document.getElementById("regBatch").value =
+          studentData["batch name"] || studentData["batch_name"] ||
+          studentData.batch || studentData.course || ""
+
+        // Pre-fill WhatsApp with mobile number if available
+        const mobNo = studentData["mob no"] || studentData["mob_no"] || studentData.mobile || studentData.phone || ""
+        document.getElementById("regWhatsapp").value = mobNo
 
         // Transition UI
         goToStep2()
@@ -838,9 +897,9 @@ function initAdmittedRegistration() {
         registrationSection.style.display = "block"
         registrationSection.scrollIntoView({ behavior: "smooth", block: "start" })
 
-        showPopup("Mahajyoti ID verified! Please complete the form below.", "success")
+        showPopup("Reg ID verified! Please verify your details and complete the form.", "success")
       } else {
-        showMessage(verifyMessage, data.message || "Mahajyoti ID not found. Please contact the office.", "error")
+        showMessage(verifyMessage, data.message || "Reg ID not found. Please contact the office.", "error")
       }
     } catch (err) {
       console.error("[admitted-reg] Verify error:", err)
@@ -868,23 +927,22 @@ function initAdmittedRegistration() {
       if (honeypot && honeypot.value.trim() !== "") return
 
       // Client-side validation
-      const phone = document.getElementById("regPhone").value.trim()
+      const whatsapp = document.getElementById("regWhatsapp").value.trim()
       const email = document.getElementById("regEmail").value.trim()
-      const guardian = document.getElementById("regGuardian").value.trim()
       const address = document.getElementById("regAddress").value.trim()
 
-      if (!phone) {
+      if (!whatsapp) {
         showMessage(regMessage, "WhatsApp number is required.", "error")
-        document.getElementById("regPhone").focus()
+        document.getElementById("regWhatsapp").focus()
         return
       }
-      if (!validatePhoneNumber(phone)) {
+      if (!validatePhoneNumber(whatsapp)) {
         showMessage(regMessage, "कृपया वैध 10-अंकी मोबाईल नंबर टाका (6-9 ने सुरू होणारा). / Please enter a valid 10-digit mobile number (starting with 6-9).", "error")
-        document.getElementById("regPhone").focus()
+        document.getElementById("regWhatsapp").focus()
         return
       }
       if (!email) {
-        showMessage(regMessage, "Email address is required.", "error")
+        showMessage(regMessage, "Email ID is required.", "error")
         document.getElementById("regEmail").focus()
         return
       }
@@ -893,18 +951,8 @@ function initAdmittedRegistration() {
         document.getElementById("regEmail").focus()
         return
       }
-      if (!guardian) {
-        showMessage(regMessage, "Father / Guardian Name is required.", "error")
-        document.getElementById("regGuardian").focus()
-        return
-      }
-      if (guardian.length < 2) {
-        showMessage(regMessage, "Father / Guardian Name must be at least 2 characters.", "error")
-        document.getElementById("regGuardian").focus()
-        return
-      }
       if (!address) {
-        showMessage(regMessage, "Address is required.", "error")
+        showMessage(regMessage, "Full address is required.", "error")
         document.getElementById("regAddress").focus()
         return
       }
@@ -918,9 +966,13 @@ function initAdmittedRegistration() {
       setLoading(regSubmitBtn, true)
 
       try {
-        const formData = new FormData(regForm)
-        const regData = Object.fromEntries(formData.entries())
-        regData.mid = document.getElementById("regMahajyotiId").value
+        const regData = {
+          mid: document.getElementById("regMahajyotiId").value,
+          whatsapp_number: whatsapp,
+          email: email,
+          address: address,
+          website: "" // honeypot
+        }
 
         const params = new URLSearchParams()
         params.append("action", "registerAdmitted")
@@ -937,14 +989,12 @@ function initAdmittedRegistration() {
         try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
 
         if (data.success) {
-          // Show success state
+          // Advance to Step 3: Join Groups
+          goToStep3()
           registrationSection.style.display = "none"
-          successSection.style.display = "block"
-          stepDot2.classList.remove("active")
-          stepDot2.classList.add("completed")
-          stepDot2.querySelector(".step-number").innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
-          successSection.scrollIntoView({ behavior: "smooth", block: "start" })
-          showPopup("🎉 Registration completed successfully!", "success")
+          joinGroupSection.style.display = "block"
+          joinGroupSection.scrollIntoView({ behavior: "smooth", block: "start" })
+          showPopup("✅ Details submitted! Now please join both groups.", "success")
         } else {
           showMessage(regMessage, data.message || "Registration failed. Please try again.", "error")
         }
@@ -954,6 +1004,30 @@ function initAdmittedRegistration() {
       } finally {
         setLoading(regSubmitBtn, false, '<i class="fas fa-paper-plane"></i> Complete Registration')
       }
+    })
+  }
+
+  // GROUP JOIN BUTTON TRACKING
+  const whatsappBtn = document.getElementById("whatsappJoinBtn")
+  const telegramBtn = document.getElementById("telegramJoinBtn")
+
+  if (whatsappBtn) {
+    whatsappBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        whatsappJoined = true
+        whatsappBtn.classList.add("joined")
+        checkGroupJoinCompletion()
+      }, 1000)
+    })
+  }
+
+  if (telegramBtn) {
+    telegramBtn.addEventListener("click", () => {
+      setTimeout(() => {
+        telegramJoined = true
+        telegramBtn.classList.add("joined")
+        checkGroupJoinCompletion()
+      }, 1000)
     })
   }
 }

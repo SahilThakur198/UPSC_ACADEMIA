@@ -6,28 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
     <title>Admitted Student Registration | UPSC Academia Pune</title>
     <meta name="description"
-        content="Already admitted at UPSC Academia? Complete your online registration by verifying your Mahajyoti ID. Quick and easy process for existing students.">
+        content="Already admitted at UPSC Academia? Complete your online registration by verifying your Reg ID. Quick and easy process for existing students.">
     <meta name="keywords"
-        content="UPSC Academia registration, Mahajyoti ID, admitted student, online registration, UPSC coaching Pune">
+        content="UPSC Academia registration, Reg ID, admitted student, online registration, UPSC coaching Pune">
     <meta name="robots" content="index, follow">
 
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Admitted Student Registration - UPSC Academia">
     <meta property="og:description"
-        content="Complete your online registration at UPSC Academia. Verify your Mahajyoti ID and update your details.">
-    <meta property="og:url" content="https://upscacademia.com/admitted-registration.html">
+        content="Complete your online registration at UPSC Academia. Verify your Reg ID and update your details.">
+    <meta property="og:url" content="https://upscacademia.in/admitted-registration.html">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="https://upscacademia.com/img/logo.png">
+    <meta property="og:image" content="https://upscacademia.in/img/logo.png">
 
     <!-- Twitter Card Meta Tags -->
     <meta name="twitter:card" content="summary">
     <meta name="twitter:title" content="Admitted Student Registration - UPSC Academia">
     <meta name="twitter:description"
-        content="Complete your online registration at UPSC Academia. Verify your Mahajyoti ID and update your details.">
-    <meta name="twitter:image" content="https://upscacademia.com/img/logo.png">
+        content="Complete your online registration at UPSC Academia. Verify your Reg ID and update your details.">
+    <meta name="twitter:image" content="https://upscacademia.in/img/logo.png">
 
     <!-- Canonical URL -->
-    <link rel="canonical" href="https://upscacademia.com/admitted-registration.html">
+    <link rel="canonical" href="https://upscacademia.in/admitted-registration.html">
 
     <!-- Breadcrumb Schema -->
     <script type="application/ld+json">
@@ -39,13 +39,13 @@
         "@type": "ListItem",
         "position": 1,
         "name": "Home",
-        "item": "https://upscacademia.com/"
+        "item": "https://upscacademia.in/"
       },
       {
         "@type": "ListItem",
         "position": 2,
         "name": "Admitted Student Registration",
-        "item": "https://upscacademia.com/admitted-registration.html"
+        "item": "https://upscacademia.in/admitted-registration.html"
       }
     ]
   }
@@ -59,6 +59,340 @@
 
     <!-- Your Styles -->
     <link rel="stylesheet" href="style.css" />
+
+    <!-- Page-specific styles -->
+    <style>
+        /* ===== 3-Step Indicator ===== */
+        .admitted-steps-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            margin: 1.5rem 0 2rem;
+        }
+
+        .step-dot {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            position: relative;
+        }
+
+        .step-number {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+            background: var(--light-gray, #f8f9fa);
+            color: var(--text-secondary, #636e72);
+            border: 2px solid var(--border-color, #ddd);
+            transition: all 0.4s ease;
+        }
+
+        .step-label {
+            font-size: 0.7rem;
+            color: var(--text-secondary, #636e72);
+            font-weight: 500;
+            transition: color 0.4s ease;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .step-dot.active .step-number {
+            background: var(--accent-red, #c62828);
+            color: #fff;
+            border-color: var(--accent-red, #c62828);
+            box-shadow: 0 0 12px rgba(198, 40, 40, 0.4);
+        }
+
+        .step-dot.active .step-label {
+            color: var(--primary-blue, #081f3d);
+            font-weight: 600;
+        }
+
+        .step-dot.completed .step-number {
+            background: #2ecc71;
+            color: #fff;
+            border-color: #2ecc71;
+        }
+
+        .step-dot.completed .step-label {
+            color: var(--text-secondary, #636e72);
+        }
+
+        .step-connector {
+            width: 50px;
+            height: 3px;
+            background: var(--border-color, #ddd);
+            border-radius: 3px;
+            margin: 0 8px;
+            margin-bottom: 20px;
+            transition: background 0.4s ease;
+        }
+
+        .step-connector.active {
+            background: linear-gradient(90deg, #2ecc71, var(--accent-red, #c62828));
+        }
+
+        .step-connector.completed {
+            background: #2ecc71;
+        }
+
+        /* ===== Read-Only Detail Card ===== */
+        .admitted-prefill-banner {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            background: rgba(46, 204, 113, 0.08);
+            border: 1px solid rgba(46, 204, 113, 0.35);
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+            color: var(--text-secondary, #636e72);
+        }
+
+        .admitted-prefill-banner i {
+            color: #2ecc71;
+            font-size: 1.1rem;
+        }
+
+        .prefilled-readonly {
+            background: #f0f2f5 !important;
+            border: 1px solid #e0e0e0 !important;
+            color: var(--text-primary, #1a1a1a) !important;
+            cursor: not-allowed;
+            font-weight: 500;
+        }
+
+        .admitted-form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .admitted-form-row-3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+        }
+
+        @media (max-width: 600px) {
+
+            .admitted-form-row,
+            .admitted-form-row-3 {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .admitted-reg-subtitle {
+            text-align: center;
+            color: var(--text-secondary, #636e72);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin-bottom: 0.5rem;
+        }
+
+        .additional-info-divider {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin: 1.8rem 0 1.2rem;
+        }
+
+        .additional-info-divider::before,
+        .additional-info-divider::after {
+            content: '';
+            flex: 1;
+            height: 1px;
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .additional-info-divider span {
+            font-size: 0.82rem;
+            color: var(--accent-red, #c62828);
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            white-space: nowrap;
+        }
+
+        /* ===== Group Join Section ===== */
+        .group-join-section {
+            text-align: center;
+            padding: 1rem 0;
+        }
+
+        .group-join-section h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.6rem;
+            color: var(--primary-blue, #081f3d);
+        }
+
+        .group-join-section p {
+            color: var(--text-secondary, #636e72);
+            font-size: 0.9rem;
+            margin-bottom: 1.8rem;
+            line-height: 1.5;
+        }
+
+        .group-links-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            max-width: 380px;
+            margin: 0 auto 2rem;
+        }
+
+        .group-join-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .group-join-btn i {
+            font-size: 1.3rem;
+        }
+
+        .group-join-btn.whatsapp-btn {
+            background: linear-gradient(135deg, #25D366, #128C7E);
+            box-shadow: 0 4px 15px rgba(37, 211, 102, 0.3);
+        }
+
+        .group-join-btn.whatsapp-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.45);
+        }
+
+        .group-join-btn.telegram-btn {
+            background: linear-gradient(135deg, #0088cc, #0077b5);
+            box-shadow: 0 4px 15px rgba(0, 136, 204, 0.3);
+        }
+
+        .group-join-btn.telegram-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 136, 204, 0.45);
+        }
+
+        .group-join-btn.joined {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .group-join-btn.joined::after {
+            content: '✓ Joined';
+            margin-left: 8px;
+            font-size: 0.8rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 2px 10px;
+            border-radius: 20px;
+        }
+
+        .join-progress {
+            color: var(--text-secondary, #636e72);
+            font-size: 0.82rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ===== Success Card ===== */
+        .admitted-success-card {
+            text-align: center;
+            padding: 2rem 1rem;
+        }
+
+        .success-icon-wrapper {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #2ecc71, #27ae60);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            box-shadow: 0 8px 25px rgba(46, 204, 113, 0.35);
+            animation: successPulse 2s ease-in-out infinite;
+        }
+
+        .success-icon-wrapper i {
+            font-size: 2.2rem;
+            color: #fff;
+        }
+
+        @keyframes successPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 8px 25px rgba(46, 204, 113, 0.35);
+            }
+
+            50% {
+                box-shadow: 0 8px 35px rgba(46, 204, 113, 0.55);
+            }
+        }
+
+        .admitted-success-card h2 {
+            font-size: 1.4rem;
+            color: #2ecc71;
+            margin-bottom: 0.6rem;
+        }
+
+        .admitted-success-card p {
+            color: var(--text-secondary, #636e72);
+            font-size: 0.92rem;
+            line-height: 1.6;
+            max-width: 400px;
+            margin: 0 auto 1.5rem;
+        }
+
+        /* ===== Inline Message ===== */
+        .admitted-inline-message {
+            margin-top: 1rem;
+            padding: 0;
+            border-radius: 8px;
+            font-size: 0.88rem;
+            display: none;
+            align-items: center;
+            gap: 8px;
+            line-height: 1.5;
+        }
+
+        .admitted-inline-message.show {
+            display: flex;
+            padding: 12px 16px;
+        }
+
+        .admitted-inline-message.error {
+            background: rgba(231, 76, 60, 0.1);
+            border: 1px solid rgba(231, 76, 60, 0.3);
+            color: #e74c3c;
+        }
+
+        .admitted-inline-message.success {
+            background: rgba(46, 204, 113, 0.1);
+            border: 1px solid rgba(46, 204, 113, 0.3);
+            color: #2ecc71;
+        }
+
+        .required-star {
+            color: var(--accent-red, #c62828);
+        }
+    </style>
 </head>
 
 <body id="admitted-reg-page">
@@ -77,28 +411,33 @@
                 <h1><i class="fas fa-user-check" style="margin-right: 10px; color: var(--accent-red);"></i>Mahajyoti
                     Online Registration</h1>
                 <p class="admitted-reg-subtitle"> ही नोंदणी फक्त त्या विद्यार्थ्यांसाठी आहे, ज्यांचा महाज्योती अंतर्गत
-                    'UPSC अकॅडेमिया' मध्ये आधीच प्रवेश निश्चित झाला आहे. कृपया खाली आपला महाज्योती आयडी (ID) टाका आणि
+                    'UPSC अकॅडेमिया' मध्ये आधीच प्रवेश निश्चित झाला आहे. कृपया खाली आपला Reg ID टाका आणि
                     आपली ऑनलाईन नोंदणी पूर्ण करा </p>
 
-                <!-- Step Indicator -->
+                <!-- Step Indicator (3 steps) -->
                 <div class="admitted-steps-indicator">
                     <div class="step-dot active" id="stepDot1">
                         <span class="step-number">1</span>
                         <span class="step-label">Verify ID</span>
                     </div>
-                    <div class="step-connector" id="stepConnector"></div>
+                    <div class="step-connector" id="stepConnector1"></div>
                     <div class="step-dot" id="stepDot2">
                         <span class="step-number">2</span>
                         <span class="step-label">Register</span>
                     </div>
+                    <div class="step-connector" id="stepConnector2"></div>
+                    <div class="step-dot" id="stepDot3">
+                        <span class="step-number">3</span>
+                        <span class="step-label">Join Groups</span>
+                    </div>
                 </div>
 
-                <!-- STEP 1: Verify Mahajyoti ID -->
+                <!-- STEP 1: Verify Reg ID -->
                 <div id="verifySection" class="admitted-step-section">
                     <div class="form-group">
-                        <label for="verifyMahajyotiId"><i class="fas fa-id-card"></i> Mahajyoti ID</label>
+                        <label for="verifyMahajyotiId"><i class="fas fa-id-card"></i> Reg ID</label>
                         <input type="text" id="verifyMahajyotiId" name="verifyMahajyotiId" required
-                            placeholder="Enter your Mahajyoti ID" autocomplete="off" />
+                            placeholder="Enter your Reg ID (e.g. MMPJ2024093544)" autocomplete="off" />
                     </div>
                     <button type="button" class="submit-btn" id="verifyBtn">
                         <i class="fas fa-search"></i> Verify My ID
@@ -116,63 +455,83 @@
 
                         <div class="admitted-prefill-banner">
                             <i class="fas fa-info-circle"></i>
-                            <span>Your details have been prefilled from our records. Please verify and update if
-                                needed.</span>
+                            <span>Your details have been fetched from our records. Please verify your information
+                                below.</span>
                         </div>
 
-                        <!-- Mahajyoti ID (readonly) -->
+                        <!-- Reg ID (readonly) -->
                         <div class="form-group">
-                            <label for="regMahajyotiId"><i class="fas fa-id-card"></i> Mahajyoti ID</label>
+                            <label for="regMahajyotiId"><i class="fas fa-id-card"></i> Reg ID</label>
                             <input type="text" id="regMahajyotiId" name="mahajyoti_id" readonly
                                 class="prefilled-readonly" />
                         </div>
 
-                        <!-- Name (readonly) -->
+                        <!-- Candidates Name (readonly) -->
                         <div class="form-group">
-                            <label for="regName"><i class="fas fa-user"></i> Full Name</label>
+                            <label for="regName"><i class="fas fa-user"></i> Candidates Name</label>
                             <input type="text" id="regName" name="name" readonly class="prefilled-readonly" />
                         </div>
 
-                        <!-- Two-column row: Course + Admission Date -->
+                        <!-- Two-column row: Percentile Scores + DOB -->
                         <div class="admitted-form-row">
                             <div class="form-group">
-                                <label for="regCourse"><i class="fas fa-book"></i> Course / Batch</label>
-                                <input type="text" id="regCourse" name="course" readonly class="prefilled-readonly" />
+                                <label for="regPercentile"><i class="fas fa-chart-bar"></i> Percentile Scores</label>
+                                <input type="text" id="regPercentile" name="percentile_scores" readonly
+                                    class="prefilled-readonly" />
                             </div>
                             <div class="form-group">
-                                <label for="regAdmissionDate"><i class="fas fa-calendar-alt"></i> Admission Date</label>
-                                <input type="text" id="regAdmissionDate" name="admission_date" readonly
-                                    class="prefilled-readonly" />
+                                <label for="regDob"><i class="fas fa-calendar-alt"></i> Date of Birth</label>
+                                <input type="text" id="regDob" name="dob" readonly class="prefilled-readonly" />
                             </div>
                         </div>
 
-                        <!-- Editable: Phone -->
+                        <!-- Three-column row: Gender + Category + Mob No -->
+                        <div class="admitted-form-row-3">
+                            <div class="form-group">
+                                <label for="regGender"><i class="fas fa-venus-mars"></i> Gender</label>
+                                <input type="text" id="regGender" name="gender" readonly class="prefilled-readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label for="regCategory"><i class="fas fa-tag"></i> Category</label>
+                                <input type="text" id="regCategory" name="category" readonly
+                                    class="prefilled-readonly" />
+                            </div>
+                            <div class="form-group">
+                                <label for="regMobNo"><i class="fas fa-phone-alt"></i> Mob No</label>
+                                <input type="text" id="regMobNo" name="mob_no" readonly class="prefilled-readonly" />
+                            </div>
+                        </div>
+
+                        <!-- Batch Name (readonly) -->
                         <div class="form-group">
-                            <label for="regPhone"><i class="fas fa-phone"></i> WhatsApp Number <span
-                                    class="required-star">*</span></label>
-                            <input type="tel" id="regPhone" name="phone" required
+                            <label for="regBatch"><i class="fas fa-book"></i> Batch Name</label>
+                            <input type="text" id="regBatch" name="batch_name" readonly class="prefilled-readonly" />
+                        </div>
+
+                        <!-- Divider for additional info -->
+                        <div class="additional-info-divider">
+                            <span><i class="fas fa-edit"></i> Additional Information</span>
+                        </div>
+
+                        <!-- Editable: WhatsApp Number -->
+                        <div class="form-group">
+                            <label for="regWhatsapp"><i class="fab fa-whatsapp"></i> WhatsApp Number (if different)
+                                <span class="required-star">*</span></label>
+                            <input type="tel" id="regWhatsapp" name="whatsapp_number" required
                                 placeholder="Enter your WhatsApp number" pattern="[6-9][0-9]{9}" maxlength="10"
                                 title="Enter a valid 10-digit Indian mobile number starting with 6-9" />
                         </div>
 
                         <!-- Editable: Email -->
                         <div class="form-group">
-                            <label for="regEmail"><i class="fas fa-envelope"></i> Email Address <span
+                            <label for="regEmail"><i class="fas fa-envelope"></i> Email ID <span
                                     class="required-star">*</span></label>
                             <input type="email" id="regEmail" name="email" required placeholder="example@email.com" />
                         </div>
 
-                        <!-- Editable: Guardian / Father Name -->
-                        <div class="form-group">
-                            <label for="regGuardian"><i class="fas fa-users"></i> Father / Guardian Name <span
-                                    class="required-star">*</span></label>
-                            <input type="text" id="regGuardian" name="father_name" required
-                                placeholder="Enter guardian name" minlength="2" />
-                        </div>
-
                         <!-- Editable: Address -->
                         <div class="form-group">
-                            <label for="regAddress"><i class="fas fa-map-marker-alt"></i> Address <span
+                            <label for="regAddress"><i class="fas fa-map-marker-alt"></i> Full Address <span
                                     class="required-star">*</span></label>
                             <textarea id="regAddress" name="address" rows="3" required
                                 placeholder="Enter your full address" minlength="10"></textarea>
@@ -185,15 +544,39 @@
                     </form>
                 </div>
 
+                <!-- STEP 3: Join Groups Section (hidden initially) -->
+                <div id="joinGroupSection" class="admitted-step-section" style="display: none;">
+                    <div class="group-join-section">
+                        <h2><i class="fas fa-users" style="color: var(--accent-red); margin-right: 8px;"></i>Join Our
+                            Groups</h2>
+                        <p>नोंदणी यशस्वी! कृपया खालील दोन्ही ग्रुप्स जॉइन करा.<br>
+                            Registration successful! Please join both groups below to complete the process.</p>
+
+                        <div class="group-links-container">
+                            <a href="https://www.whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g" target="_blank"
+                                rel="noopener noreferrer" class="group-join-btn whatsapp-btn" id="whatsappJoinBtn">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>Join WhatsApp Group</span>
+                            </a>
+                            <a href="https://t.me/UPSC_Academia_Pune" target="_blank" rel="noopener noreferrer"
+                                class="group-join-btn telegram-btn" id="telegramJoinBtn">
+                                <i class="fab fa-telegram-plane"></i>
+                                <span>Join Telegram Group</span>
+                            </a>
+                        </div>
+
+                        <p class="join-progress" id="joinProgress">Please join both groups to complete registration.</p>
+                    </div>
+                </div>
+
                 <!-- Success State (hidden initially) -->
                 <div id="successSection" class="admitted-step-section" style="display: none;">
                     <div class="admitted-success-card">
                         <div class="success-icon-wrapper">
                             <i class="fas fa-check-circle"></i>
                         </div>
-                        <h2>Registration Complete!</h2>
-                        <p>Your online registration has been saved successfully. Thank you for completing the process.
-                        </p>
+                        <h2>Registration Successful!</h2>
+                        <p>You have successfully completed your admission process. Welcome to UPSC Academia!</p>
                         <a href="index.html" class="submit-btn"
                             style="display: inline-block; width: auto; padding: 0.8rem 2rem; text-decoration: none;">
                             <i class="fas fa-home"></i> Back to Home
