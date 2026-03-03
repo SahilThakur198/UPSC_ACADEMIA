@@ -994,7 +994,7 @@ function initAdmittedRegistration() {
           registrationSection.style.display = "none"
           joinGroupSection.style.display = "block"
           joinGroupSection.scrollIntoView({ behavior: "smooth", block: "start" })
-          showPopup("✅ Details submitted! Now please join both groups.", "success")
+          showPopup("Details submitted! Now please join both groups.", "success")
         } else {
           showMessage(regMessage, data.message || "Registration failed. Please try again.", "error")
         }

@@ -2685,23 +2685,33 @@
           table.innerHTML = `
             <thead>
               <tr>
-                <th>Mahajyoti ID</th>
-                <th>Name</th>
-                <th>Phone</th>
+                <th>Reg Id</th>
+                <th>Candidates Name</th>
+                <th>Percentile</th>
+                <th>DOB</th>
+                <th>Gender</th>
+                <th>Category</th>
+                <th>Mob No</th>
+                <th>Batch</th>
+                <th>WhatsApp</th>
                 <th>Email</th>
-                <th>Course</th>
-                <th>Reg. Date</th>
+                <th>Address</th>
               </tr>
             </thead>
             <tbody>
               ${result.registrations.map(reg => `
                 <tr>
-                  <td><strong>${escapeHTML(reg.mahajyoti_id)}</strong></td>
+                  <td><strong>${escapeHTML(reg.reg_id)}</strong></td>
                   <td>${escapeHTML(reg.name)}</td>
-                  <td>${escapeHTML(reg.phone)}</td>
+                  <td>${escapeHTML(reg.percentile)}</td>
+                  <td>${escapeHTML(reg.dob)}</td>
+                  <td>${escapeHTML(reg.gender)}</td>
+                  <td>${escapeHTML(reg.category)}</td>
+                  <td>${escapeHTML(reg.mob_no)}</td>
+                  <td>${escapeHTML(reg.batch_name)}</td>
+                  <td>${escapeHTML(reg.whatsapp_number)}</td>
                   <td>${escapeHTML(reg.email)}</td>
-                  <td>${escapeHTML(reg.course)}</td>
-                  <td>${escapeHTML(reg.registration_date)}</td>
+                  <td>${escapeHTML(reg.address)}</td>
                 </tr>
               `).join('')}
             </tbody>

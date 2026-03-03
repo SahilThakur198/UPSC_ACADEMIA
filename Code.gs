@@ -614,41 +614,53 @@ function getRegistrationsFromSheet() {
 
     var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
 
-    // Find key column indices
-    var midCol = headers.indexOf('mahajyoti_id');
-    if (midCol === -1) midCol = headers.indexOf('mahajyoti id');
-    if (midCol === -1) midCol = 0;
+    // Helper to find column index from multiple possible header names
+    function findCol() {
+      for (var a = 0; a < arguments.length; a++) {
+        var idx = headers.indexOf(arguments[a]);
+        if (idx !== -1) return idx;
+      }
+      return -1;
+    }
 
-    var nameCol = headers.indexOf('name');
-    if (nameCol === -1) nameCol = headers.indexOf('student_name');
+    // Map columns to actual sheet headers
+    var regIdCol       = findCol('reg id', 'reg_id', 'regid', 'mahajyoti_id', 'mahajyoti id');
+    var nameCol        = findCol('candidates name', 'candidate name', 'name', 'student_name');
+    var percentileCol  = findCol('percentile scores', 'percentile', 'percentile_scores');
+    var dobCol         = findCol('dob', 'date of birth', 'date_of_birth');
+    var genderCol      = findCol('gender');
+    var categoryCol    = findCol('category');
+    var mobCol         = findCol('mob no', 'mob_no', 'phone', 'mobile', 'mobile no');
+    var batchCol       = findCol('batch name', 'batch_name', 'batch', 'course');
+    var whatsappCol    = findCol('whatsapp number', 'whatsapp_number', 'whatsapp no', 'whatsapp');
+    var emailCol       = findCol('email id', 'email_id', 'email');
+    var addressCol     = findCol('full address', 'full_address', 'address');
+    var regStatusCol   = findCol('online_registered', 'online registered');
+    var regDateCol     = findCol('online_registration_date', 'registration_date');
 
-    var phoneCol = headers.indexOf('phone');
-    if (phoneCol === -1) phoneCol = headers.indexOf('mobile');
-
-    var emailCol = headers.indexOf('email');
-    var courseCol = headers.indexOf('course');
-    if (courseCol === -1) courseCol = headers.indexOf('batch');
-
-    var regCol = headers.indexOf('online_registered');
-    if (regCol === -1) regCol = headers.indexOf('online registered');
-
-    var dateCol = headers.indexOf('online_registration_date');
-    if (dateCol === -1) dateCol = headers.indexOf('registration_date');
+    if (regIdCol === -1) regIdCol = 0; // fallback: first column
 
     var registrations = [];
 
     for (var i = 1; i < data.length; i++) {
       var row = data[i];
-      var isOnlineReg = regCol !== -1 ? String(row[regCol]).trim().toUpperCase() : '';
 
+      // Filter: only show online-registered students
+      var isOnlineReg = regStatusCol !== -1 ? String(row[regStatusCol]).trim().toUpperCase() : '';
       if (isOnlineReg === 'TRUE' || isOnlineReg === 'YES' || isOnlineReg === '1') {
         registrations.push({
-          mahajyoti_id: midCol !== -1 ? row[midCol] : '',
-          name: nameCol !== -1 ? row[nameCol] : '',
-          phone: phoneCol !== -1 ? row[phoneCol] : '',
-          email: emailCol !== -1 ? row[emailCol] : '',
-          course: courseCol !== -1 ? row[courseCol] : '',
-          registration_date: dateCol !== -1 ? row[dateCol] : ''
+          reg_id:           regIdCol !== -1       ? row[regIdCol] : '',
+          name:             nameCol !== -1        ? row[nameCol] : '',
+          percentile:       percentileCol !== -1  ? row[percentileCol] : '',
+          dob:              dobCol !== -1         ? row[dobCol] : '',
+          gender:           genderCol !== -1      ? row[genderCol] : '',
+          category:         categoryCol !== -1    ? row[categoryCol] : '',
+          mob_no:           mobCol !== -1         ? row[mobCol] : '',
+          batch_name:       batchCol !== -1       ? row[batchCol] : '',
+          whatsapp_number:  whatsappCol !== -1    ? row[whatsappCol] : '',
+          email:            emailCol !== -1       ? row[emailCol] : '',
+          address:          addressCol !== -1     ? row[addressCol] : '',
+          registration_date: regDateCol !== -1    ? row[regDateCol] : ''
         });
       }
     }
