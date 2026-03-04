@@ -1,0 +1,29 @@
+# UPSC Academia API - Apache Configuration
+# Ensures proper PHP routing and security
+
+# Enable URL Rewriting
+RewriteEngine On
+
+# Route all API requests to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Block access to config file directly
+<Files "config.php">
+    Order Allow,Deny
+    Deny from all
+</Files>
+
+# Block access to setup file (extra safety)
+# Uncomment after running setup:
+# <Files "setup.php">
+#     Order Allow,Deny
+#     Deny from all
+# </Files>
+
+# Security Headers
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "DENY"
+</IfModule>

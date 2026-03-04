@@ -15,12 +15,15 @@ UPSC Academia is a **static marketing + functional web app** for a civil service
 
 | Layer | Technology |
 |-------|-----------|
-| Language | HTML5, Vanilla JavaScript (ES6+), Google Apps Script |
+| Language | HTML5, Vanilla JavaScript (ES6+), Google Apps Script, PHP 8 |
 | Styling | Vanilla CSS3 (custom properties, grid, flexbox) |
-| Backend | Google Apps Script (Code.gs) deployed as a Web App |
-| Database | Google Sheets (via Spreadsheet API in Apps Script) |
+| Backend (primary) | Google Apps Script (Code.gs) deployed as a Web App |
+| Backend (secondary) | PHP 8 API (`api/index.php`) on Hostinger — MySQL dual-write |
+| Database (primary) | Google Sheets (via Spreadsheet API in Apps Script) |
+| Database (secondary) | Hostinger MySQL (`u667809186_academia`) |
 | File Storage | Google Drive (via DriveApp in Apps Script) |
 | Hosting | GitHub Pages (via `.github/workflows/static.yml`) |
+| PHP Hosting | Hostinger (academiaclass.in) — hosts `/api/` PHP files |
 | Fonts | Google Fonts (Inter, Kalam) |
 | Icons | Font Awesome 6 |
 
@@ -28,33 +31,32 @@ UPSC Academia is a **static marketing + functional web app** for a civil service
 
 ## 🏗 Architecture
 
-**Pattern**: Multi-Page Static Site + Serverless Backend (Google Apps Script)
+**Pattern**: Multi-Page Static Site + Dual Serverless Backend (GAS + PHP/MySQL)
 
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                      Frontend (GitHub Pages)                     │
-│                                                                  │
-│  index.html  enroll.html  login.html  admitted-registration.html │
-│  view_notes.html                                                 │
-│          │                    │                                  │
-│    script.js             login.html (inline JS)                  │
-│    (shared logic)                                                │
-│          │                    │                                  │
-│      config.js ──────────────────────────────────────────────── ▶│
-└──────────────────────────────┬──────────────────────────────────┘
-                               │ HTTPS fetch (GET/POST)
-                               ▼
-┌──────────────────────────────────────────────────────────────────┐
-│              Google Apps Script (Code.gs)                        │
-│  doGet / doPost ──▶ handleApiRequest ──▶ switch(action)          │
-│                                                                  │
-│  Actions: signup, login, enroll, getLeads, upload, deleteFile,   │
-│           getFiles, download, forgotPassword, verifyOTP,         │
-│           verifyMahajyoti, registerAdmitted, getRegistrations    │
-│                    │                    │                        │
-│             Google Sheets        Google Drive                    │
-│             (SPREADSHEET_ID)      (FOLDER_ID)                    │
-└──────────────────────────────────────────────────────────────────┘
+┌─────────────────────────────────────────────────────────────────────┐
+│                       Frontend (GitHub Pages)                        │
+│  index.html  enroll.html  login.html  admitted-registration.html     │
+│  view_notes.html                                                     │
+│          │                    │                                      │
+│    script.js            login.html (inline JS)                       │
+│    sendToDatabase()     sendToDB()   ◄─ fire-and-forget DB writes    │
+│          │                    │                                      │
+│      config.js ───────────────────────────────────────────────────▶  │
+└──────────┬─────────────────────────────┬───────────────────────────┘
+           │ HTTPS fetch (GAS)           │ HTTPS fetch (PHP)
+           ▼                             ▼
+┌──────────────────────┐    ┌────────────────────────────────────────┐
+│  Google Apps Script  │    │   PHP API (academiaclass.in/api/)       │
+│  (Code.gs)           │    │   api/index.php  api/config.php        │
+│  Actions: signup,    │    │   Actions: enroll, signup,             │
+│  login, enroll,      │    │   registerAdmitted, getLeads,          │
+│  getLeads, upload,   │    │   getRegistrations, health             │
+│  getFiles, etc.      │    │           │                            │
+│       │      │       │    │     MySQL DB                           │
+│ Google   Google      │    │  leads / users /                       │
+│ Sheets   Drive       │    │  student_registrations                 │
+└──────────────────────┘    └────────────────────────────────────────┘
 ```
 
 ---
@@ -71,9 +73,14 @@ project-root/
 ├── header.html                 # Shared reusable navbar component (injected via JS fetch)
 ├── footer.html                 # Shared reusable footer component (injected via JS fetch)
 ├── style.css                   # Global stylesheet (~52KB) — all page styles, variables, animations
-├── script.js                   # Shared JS (~37KB) — routing, all page init, API calls
-├── config.js                   # Single source of truth for the Apps Script Web App URL
+├── script.js                   # Shared JS (~37KB) — routing, all page init, API calls, DB dual-write
+├── config.js                   # Single source of truth for SCRIPT_URL and DB_API_URL
 ├── Code.gs                     # Google Apps Script backend — full API + Sheets + Drive + Mail
+├── api/                        # PHP API — MySQL dual-write layer (deploy to Hostinger)
+│   ├── config.php              # MySQL credentials (DB_HOST, DB_NAME, DB_USER, DB_PASS)
+│   ├── index.php               # PHP API router (mirrors GAS actions for MySQL writes)
+│   ├── setup.php               # One-time table creation script (delete after use)
+│   └── .htaccess               # Apache routing + blocks direct access to config.php
 ├── sitemap.xml                 # SEO sitemap
 ├── robots.txt                  # SEO robots file
 ├── img/                        # Images: logo, director photo, app logos, whatsapp icon
@@ -86,9 +93,10 @@ project-root/
 
 **Critical Modules** (touch with care):
 - `Code.gs` — single backend file; all API logic lives here. Redeploy required after any change.
-- `config.js` — changing `SCRIPT_URL` affects ALL pages simultaneously.
+- `config.js` — changing `SCRIPT_URL` or `DB_API_URL` affects ALL pages simultaneously.
 - `style.css` — global CSS; changes affect all 5 HTML pages.
 - `script.js` — page routing by `document.body.id`; wrong body IDs will silently break pages.
+- `api/config.php` — contains MySQL password; must NOT be committed with real credentials.
 
 ---
 
@@ -98,12 +106,16 @@ project-root/
 ```
 User fills enroll.html form
     ↓ script.js: initEnrollSubmission()
-POST to APPS_SCRIPT_URL { action: 'enroll', data: {...} }
-    ↓ Code.gs: processEnrollment()
-Google Sheets 'Leads' tab ← appended row
-Google MailApp → confirmation email (Marathi + HTML) sent to student
-    ↓ response: { success: true }
-script.js: showPopup("Enrollment submitted successfully!")
+    ├──▶ sendToDatabase('enroll', data)  [PARALLEL — fire-and-forget]
+    │       ↓ POST to DB_API_URL { action:'enroll', data:{...} }
+    │       ↓ api/index.php: processEnrollment() → MySQL 'leads' table
+    │
+    └──▶ POST to APPS_SCRIPT_URL { action: 'enroll', data: {...} }
+            ↓ Code.gs: processEnrollment()
+        Google Sheets 'Leads' tab ← appended row
+        Google MailApp → confirmation email (Marathi + HTML) sent to student
+            ↓ response: { success: true }
+    script.js: showPopup("Enrollment submitted successfully!")
 ```
 
 ### 2. Admitted Student Registration Flow (3-Step)
@@ -113,14 +125,17 @@ Step 1: Student enters Mahajyoti Reg ID
     ↓ Code.gs: verifyMahajyotiId() → checks student_registration sheet
     ↓ Returns: { exists, already_registered, data: {...student fields} }
 Step 2: Student fills WhatsApp, email, address form (pre-filled readonly fields from Step 1)
-    ↓ POST { action: 'registerAdmitted', data: {...} }
-    ↓ Code.gs: processAdmittedRegistration() → updates row in sheet
+    ├──▶ sendToDatabase('registerAdmitted', data)  [PARALLEL — fire-and-forget]
+    │       ↓ api/index.php: processAdmittedRegistration() → MySQL 'student_registrations'
+    └──▶ POST { action: 'registerAdmitted', data: {...} }
+            ↓ Code.gs: processAdmittedRegistration() → updates row in sheet
 Step 3: Join WhatsApp + Telegram group links displayed
 ```
 
 ### 3. Staff Portal Flow
 ```
 Staff opens login.html
+    ↓ Signup → sendToDB('signup', data) [PARALLEL fire-and-forget → MySQL 'users']
     ↓ Signup/Login → POST { action: 'signup'/'login' }
     ↓ Code.gs: processSignup() / processLogin()
     ↓ google Sheets 'Users' tab — Admin_consent must = '1' to allow login
@@ -154,6 +169,8 @@ Download: GET ?action=download&id=FILE_ID → returns base64 blob → browser do
 | `sendEnrollmentConfirmation` | `Code.gs:429` | Sends Marathi HTML email after enrollment | `processEnrollment` |
 | `initAdmittedRegistration` | `script.js:732` | Drives the 3-step registration UI | DOMContentLoaded |
 | `initEnrollSubmission` | `script.js:670` | Handles enroll form submit + validation | DOMContentLoaded |
+| `sendToDatabase` | `script.js:~630` | Fire-and-forget MySQL dual-write helper | `initEnrollSubmission`, `initAdmittedRegistration` |
+| `sendToDB` | `login.html:~2155` | Same as sendToDatabase, for login.html inline JS | `handleSignUp` |
 | `initNotesPage` | `script.js:416` | Fetches and renders notes from Drive | DOMContentLoaded |
 | `loadLayoutComponents` | `script.js:47` | Fetches header.html + footer.html via fetch() | DOMContentLoaded |
 | `showPopup` | `script.js:642` | Toast notification (success/error) | Many |
@@ -171,6 +188,8 @@ Download: GET ?action=download&id=FILE_ID → returns base64 blob → browser do
 | Google Sheets | All data storage (Leads, Users, student_registration) | GAS service (no key needed serverside) | `Code.gs: SPREADSHEET_ID` |
 | Google Drive | Study notes file storage + retrieval | GAS service | `Code.gs: FOLDER_ID` |
 | Google MailApp | Enrollment confirmation + OTP emails | GAS service (Gmail of deployer) | Hardcoded BCC: sahiluselessfellow@gmail.com |
+| **Hostinger MySQL** | **Secondary DB — dual-write for leads, users, registrations** | **DB credentials in `api/config.php`** | **`config.js: DB_API_URL`** |
+| **PHP API** | **Bridge between frontend and MySQL** | **Public endpoint (CORS-controlled)** | **`config.js: DB_API_URL`** |
 | Google Maps Embed | Contact section map | Public embed (no key) | Hardcoded iframe src |
 | Google Fonts | Inter, Kalam typography | Public CDN | Hardcoded `<link>` |
 | Font Awesome 6 | Icons throughout | Public CDN | Hardcoded `<link>` |
@@ -184,10 +203,11 @@ Download: GET ?action=download&id=FILE_ID → returns base64 blob → browser do
 ## 🧩 Conventions & Patterns
 
 - **Page routing**: Each HTML page sets `<body id="X-page">`. `script.js` reads `document.body.id` in `DOMContentLoaded` and calls the matching `initXPage()` function.
-- **API calls**: All backend calls use `fetch(APPS_SCRIPT_URL, {...})`. URL comes from `CONFIG.SCRIPT_URL` via `config.js`.
-- **API shape (backend)**: Every Code.gs function returns `{ success: boolean, message?: string, data?: any }`.
-- **Error handling**: All GAS functions wrapped in try/catch returning `{ success: false, message: err.toString() }`.
-- **Naming**: camelCase for JS functions/variables, kebab-case for CSS classes, snake_case for Google Sheet column headers.
+- **API calls (GAS)**: All primary backend calls use `fetch(APPS_SCRIPT_URL, {...})`. URL comes from `CONFIG.SCRIPT_URL` via `config.js`.
+- **API calls (MySQL)**: Dual-write calls use `sendToDatabase(action, data)` in `script.js` or `sendToDB(action, data)` in `login.html`. Both fire-and-forget — they never block the main GAS response.
+- **API shape (backend)**: Every Code.gs function and PHP function returns `{ success: boolean, message?: string, data?: any }`.
+- **Error handling**: All GAS and PHP functions wrapped in try/catch returning `{ success: false, message: err.toString() }`.
+- **Naming**: camelCase for JS functions/variables, kebab-case for CSS classes, snake_case for Google Sheet column headers and MySQL columns.
 - **CSS variables**: All brand colors defined as `--primary-blue`, `--accent-red` etc. in `:root` in `style.css`.
 - **Layout injection**: `header.html` and `footer.html` are fetched and injected via `loadLayoutComponents()` — NOT server-side includes.
 - **Mobile optimization**: Android-specific class `android-device` added to `<body>`; `--vh` CSS variable set dynamically; particles disabled on very small screens.
@@ -204,6 +224,7 @@ Download: GET ?action=download&id=FILE_ID → returns base64 blob → browser do
 - [ ] **CORS**: GAS API is fully public — no authentication required for `getLeads`, `getRegistrations`.
 - [ ] **`console.log` statements** still present in production `script.js` (e.g., `[v0]` prefix logs).
 - [ ] **Particles on desktop only** — reasonable, but particle lifecycle relies on `setTimeout` recursion which is fragile.
+- [ ] **MySQL `api/config.php`** must be deployed with real credentials to Hostinger — not tracked in git with real password.
 
 ---
 
@@ -217,11 +238,12 @@ When adding a **new page**:
 5. Include `<script src="config.js">` and `<script src="script.js" defer>` in the HTML
 6. Add the page to `sitemap.xml`
 
-When adding a **new API action**:
+When adding a **new API action** (that writes data):
 1. Add a `case 'actionName':` in `handleApiRequest`'s switch statement (`Code.gs:64`)
 2. Create the handler function below, returning `{ success: boolean, ... }`
 3. Deploy a new version of the GAS Web App (Deploy > Manage Deployments)
-4. Test with `?action=actionName` appended to the Script URL
+4. **Also add the action to `api/index.php`** switch statement + handler function for MySQL dual-write
+5. Test with `?action=actionName` appended to the Script URL
 
 When touching **`style.css`**:
 - Check `--primary-blue`, `--accent-red`, `--text-primary` CSS variables before adding new hardcoded colors
@@ -233,6 +255,7 @@ When touching **`style.css`**:
 
 | Date | Change | Affected Modules |
 |------|--------|-----------------| 
+| 2026-03-04 | **Added MySQL dual-write system**: PHP API (`api/`), parallel `sendToDatabase()`/`sendToDB()` calls in script.js + login.html, `DB_API_URL` in config.js | `config.js`, `script.js`, `login.html`, `api/` |
 | 2026-03-04 | Initial CODEBASE_CONTEXT.md created | All |
 | 2026-03-02 | Fixed Mahajyoti column header mismatch in staff portal | `Code.gs`, `login.html` |
 | 2026-03-01 | Fixed invisible text in readonly admitted-registration fields | `admitted-registration.html` |

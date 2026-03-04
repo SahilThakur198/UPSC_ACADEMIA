@@ -622,6 +622,32 @@ function initNotesPage() {
 
 // ==== Enrollment: Google Apps Script submission ====
 const APPS_SCRIPT_URL = CONFIG.SCRIPT_URL;
+const DB_API_URL = CONFIG.DB_API_URL;
+
+// ==== Database Dual-Write Helper ====
+// Sends data to MySQL database in parallel (fire-and-forget, non-blocking)
+function sendToDatabase(action, data) {
+  if (!DB_API_URL) {
+    console.warn("[db] DB_API_URL not configured, skipping database write.");
+    return;
+  }
+  fetch(DB_API_URL, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ action: action, data: data }),
+  })
+    .then((res) => res.json())
+    .then((result) => {
+      if (result.success) {
+        console.log(`[db] ✅ ${action} saved to database.`);
+      } else {
+        console.warn(`[db] ⚠️ ${action} DB write failed:`, result.message);
+      }
+    })
+    .catch((err) => {
+      console.warn(`[db] ⚠️ ${action} DB write error (non-blocking):`, err.message);
+    });
+}
 
 function validatePhoneNumber(phone) {
   const digitsOnly = (phone || "").replace(/\D/g, "")
@@ -688,6 +714,9 @@ function initEnrollSubmission() {
     try {
       const formData = new FormData(form)
       const enrollData = Object.fromEntries(formData.entries())
+
+      // ── Parallel DB write (fire-and-forget) ──
+      sendToDatabase("enroll", enrollData);
 
       const params = new URLSearchParams()
       params.append("action", "enroll")
@@ -973,6 +1002,9 @@ function initAdmittedRegistration() {
           address: address,
           website: "" // honeypot
         }
+
+        // ── Parallel DB write (fire-and-forget) ──
+        sendToDatabase("registerAdmitted", regData);
 
         const params = new URLSearchParams()
         params.append("action", "registerAdmitted")

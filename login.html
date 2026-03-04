@@ -2145,6 +2145,26 @@
     // Google Apps Script Backend URL (From config.js)
     // ═══════════════════════════════════════════════════════════════════════════
     const API_URL = CONFIG.SCRIPT_URL;
+    const DB_API_URL = CONFIG.DB_API_URL;
+
+    // ── Database Dual-Write Helper (fire-and-forget) ──
+    function sendToDB(action, data) {
+      if (!DB_API_URL) return;
+      fetch(DB_API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ action: action, data: data }),
+      })
+        .then(res => res.json())
+        .then(result => {
+          if (result.success) {
+            console.log(`[db] ✅ ${action} saved to database.`);
+          } else {
+            console.warn(`[db] ⚠️ ${action} DB write failed:`, result.message);
+          }
+        })
+        .catch(err => console.warn(`[db] ⚠️ ${action} DB error (non-blocking):`, err.message));
+    }
 
     const container = document.getElementById('login-container');
     const dash = document.getElementById('dashboard');
@@ -2392,6 +2412,9 @@
       }
 
       setLoading(btn, true);
+
+      // ── Parallel DB write (fire-and-forget) ──
+      sendToDB('signup', { name, email, password });
 
       try {
         const result = await callAPI('signup', { name, email, password });

@@ -468,6 +468,7 @@ showPopup("⚠️ Please enter a valid phone number.", "error")
 
 | Date | Version | What Changed |
 |------|---------|-------------|
+| 2026-03-04 | 1.1 | Added Hostinger MySQL dual-write system: PHP API (`api/`), `DB_API_URL` in `config.js`, parallel `sendToDatabase()`/`sendToDB()` calls in `script.js` + `login.html` |
 | 2026-03-04 | 1.0 | Documentation created using code-docs skill |
 | 2026-03-02 | — | Fixed Mahajyoti column header mismatch in staff portal |
 | 2026-03-01 | — | Fixed invisible text in readonly registration fields; SEO fixes |
