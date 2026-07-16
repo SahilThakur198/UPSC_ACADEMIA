@@ -10,9 +10,11 @@ document.addEventListener("DOMContentLoaded", async () => {
   initParticleAnimation()
   initMobileMenu()
   verifyLayoutLoaded()
+  initScrollEffects()
 
   // Initialize enrollment submission handler if present
   initEnrollSubmission()
+  initCourseEnquiryForms()
   initMobileStickyCTA()
 
   const contactForm = document.getElementById("contactForm")
@@ -267,9 +269,77 @@ function createParticle(container) {
 }
 
 function initHomePage() {
-  initScrollEffects()
   initMapLoader()
   initFAQ()
+  initTimers()
+}
+
+// ==== Exam Countdown Timers ====
+async function initTimers() {
+  const container = document.getElementById("timers-container")
+  const section = document.getElementById("exam-timers")
+  if (!container || !section) return
+
+  try {
+    const response = await fetch(`${APPS_SCRIPT_URL}?action=getTimers`)
+    const data = await response.json()
+
+    if (data.success && data.timers && data.timers.length > 0) {
+      section.style.display = "block"
+      
+      const updateTimers = () => {
+        const now = new Date().getTime()
+        let html = ""
+
+        data.timers.forEach(timer => {
+          const targetDate = new Date(timer.date).getTime()
+          const distance = targetDate - now
+
+          if (distance < 0) return // Skip past exams
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24))
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60))
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60))
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000)
+
+          html += `
+            <div class="timer-card">
+              <h3>${timer.name}</h3>
+              <div class="countdown">
+                <div class="time-box">
+                  <span>${days}</span>
+                  <div class="label">Days</div>
+                </div>
+                <div class="time-box">
+                  <span>${hours}</span>
+                  <div class="label">Hours</div>
+                </div>
+                <div class="time-box">
+                  <span>${minutes}</span>
+                  <div class="label">Mins</div>
+                </div>
+                <div class="time-box">
+                  <span>${seconds}</span>
+                  <div class="label">Secs</div>
+                </div>
+              </div>
+            </div>
+          `
+        })
+
+        if (html) {
+          container.innerHTML = html
+        } else {
+          section.style.display = "none"
+        }
+      }
+
+      updateTimers()
+      setInterval(updateTimers, 1000)
+    }
+  } catch (err) {
+    console.error("[Timers] Failed to fetch timers:", err)
+  }
 }
 
 function initScrollEffects() {
@@ -753,6 +823,119 @@ function initEnrollSubmission() {
       submitBtn.textContent = originalText
     }
   })
+}
+
+function initCourseEnquiryForms() {
+  // Modal toggle logic
+  const enquiryModal = document.getElementById("enquiryModal")
+  const closeEnquiryBtn = document.getElementById("closeEnquiryBtn")
+  const courseInput = document.getElementById("enquiryCourse")
+  const campusGroup = document.getElementById("campusGroup")
+  
+  window.openEnquiryModal = (courseName) => {
+    if (!enquiryModal) return
+    
+    // Set source page
+    const sourcePageInput = document.getElementById("enquirySourcePage")
+    if(sourcePageInput) sourcePageInput.value = window.location.pathname.split('/').pop() || 'courses.html'
+    
+    // Pre-fill and lock course dropdown
+    if (courseInput && courseName) {
+      courseInput.value = courseName
+      courseInput.setAttribute("readonly", true)
+      courseInput.style.pointerEvents = "none"
+      courseInput.style.backgroundColor = "#f5f5f5"
+      
+      if(courseName === 'TAIT' && campusGroup) {
+         campusGroup.style.display = 'block'
+         document.getElementById('enquiryCampus').required = true
+      } else if (campusGroup) {
+         campusGroup.style.display = 'none'
+         document.getElementById('enquiryCampus').required = false
+      }
+    }
+    
+    enquiryModal.classList.add("active")
+  }
+
+  if (closeEnquiryBtn) {
+    closeEnquiryBtn.addEventListener("click", () => {
+      enquiryModal.classList.remove("active")
+    })
+  }
+  
+  if(enquiryModal) {
+    enquiryModal.addEventListener("click", (e) => {
+      if (e.target === enquiryModal) enquiryModal.classList.remove("active")
+    })
+  }
+
+  // Generic submit handler for both modal and inline forms
+  const handleEnquirySubmit = async (e, form, submitBtn) => {
+    e.preventDefault()
+
+    const phoneInput = form.querySelector('input[name="phone"]')
+    if (phoneInput && !validatePhoneNumber(phoneInput.value.trim())) {
+      showPopup("⚠️ Please enter a valid 10-digit Indian phone number.", "error")
+      return
+    }
+
+    submitBtn.disabled = true
+    const originalText = submitBtn.textContent
+    submitBtn.textContent = "Sending..."
+
+    try {
+      const formData = new FormData(form)
+      const enquiryData = Object.fromEntries(formData.entries())
+      
+      // Dual-write: Send to MySQL
+      sendToDatabase("courseEnquiry", enquiryData)
+
+      // Send to Google Apps Script
+      const params = new URLSearchParams()
+      params.append("action", "courseEnquiry")
+      params.append("data", JSON.stringify(enquiryData))
+
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params,
+      })
+
+      const text = await res.text()
+      let data
+      try { data = JSON.parse(text) } catch { data = { success: res.ok, message: text } }
+
+      if (res.ok && data.success) {
+        showPopup("Enquiry submitted successfully! We will contact you soon.", "success")
+        form.reset()
+        if (enquiryModal) enquiryModal.classList.remove("active")
+      } else {
+        console.error("[enquiry] Response error:", data)
+        showPopup("⚠️ Submission failed: " + (data.message || "Unknown error"), "error")
+      }
+    } catch (err) {
+      console.error("[enquiry] Network error:", err)
+      showPopup("Network error, please try again later.", "error")
+    } finally {
+      submitBtn.disabled = false
+      submitBtn.textContent = originalText
+    }
+  }
+
+  // Attach to Modal Form
+  const modalForm = document.getElementById("courseEnquiryForm")
+  const modalSubmitBtn = document.getElementById("submitEnquiryBtn")
+  if (modalForm && modalSubmitBtn) {
+    modalForm.addEventListener("submit", (e) => handleEnquirySubmit(e, modalForm, modalSubmitBtn))
+  }
+
+  // Attach to Inline Form (on individual course pages)
+  const inlineForm = document.getElementById("inlineCourseEnquiryForm")
+  const inlineSubmitBtn = document.getElementById("inlineSubmitBtn")
+  if (inlineForm && inlineSubmitBtn) {
+    inlineForm.addEventListener("submit", (e) => handleEnquirySubmit(e, inlineForm, inlineSubmitBtn))
+  }
 }
 
 // =============================================

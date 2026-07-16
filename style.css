@@ -2,6 +2,13 @@
   --primary-blue: #081f3d;
   --accent-red: #c62828;
   --accent-blue: #1e88e5;
+  --accent-crimson: #A71013;
+  --accent-gold: #F59F2E;
+  --course-navy: #041d48;
+  --course-royal: #1a3e70;
+  --course-crimson: #a71013;
+  --course-gold: #f59f2e;
+  --course-khaki: #8b7d58;
   --white: #ffffff;
   --light-gray: #f8f9fa;
   --dark-gray: #2d3436;
@@ -2653,3 +2660,264 @@ input:checked+.slider:before {
     width: 35px;
   }
 }
+
+/* ========================================
+   FOOTER COMPONENT STYLES
+   ======================================== */
+.footer {
+  background: var(--primary-blue);
+  color: var(--white);
+  padding: 60px 0 20px;
+  position: relative;
+  overflow: visible; /* to allow wave to show */
+  margin-top: 100px; /* space for wave */
+}
+
+.footer-wave {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  line-height: 0;
+  transform: translateY(-99%);
+}
+
+.footer-wave svg {
+  display: block;
+  width: calc(100% + 1.3px);
+  height: 60px;
+}
+
+.footer-wave .shape-fill {
+  fill: var(--primary-blue);
+}
+
+.footer-content {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  margin-bottom: 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 20px;
+}
+
+.footer-section {
+  flex: 1;
+  min-width: 200px;
+}
+
+.footer-logo {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 20px;
+  font-family: 'Montserrat', sans-serif;
+}
+
+.footer-logo .upsc {
+  color: var(--white);
+}
+
+.footer-logo .academia {
+  color: var(--accent-red);
+}
+
+.footer-section p {
+  color: #bdc3c7;
+  line-height: 1.6;
+  margin-bottom: 20px;
+}
+
+.footer-section h3 {
+  font-size: 18px;
+  margin-bottom: 20px;
+  position: relative;
+  padding-bottom: 10px;
+}
+
+.footer-section h3::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background: var(--accent-red);
+}
+
+.footer-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.footer-section ul li {
+  margin-bottom: 12px;
+}
+
+.footer-section ul li a {
+  color: #bdc3c7;
+  text-decoration: none;
+  transition: color 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.footer-section ul li a:hover {
+  color: var(--accent-red);
+}
+
+.footer-section.contact-info {
+  flex: 1.5;
+  min-width: 250px;
+}
+.footer-section.contact-info ul li {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  color: #bdc3c7;
+}
+
+.footer-section.contact-info ul li i {
+  color: var(--accent-red);
+  margin-top: 4px;
+}
+
+.footer-section.contact-info ul li a {
+  display: inline;
+}
+
+/* Social links inside footer */
+.social-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 15px;
+}
+
+.social-links a {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--white);
+  font-size: 0.95rem;
+  transition: var(--transition);
+  text-decoration: none;
+}
+
+.social-links a:hover {
+  background: var(--accent-red);
+  color: var(--white);
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
+}
+
+.footer-bottom {
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+  padding-top: 20px;
+  text-align: center;
+  color: #bdc3c7;
+  font-size: 14px;
+}
+
+@media (max-width: 768px) {
+  .footer-content {
+    flex-direction: column;
+  }
+}
+
+/* ========================================
+   ENROLLMENT PAGE STYLES
+   ======================================== */
+.enrollment-form-container {
+  max-width: 600px;
+  margin: 40px auto;
+  background: var(--white);
+  padding: 50px 40px;
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.enrollment-form-container h1 {
+  text-align: center;
+  color: var(--course-navy);
+  font-size: 2.2rem;
+  font-weight: 800;
+  margin-bottom: 10px;
+}
+
+.enrollment-form-container .form-subtitle {
+  text-align: center;
+  color: var(--text-secondary);
+  font-size: 1.1rem;
+  margin-bottom: 35px;
+}
+
+.custom-enroll-form .form-group {
+  margin-bottom: 22px;
+}
+
+.custom-enroll-form label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.custom-enroll-form input,
+.custom-enroll-form select {
+  width: 100%;
+  padding: 14px 18px;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #333;
+  transition: all 0.3s ease;
+  background: #fdfdfd;
+  box-sizing: border-box;
+}
+
+.custom-enroll-form input:focus,
+.custom-enroll-form select:focus {
+  outline: none;
+  border-color: var(--course-royal);
+  box-shadow: 0 0 0 3px rgba(26, 62, 112, 0.1);
+  background: var(--white);
+}
+
+.custom-enroll-form .enroll-submit-btn {
+  width: 100%;
+  padding: 16px;
+  background-color: #ef4444; /* Match reference red */
+  color: var(--white);
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-transform: uppercase;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.custom-enroll-form .enroll-submit-btn:hover {
+  background-color: #dc2626;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(239, 68, 68, 0.3);
+}
+
+@media (max-width: 600px) {
+  .enrollment-form-container {
+    padding: 30px 20px;
+    margin: 20px;
+  }
+}
+

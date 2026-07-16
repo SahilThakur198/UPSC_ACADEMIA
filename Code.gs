@@ -71,6 +71,9 @@ function handleApiRequest(e) {
       case 'enroll':
         result = processEnrollment(data);
         break;
+      case 'courseEnquiry':
+        result = processCourseEnquiry(data);
+        break;
       case 'getLeads':
         result = getLeadsFromSheet();
         break;
@@ -100,6 +103,15 @@ function handleApiRequest(e) {
         break;
       case 'getRegistrations':
         result = getRegistrationsFromSheet();
+        break;
+      case 'getTimers':
+        result = getTimers();
+        break;
+      case 'addTimer':
+        result = addTimer(data);
+        break;
+      case 'deleteTimer':
+        result = deleteTimer(data);
         break;
       default:
         result = { success: false, message: 'Invalid action: ' + action };
@@ -148,6 +160,44 @@ function processEnrollment(data) {
 }
 
 /**
+ * Handle new Course Enquiry
+ */
+function processCourseEnquiry(data) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName('Leads');
+    if (!sheet) return { success: false, message: 'Leads sheet not found' };
+
+    const name = data.name || '';
+    const email = data.email || '';
+    const phone = data.phone || '';
+    const course = data.course || '';
+    const campus = data.campus || '';
+    const city = data.city || '';
+    const message = data.message || '';
+    const sourcePage = data.source_page || '';
+
+    sheet.appendRow([
+      new Date(),
+      name,
+      email,
+      phone,
+      course,
+      'New',
+      '',
+      '',
+      campus,
+      city,
+      message,
+      sourcePage
+    ]);
+    return { success: true, message: 'Course enquiry saved successfully' };
+  } catch (error) {
+    return { success: false, message: 'Server error: ' + error.toString() };
+  }
+}
+
+/**
  * Fetch Leads for Admin Dashboard
  */
 function getLeadsFromSheet() {
@@ -167,7 +217,11 @@ function getLeadsFromSheet() {
         email: data[i][2],
         phone: data[i][3],
         course: data[i][4],
-        status: data[i][5]
+        status: data[i][5],
+        preferred_campus: data[i][8] || '',
+        city: data[i][9] || '',
+        message: data[i][10] || '',
+        source_page: data[i][11] || ''
       });
     }
     
@@ -187,6 +241,81 @@ function deleteFileFromDrive(fileId) {
     return { success: true, message: 'File moved to trash.' };
   } catch (err) {
     return { success: false, message: 'Delete error: ' + err.toString() };
+  }
+}
+
+// =============================================
+// EXAM TIMERS FUNCTIONS
+// =============================================
+
+function getTimers() {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = ss.getSheetByName('Timers');
+    if (!sheet) {
+      sheet = ss.insertSheet('Timers');
+      sheet.appendRow(['ID', 'Name', 'Date', 'CreatedAt']);
+      return { success: true, timers: [] };
+    }
+    
+    const data = sheet.getDataRange().getDisplayValues();
+    const timers = [];
+    for (let i = 1; i < data.length; i++) {
+      if (data[i][0]) {
+        timers.push({
+          id: data[i][0],
+          name: data[i][1],
+          date: data[i][2],
+          createdAt: data[i][3]
+        });
+      }
+    }
+    return { success: true, timers: timers };
+  } catch (err) {
+    return { success: false, message: 'Error fetching timers: ' + err.toString() };
+  }
+}
+
+function addTimer(data) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    let sheet = ss.getSheetByName('Timers');
+    if (!sheet) {
+      sheet = ss.insertSheet('Timers');
+      sheet.appendRow(['ID', 'Name', 'Date', 'CreatedAt']);
+    }
+    
+    const id = Utilities.getUuid();
+    sheet.appendRow([
+      id,
+      data.name,
+      data.date,
+      new Date().toISOString()
+    ]);
+    
+    return { success: true, message: 'Timer added successfully.' };
+  } catch (err) {
+    return { success: false, message: 'Error adding timer: ' + err.toString() };
+  }
+}
+
+function deleteTimer(data) {
+  try {
+    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const sheet = ss.getSheetByName('Timers');
+    if (!sheet) return { success: false, message: 'Timers sheet not found.' };
+    
+    const sheetData = sheet.getDataRange().getDisplayValues();
+    for (let i = 1; i < sheetData.length; i++) {
+      if (sheetData[i][0] === data.id) {
+        sheet.deleteRow(i + 1);
+        return { success: true, message: 'Timer deleted successfully.' };
+      }
+    }
+    
+    return { success: false, message: 'Timer not found.' };
+  } catch (err) {
+    return { success: false, message: 'Error deleting timer: ' + err.toString() };
   }
 }
 

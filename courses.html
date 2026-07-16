@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0">
+    <title>Courses | UPSC Academia</title>
+    <meta name="description" content="Explore UPSC Academia's courses for SSC-CGL, MBA Entrance, TAIT, Agniveer, and IBPS PO & Clerk in Pune.">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="courses.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&family=Kalam:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Configuration & Scripts -->
+    <script src="config.js"></script>
+    <script src="script.js" defer></script>
+</head>
+<body id="courses-page">
+    <div class="bg-decoration"></div>
+    
+    <!-- Header Injected via JS -->
+    <div id="site-header"></div>
+    <div class="navbar-spacer"></div>
+
+    <!-- Page Header -->
+    <header class="course-header">
+        <div class="container fade-in">
+            <h1>Our Courses</h1>
+            <p>Comprehensive coaching programs for competitive exams in Pune, guided by expert faculty and proven methodologies.</p>
+        </div>
+    </header>
+
+    <!-- Courses Grid Section -->
+    <section class="section">
+        <div class="container fade-in">
+            <h2 class="section-title">Batch 2026-27</h2>
+            <div class="courses-grid" id="courses-grid">
+                
+                <!-- Course 1: SSC-CGL -->
+                <div class="course-card fade-in">
+                    <div class="course-card-banner" style="background-image: url('img/courses/course_ssc_cgl.png'); background-size: 100% 100%; background-position: center;">
+                        <h3 style="display: none;">SSC-CGL</h3>
+                    </div>
+                    <div class="batch-badge">Batch 2026-27</div>
+                    <div class="course-card-content">
+                        <h4 class="course-hook">Your gateway to Group B & C government jobs</h4>
+                        <ul class="course-features">
+                            <li>Full Tier-I & Tier-II coverage</li>
+                            <li>Regular mock tests & sectional quizzes</li>
+                            <li>Current affairs & GK sessions</li>
+                            <li>Doubt-clearing support</li>
+                        </ul>
+                        <div class="course-actions">
+                            <a href="course-ssc-cgl.html" class="btn-secondary">View Details</a>
+                            <button class="btn-primary" onclick="openEnquiryModal('SSC-CGL')">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 2: MBA Entrance -->
+                <div class="course-card fade-in">
+                    <div class="course-card-banner" style="background-image: url('img/courses/course_mba.png'); background-size: 100% 100%; background-position: center;">
+                        <h3 style="display: none;">MBA Entrance</h3>
+                    </div>
+                    <div class="batch-badge">Batch 2026-27</div>
+                    <div class="course-card-content">
+                        <h4 class="course-hook">Empowering future leaders</h4>
+                        <ul class="course-features">
+                            <li>Comprehensive Curriculum</li>
+                            <li>Industry Relevant</li>
+                            <li>Career Focused Mentoring</li>
+                            <li>CAT, MAH-MBA-CET, CMAT</li>
+                        </ul>
+                        <div class="course-actions">
+                            <a href="course-mba.html" class="btn-secondary">View Details</a>
+                            <button class="btn-primary" onclick="openEnquiryModal('MBA Entrance Exam')">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 3: TAIT -->
+                <div class="course-card fade-in">
+                    <div class="course-card-banner" style="background-image: url('img/courses/course_tait.png'); background-size: 100% 100%; background-position: center;">
+                        <h3 style="display: none;">TAIT</h3>
+                    </div>
+                    <div class="batch-badge">Batch 2026-27</div>
+                    <div class="course-card-content">
+                        <h4 class="course-hook">Your roadmap to success in TAIT</h4>
+                        <ul class="course-features">
+                            <li>Teacher Eligibility & Quality Assessment</li>
+                            <li>Online (CBT) Exam Practice</li>
+                            <li>Aptitude & Intelligence Test Training</li>
+                            <li>Merit-Based Selection Guidance</li>
+                        </ul>
+                        <div class="course-actions">
+                            <a href="course-tait.html" class="btn-secondary">View Details</a>
+                            <button class="btn-primary" onclick="openEnquiryModal('TAIT')">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 4: Agniveer -->
+                <div class="course-card agniveer fade-in">
+                    <div class="course-card-banner" style="background-image: url('img/courses/course_agniveer.png'); background-size: 100% 100%; background-position: center;">
+                        <h3 style="display: none;">Agniveer</h3>
+                    </div>
+                    <div class="batch-badge">Batch 2026-27</div>
+                    <div class="course-card-content">
+                        <h4 class="course-hook">Serve the nation — complete preparation</h4>
+                        <ul class="course-features">
+                            <li>Online & Offline Coaching</li>
+                            <li>Written/CBT exam prep</li>
+                            <li>Physical fitness guidance</li>
+                            <li>Army, Navy & Air Force focus</li>
+                        </ul>
+                        <div class="course-actions">
+                            <a href="course-agniveer.html" class="btn-secondary">View Details</a>
+                            <button class="btn-primary" onclick="openEnquiryModal('Agniveer')">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Course 5: IBPS PO & Clerk -->
+                <div class="course-card fade-in">
+                    <div class="course-card-banner" style="background-image: url('img/courses/course_ibps.png'); background-size: 100% 100%; background-position: center;">
+                        <h3 style="display: none;">IBPS PO & Clerk</h3>
+                    </div>
+                    <div class="batch-badge">Batch 2026-27</div>
+                    <div class="course-card-content">
+                        <h4 class="course-hook">Launch your banking career</h4>
+                        <ul class="course-features">
+                            <li>Combined PO & Clerk batch</li>
+                            <li>Prelims + Mains coverage</li>
+                            <li>Banking & financial awareness</li>
+                            <li>Regular mock tests</li>
+                        </ul>
+                        <div class="course-actions">
+                            <a href="course-ibps.html" class="btn-secondary">View Details</a>
+                            <button class="btn-primary" onclick="openEnquiryModal('IBPS PO & Clerk')">Enquire Now</button>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Generic Enquiry Modal (Injected/Handled by JS) -->
+    <div class="modal-overlay" id="enquiryModal">
+        <div class="modal-content">
+            <button class="close-modal" id="closeEnquiryBtn">&times;</button>
+            <h2 class="modal-title">Course Enquiry</h2>
+            <p class="modal-subtitle">Fill out the form below and our counsellor will contact you within 24 hours.</p>
+            
+            <form id="courseEnquiryForm" class="enquiry-form">
+                <!-- Honeypot -->
+                <input type="text" name="website" style="display:none" autocomplete="off">
+                <input type="hidden" id="enquirySourcePage" name="source_page" value="">
+                
+                <div class="form-group">
+                    <label for="enquiryName">Full Name *</label>
+                    <input type="text" id="enquiryName" name="name" required placeholder="Enter your full name">
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryPhone">Phone Number *</label>
+                    <input type="tel" id="enquiryPhone" name="phone" required placeholder="10-digit mobile number" pattern="[6-9][0-9]{9}" title="Valid 10-digit Indian mobile number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryEmail">Email Address</label>
+                    <input type="email" id="enquiryEmail" name="email" placeholder="Optional">
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryCourse">Course Interested In *</label>
+                    <select id="enquiryCourse" name="course" required>
+                        <option value="">Select a Course</option>
+                        <option value="SSC-CGL">SSC-CGL</option>
+                        <option value="MBA Entrance Exam">MBA Entrance Exam</option>
+                        <option value="TAIT">TAIT</option>
+                        <option value="Agniveer">Agniveer</option>
+                        <option value="IBPS PO & Clerk">IBPS PO & Clerk</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="campusGroup" style="display: none;">
+                    <label for="enquiryCampus">Preferred Campus *</label>
+                    <select id="enquiryCampus" name="campus">
+                        <option value="">Select Campus</option>
+                        <option value="Campus 1 - Budhwar Peth">Campus 1 - Budhwar Peth</option>
+                        <option value="Campus 2 - Sadashiv Peth">Campus 2 - Sadashiv Peth</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryCity">City / Area</label>
+                    <input type="text" id="enquiryCity" name="city" placeholder="Optional">
+                </div>
+                
+                <div class="form-group">
+                    <label for="enquiryMessage">Message / Query</label>
+                    <textarea id="enquiryMessage" name="message" placeholder="Optional"></textarea>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="enquiryConsent" name="consent" required>
+                    <label for="enquiryConsent">I agree to be contacted by UPSC Academia regarding this enquiry via phone, SMS, or WhatsApp.</label>
+                </div>
+                
+                <button type="submit" class="submit-btn" id="submitEnquiryBtn">Submit Enquiry</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Footer Injected via JS -->
+    <div id="site-footer"></div>
+    
+</body>
+</html>

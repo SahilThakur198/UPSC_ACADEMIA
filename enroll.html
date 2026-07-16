@@ -29,6 +29,27 @@
   <!-- Canonical URL -->
   <link rel="canonical" href="https://upscacademia.in/enroll.html">
 
+  <!-- Geo Meta Tags for Local SEO -->
+  <meta name="geo.region" content="IN-MH">
+  <meta name="geo.placename" content="Pune">
+  <meta name="geo.position" content="18.517250;73.855504">
+  <meta name="ICBM" content="18.517250, 73.855504">
+
+  <!-- Course Schema -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Course",
+    "name": "Free Civil Services Demo Class",
+    "description": "Attend a free comprehensive demo class for UPSC and MPSC preparation at UPSC Academia in Pune.",
+    "provider": {
+      "@type": "EducationalOrganization",
+      "name": "UPSC Academia",
+      "sameAs": "https://upscacademia.in"
+    }
+  }
+  </script>
+
   <!-- Breadcrumb Schema -->
   <script type="application/ld+json">
   {
@@ -74,7 +95,8 @@
     <div class="page-container">
       <div class="enrollment-form-container">
         <h1>Request a Demo Class</h1>
-        <form id="enrollForm">
+        <p class="form-subtitle">Take the first step towards your civil services success.</p>
+        <form id="enrollForm" class="custom-enroll-form">
           <div class="form-group">
             <label for="enrollName">Full Name</label>
             <input type="text" id="enrollName" name="enrollName" required placeholder="Enter your full name" />
@@ -90,8 +112,8 @@
             <input type="tel" id="enrollPhone" name="enrollPhone" required placeholder="Enter your phone number" />
           </div>
 
-          <div class="form-group">
-            <label for="course">Course of Interest</label>
+          <div class="form-group custom-select-wrapper">
+            <label for="course" class="select-label">Course of Interest</label>
             <select id="course" name="course" required>
               <option value="" disabled selected>Select a Course</option>
               <option value="MPSC राज्यासेवा २०२५ - २०२६">MPSC राज्यासेवा २०२५ - २०२६</option>
@@ -101,7 +123,7 @@
             </select>
           </div>
 
-          <button type="submit" class="submit-btn" id="submitBtn">Submit Enrollment</button>
+          <button type="submit" class="submit-btn enroll-submit-btn" id="submitBtn">Submit Enrollment</button>
           <div id="formMessage" style="margin-top:10px;"></div>
         </form>
       </div>

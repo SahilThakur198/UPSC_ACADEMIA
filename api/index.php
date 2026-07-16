@@ -59,6 +59,9 @@ switch ($action) {
     case 'registerAdmitted':
         $result = processAdmittedRegistration($data);
         break;
+    case 'courseEnquiry':
+        $result = processCourseEnquiry($data);
+        break;
     case 'getLeads':
         $result = getLeads();
         break;
@@ -112,6 +115,50 @@ function processEnrollment($data)
         ]);
 
         return ['success' => true, 'message' => 'Enrollment saved to database.', 'id' => $pdo->lastInsertId()];
+    } catch (PDOException $e) {
+        return ['success' => false, 'message' => 'DB Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Process course enquiry from new Courses section
+ * Mirrors Code.gs processCourseEnquiry()
+ */
+function processCourseEnquiry($data)
+{
+    try {
+        $pdo = getDBConnection();
+
+        $name = sanitize($data['name'] ?? '');
+        $email = sanitize($data['email'] ?? '');
+        $phone = sanitize($data['phone'] ?? '');
+        $course = sanitize($data['course'] ?? '');
+        $campus = sanitize($data['campus'] ?? '');
+        $city = sanitize($data['city'] ?? '');
+        $message = sanitize($data['message'] ?? '');
+        $sourcePage = sanitize($data['source_page'] ?? '');
+
+        if (empty($name) || empty($phone) || empty($course)) {
+            return ['success' => false, 'message' => 'Name, phone, and course are required.'];
+        }
+
+        $stmt = $pdo->prepare("
+            INSERT INTO leads (name, email, phone, course, preferred_campus, city, message, source_page, status, created_at)
+            VALUES (:name, :email, :phone, :course, :campus, :city, :message, :source_page, 'New', NOW())
+        ");
+
+        $stmt->execute([
+            ':name' => $name,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':course' => $course,
+            ':campus' => $campus,
+            ':city' => $city,
+            ':message' => $message,
+            ':source_page' => $sourcePage,
+        ]);
+
+        return ['success' => true, 'message' => 'Enquiry saved to database.', 'id' => $pdo->lastInsertId()];
     } catch (PDOException $e) {
         return ['success' => false, 'message' => 'DB Error: ' . $e->getMessage()];
     }
@@ -240,6 +287,10 @@ function getLeads()
                 'email' => $row['email'],
                 'phone' => $row['phone'],
                 'course' => $row['course'],
+                'preferred_campus' => $row['preferred_campus'] ?? '',
+                'city' => $row['city'] ?? '',
+                'message' => $row['message'] ?? '',
+                'source_page' => $row['source_page'] ?? '',
                 'status' => $row['status'],
             ];
         }, $leads);
