@@ -15,6 +15,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Validate FTP server and DNS
+        run: |
+          if [ -z "${{ secrets.FTP_SERVER }}" ]; then
+            echo "ERROR: FTP_SERVER secret is empty or missing"; exit 1
+          fi
+          echo "Checking DNS for ${{ secrets.FTP_SERVER }}..."
+          nslookup "${{ secrets.FTP_SERVER }}" || (echo "DNS lookup failed for ${{ secrets.FTP_SERVER }}"; exit 1)
+
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
