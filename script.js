@@ -27,18 +27,18 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // --- Page-Specific Logic ---
+  // --- Page-Specific Logic ---
   const bodyId = document.body.id
   if (bodyId === "home-page") {
     initHomePage()
+    handleInitialHashScroll()
   } else if (bodyId === "notes-page") {
     initNotesPage()
   } else if (bodyId === "enroll-page") {
     initEnrollPage()
     // Hide Demo Class button on enroll page
-    // Desktop button
     const enrollBtn = document.querySelector(".enroll-btn.desktop-only")
     if (enrollBtn) enrollBtn.style.display = "none"
-    // Mobile button
     const enrollMobile = document.querySelector(".enroll-mobile.mobile-only")
     if (enrollMobile) enrollMobile.parentElement.style.display = "none"
   } else if (bodyId === "admitted-reg-page") {
@@ -68,6 +68,7 @@ async function loadLayoutComponents() {
     initMobileMenu();
     markActiveNavLink();
     enableInPageSmoothScroll();
+    handleInitialHashScroll();
   } catch (err) {
     console.error("[Performance] Layout components failed to load:", err);
   }
@@ -84,13 +85,21 @@ function verifyLayoutLoaded() {
 
 function markActiveNavLink() {
   const navLinks = document.querySelectorAll(".nav-menu a.nav-link")
+  const currentPath = window.location.pathname.split("/").pop() || "index.html"
   const currentHash = window.location.hash
   const isHome = document.body.id === "home-page"
+
   navLinks.forEach((link) => {
     link.classList.remove("active")
     const href = link.getAttribute("href") || ""
+    const linkPath = href.split("#")[0] || "index.html"
     const linkHash = href.includes("#") ? `#${href.split("#")[1]}` : ""
-    if ((isHome && linkHash && linkHash === currentHash) || (!currentHash && isHome && linkHash === "#home")) {
+
+    if (isHome) {
+      if ((linkHash && linkHash === currentHash) || (!currentHash && (linkHash === "#home" || (linkPath === "index.html" && !linkHash)))) {
+        link.classList.add("active")
+      }
+    } else if (linkPath && currentPath.endsWith(linkPath)) {
       link.classList.add("active")
     }
   })
@@ -117,6 +126,20 @@ function enableInPageSmoothScroll() {
       }
     })
   })
+}
+
+function handleInitialHashScroll() {
+  if (document.body.id === "home-page" && window.location.hash) {
+    setTimeout(() => {
+      const target = document.querySelector(window.location.hash)
+      if (target) {
+        const navbar = document.querySelector(".navbar")
+        const navbarHeight = navbar ? navbar.offsetHeight : 0
+        const targetPosition = target.offsetTop - navbarHeight - 20
+        window.scrollTo({ top: targetPosition, behavior: "smooth" })
+      }
+    }, 150)
+  }
 }
 
 function initMobileMenu() {
@@ -404,7 +427,6 @@ function initMapLoader() {
   }
 
   window.handleMapError = () => {
-    console.log("[v0] Map failed to load, showing fallback")
     if (mapLoading) {
       mapLoading.style.display = "none"
     }
@@ -418,13 +440,10 @@ function initMapLoader() {
 
   setTimeout(() => {
     if (googleMap && googleMap.style.display === "none") {
-      console.log("[v0] Map timeout, showing fallback")
       window.handleMapError()
     }
   }, 5000)
 }
-
-// Production: Redundant debug functions removed
 
 function optimizeForMobile() {
   if (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4) {
@@ -435,15 +454,11 @@ function optimizeForMobile() {
     const particlesContainer = document.querySelector(".particles-container")
     if (particlesContainer) {
       particlesContainer.style.display = "none"
-      console.log("[v0] Disabled particles for performance")
     }
   }
 
-
-
   const isAndroid = /Android/i.test(navigator.userAgent)
   if (isAndroid) {
-    console.log("[v0] Android device detected, applying optimizations")
     document.body.classList.add("android-device")
 
     const setVH = () => {
@@ -466,17 +481,14 @@ function initEnrollPage() {
     inputs.forEach((input) => {
       input.addEventListener("focus", function () {
         this.parentElement.classList.add("focused")
-        console.log("[v0] Input focused, adding focused class")
       })
 
       input.addEventListener("blur", function () {
         this.parentElement.classList.remove("focused")
         if (this.value) {
           this.parentElement.classList.add("filled")
-          console.log("[v0] Input blurred, adding filled class")
         } else {
           this.parentElement.classList.remove("filled")
-          console.log("[v0] Input blurred, removing filled class")
         }
       })
     })
@@ -484,7 +496,6 @@ function initEnrollPage() {
 }
 
 function initNotesPage() {
-  console.log("[v0] Initializing dynamic multi-action notes page")
   const notesList = document.getElementById("notes-list")
   const loader = document.getElementById("notes-loader")
   const noNotes = document.getElementById("no-notes")
@@ -494,10 +505,8 @@ function initNotesPage() {
   const WEB_APP_URL = APPS_SCRIPT_URL
 
   async function fetchNotes() {
-    console.log("[v0] Attempting to fetch notes...")
     try {
       if (!WEB_APP_URL || WEB_APP_URL.includes("replace")) {
-        console.warn("[v0] Apps Script URL is placeholder. Using mock data.")
         renderNotes(getMockNotes())
         return
       }
@@ -507,7 +516,6 @@ function initNotesPage() {
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`)
 
       const data = await response.json()
-      console.log("[v0] Fetch successful, data received:", data)
 
       if (data && (data.error || !data.success)) {
         throw new Error(data.error || data.message || "Failed to fetch files")
@@ -515,7 +523,7 @@ function initNotesPage() {
 
       renderNotes(data.files || [])
     } catch (err) {
-      console.error("[v0] Failed to fetch notes:", err)
+      console.error("[notes] Failed to fetch notes:", err)
       if (loader)
         loader.innerHTML = `
           <div style="color: var(--accent-red); padding: 2rem; border: 1px dashed var(--accent-red); border-radius: 12px;">
@@ -529,18 +537,15 @@ function initNotesPage() {
   function renderNotes(notes) {
     if (loader) loader.style.display = "none"
     if (!notesList) {
-      console.error("[v0] notes-list container not found!")
       return
     }
 
     if (!Array.isArray(notes)) {
-      console.error("[v0] Expected an array of notes, but received:", notes)
       notesList.innerHTML = '<p style="color:var(--accent-red);">Unexpected data format received from API.</p>'
       return
     }
 
     notesList.style.display = "flex"
-    console.log("[v0] Rendering", notes.length, "notes")
 
     notesList.innerHTML = notes
       .map(
@@ -1249,8 +1254,6 @@ function initAdmittedRegistration() {
 
 window.addEventListener("orientationchange", () => {
   setTimeout(() => {
-    console.log("[v0] Orientation changed, recalculating layout")
-
     const particlesContainer = document.querySelector(".particles-container")
     if (particlesContainer && window.innerWidth >= 480) {
       particlesContainer.innerHTML = ""
@@ -1258,7 +1261,6 @@ window.addEventListener("orientationchange", () => {
       for (let i = 0; i < particleCount; i++) {
         createParticle(particlesContainer)
       }
-      console.log("[v0] Recreated particles after orientation change")
     }
   }, 100)
 })
@@ -1283,7 +1285,6 @@ function initFAQ() {
       if (!isActive) {
         item.classList.add("active")
       }
-      console.log("[v0] FAQ item toggled")
     })
   })
 }
