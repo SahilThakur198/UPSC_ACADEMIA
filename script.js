@@ -698,8 +698,14 @@ function initNotesPage() {
 }
 
 // ==== Enrollment: Google Apps Script submission ====
-const APPS_SCRIPT_URL = CONFIG.SCRIPT_URL;
-const DB_API_URL = CONFIG.DB_API_URL;
+function getAppsScriptUrl() {
+  if (typeof CONFIG !== 'undefined' && CONFIG.SCRIPT_URL) {
+    return CONFIG.SCRIPT_URL;
+  }
+  return "https://script.google.com/macros/s/AKfycbxVd6G9yCWCBowAK2PZxWQLJRgJvff8y4wKh56fDUEnv3b_Sxoz3uva9kyZz-X-kEeG/exec";
+}
+const APPS_SCRIPT_URL = getAppsScriptUrl();
+const DB_API_URL = typeof CONFIG !== 'undefined' ? CONFIG.DB_API_URL : "https://academiaclass.in/api/index.php";
 
 // ==== Database Dual-Write Helper ====
 // Sends data to MySQL database in parallel (fire-and-forget, non-blocking)
@@ -1402,7 +1408,8 @@ function initMpscRegistration() {
       params.append("action", "verifyMpscStudent")
       params.append("data", JSON.stringify({ roll_no: rollNo }))
 
-      const res = await fetch(APPS_SCRIPT_URL, {
+      const scriptUrl = getAppsScriptUrl()
+      const res = await fetch(scriptUrl, {
         method: "POST",
         headers: { "Content-Type": "application/x-www-form-urlencoded" },
         body: params
@@ -1544,7 +1551,8 @@ function initMpscRegistration() {
         params.append("action", "registerMpscInterview")
         params.append("data", JSON.stringify(regData))
 
-        const res = await fetch(APPS_SCRIPT_URL, {
+        const scriptUrl = getAppsScriptUrl()
+        const res = await fetch(scriptUrl, {
           method: "POST",
           headers: { "Content-Type": "application/x-www-form-urlencoded" },
           body: params
