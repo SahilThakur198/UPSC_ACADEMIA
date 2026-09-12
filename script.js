@@ -43,6 +43,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     if (enrollMobile) enrollMobile.parentElement.style.display = "none"
   } else if (bodyId === "admitted-reg-page") {
     initAdmittedRegistration()
+  } else if (bodyId === "mpsc-reg-page") {
+    initMpscRegistration()
   }
 })
 
@@ -1305,6 +1307,293 @@ function initMobileStickyCTA() {
       }
     }
   })
+}
+
+// =============================================
+// MPSC MOCK INTERVIEW REGISTRATION FLOW
+// =============================================
+function initMpscRegistration() {
+  const verifySection = document.getElementById("verifySection")
+  const registrationSection = document.getElementById("registrationSection")
+  const joinGroupSection = document.getElementById("joinGroupSection")
+  const verifyBtn = document.getElementById("verifyBtn")
+  const verifyInput = document.getElementById("verifyRollNumber")
+  const verifyMessage = document.getElementById("verifyMessage")
+  const regForm = document.getElementById("mpscRegForm")
+  const regSubmitBtn = document.getElementById("regSubmitBtn")
+  const regMessage = document.getElementById("regMessage")
+  const stepDot1 = document.getElementById("stepDot1")
+  const stepDot2 = document.getElementById("stepDot2")
+  const stepDot3 = document.getElementById("stepDot3")
+  const stepConnector1 = document.getElementById("stepConnector1")
+  const stepConnector2 = document.getElementById("stepConnector2")
+
+  if (!verifyBtn || !verifyInput) return
+
+  function showMessage(el, text, type) {
+    if (!el) return
+    el.className = "admitted-inline-message show " + type
+    el.innerHTML = `<i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i><span>${text}</span>`
+  }
+
+  function hideMessage(el) {
+    if (!el) return
+    el.className = "admitted-inline-message"
+    el.innerHTML = ""
+  }
+
+  function setLoading(btn, isLoading, originalHtml) {
+    if (!btn) return
+    if (isLoading) {
+      btn._originalHtml = btn.innerHTML
+      btn.innerHTML = '<span class="btn-spinner"></span> Processing...'
+      btn.classList.add("loading")
+      btn.disabled = true
+    } else {
+      btn.innerHTML = originalHtml || btn._originalHtml || "Submit"
+      btn.classList.remove("loading")
+      btn.disabled = false
+    }
+  }
+
+  function goToStep2() {
+    if (stepDot1) {
+      stepDot1.classList.remove("active")
+      stepDot1.classList.add("completed")
+      const num = stepDot1.querySelector(".step-number")
+      if (num) num.innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    }
+    if (stepConnector1) stepConnector1.classList.add("active")
+    if (stepDot2) stepDot2.classList.add("active")
+  }
+
+  function goToStep3() {
+    if (stepDot2) {
+      stepDot2.classList.remove("active")
+      stepDot2.classList.add("completed")
+      const num = stepDot2.querySelector(".step-number")
+      if (num) num.innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    }
+    if (stepConnector1) stepConnector1.classList.add("completed")
+    if (stepConnector2) stepConnector2.classList.add("active")
+    if (stepDot3) {
+      stepDot3.classList.add("active")
+      stepDot3.classList.add("completed")
+      const num = stepDot3.querySelector(".step-number")
+      if (num) num.innerHTML = '<i class="fas fa-check" style="font-size:0.8rem"></i>'
+    }
+    if (stepConnector2) stepConnector2.classList.add("completed")
+  }
+
+  // STEP 1: VERIFY ROLL NUMBER
+  verifyBtn.addEventListener("click", async () => {
+    const rollNo = verifyInput.value.trim()
+    if (!rollNo) {
+      showMessage(verifyMessage, "Please enter your Roll Number / Reg ID.", "error")
+      verifyInput.focus()
+      return
+    }
+
+    hideMessage(verifyMessage)
+    setLoading(verifyBtn, true)
+
+    try {
+      const params = new URLSearchParams()
+      params.append("action", "verifyMpscStudent")
+      params.append("data", JSON.stringify({ roll_no: rollNo }))
+
+      const res = await fetch(APPS_SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: params
+      })
+
+      const text = await res.text()
+      let data
+      try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
+
+      if (data.exists) {
+        if (data.already_registered) {
+          showMessage(
+            verifyMessage,
+            "तुमची MPSC मॉक मुलाखतीसाठीची नोंदणी आधीच पूर्ण झाली आहे. पुन्हा नोंदणीची आवश्यकता नाही.<br>(You have already registered for the MPSC Mock Interview.)",
+            "error"
+          )
+          verifyInput.disabled = true
+          verifyBtn.disabled = true
+          verifyBtn.style.opacity = "0.5"
+          verifyBtn.style.cursor = "not-allowed"
+          return
+        }
+
+        const student = data.data || {}
+
+        // Populate Form Fields
+        const regRollEl = document.getElementById("regRollNo")
+        const regNameEl = document.getElementById("regName")
+        const regCategoryEl = document.getElementById("regCategory")
+        const regGenderEl = document.getElementById("regGender")
+        const regBatchEl = document.getElementById("regBatch")
+        const batchGroup = document.getElementById("batchGroup")
+        const regWhatsappEl = document.getElementById("regWhatsapp")
+        const regEmailEl = document.getElementById("regEmail")
+
+        if (regRollEl) regRollEl.value = student.roll_no || rollNo
+        if (regNameEl) regNameEl.value = student.name || "Candidate"
+        if (regCategoryEl) regCategoryEl.value = student.category || "-"
+        if (regGenderEl) regGenderEl.value = student.gender || "-"
+
+        if (student.batch && regBatchEl && batchGroup) {
+          regBatchEl.value = student.batch
+          batchGroup.style.display = "block"
+        }
+
+        // Pre-fill contact details if already in database
+        if (regWhatsappEl && student.phone) {
+          regWhatsappEl.value = student.phone
+        }
+        if (regEmailEl && student.email) {
+          regEmailEl.value = student.email
+        }
+
+        // Transition UI to Step 2
+        goToStep2()
+        if (verifySection) verifySection.style.display = "none"
+        if (registrationSection) {
+          registrationSection.style.display = "block"
+          registrationSection.scrollIntoView({ behavior: "smooth", block: "start" })
+        }
+
+        showPopup("Roll Number verified! Please confirm your contact details.", "success")
+      } else {
+        showMessage(
+          verifyMessage,
+          data.message || "Roll Number not found in our student records. Please check and re-enter, or contact the academy office.",
+          "error"
+        )
+      }
+    } catch (err) {
+      console.error("[mpsc-reg] Verification error:", err)
+      showMessage(verifyMessage, "Network error. Please check your internet connection and try again.", "error")
+    } finally {
+      setLoading(verifyBtn, false, '<i class="fas fa-search"></i> Verify My Roll Number')
+    }
+  })
+
+  verifyInput.addEventListener("keydown", (e) => {
+    if (e.key === "Enter") {
+      e.preventDefault()
+      verifyBtn.click()
+    }
+  })
+
+  // STEP 2: REGISTRATION SUBMISSION
+  if (regForm) {
+    regForm.addEventListener("submit", async (e) => {
+      e.preventDefault()
+
+      // Honeypot check
+      const honeypot = regForm.querySelector('input[name="website"]')
+      if (honeypot && honeypot.value.trim() !== "") return
+
+      const rollNo = (document.getElementById("regRollNo")?.value || "").trim()
+      const name = (document.getElementById("regName")?.value || "").trim()
+      const category = (document.getElementById("regCategory")?.value || "").trim()
+      const gender = (document.getElementById("regGender")?.value || "").trim()
+      const whatsapp = (document.getElementById("regWhatsapp")?.value || "").trim()
+      const email = (document.getElementById("regEmail")?.value || "").trim()
+
+      if (!whatsapp) {
+        showMessage(regMessage, "WhatsApp number is required.", "error")
+        document.getElementById("regWhatsapp")?.focus()
+        return
+      }
+
+      if (!validatePhoneNumber(whatsapp)) {
+        showMessage(regMessage, "कृपया वैध 10-अंकी मोबाईल नंबर टाका (6-9 ने सुरू होणारा). / Please enter a valid 10-digit mobile number.", "error")
+        document.getElementById("regWhatsapp")?.focus()
+        return
+      }
+
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showMessage(regMessage, "Please enter a valid email address.", "error")
+        document.getElementById("regEmail")?.focus()
+        return
+      }
+
+      hideMessage(regMessage)
+      setLoading(regSubmitBtn, true)
+
+      const regData = {
+        roll_no: rollNo,
+        name: name,
+        category: category,
+        gender: gender,
+        whatsapp_number: whatsapp,
+        phone: whatsapp,
+        email: email,
+        website: ""
+      }
+
+      try {
+        // Parallel MySQL Dual-Write (fire-and-forget)
+        sendToDatabase("registerMpscInterview", regData)
+
+        // Primary Apps Script Write
+        const params = new URLSearchParams()
+        params.append("action", "registerMpscInterview")
+        params.append("data", JSON.stringify(regData))
+
+        const res = await fetch(APPS_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: params
+        })
+
+        const text = await res.text()
+        let data
+        try { data = JSON.parse(text) } catch { data = { success: false, message: text } }
+
+        if (data.success) {
+          // Fill summary details
+          const summaryRoll = document.getElementById("summaryRoll")
+          const summaryName = document.getElementById("summaryName")
+          const summaryPhone = document.getElementById("summaryPhone")
+          const summaryEmail = document.getElementById("summaryEmail")
+
+          if (summaryRoll) summaryRoll.textContent = rollNo
+          if (summaryName) summaryName.textContent = name
+          if (summaryPhone) summaryPhone.textContent = whatsapp
+          if (summaryEmail) summaryEmail.textContent = email
+
+          // Advance to Step 3: WhatsApp Group Access
+          goToStep3()
+          if (registrationSection) registrationSection.style.display = "none"
+          if (joinGroupSection) {
+            joinGroupSection.style.display = "block"
+            joinGroupSection.scrollIntoView({ behavior: "smooth", block: "start" })
+          }
+
+          showPopup("🎉 MPSC Mock Interview Registration Successful!", "success")
+        } else {
+          showMessage(regMessage, data.message || "Registration failed. Please try again.", "error")
+        }
+      } catch (err) {
+        console.error("[mpsc-reg] Submission error:", err)
+        showMessage(regMessage, "Network error during registration. Please try again.", "error")
+      } finally {
+        setLoading(regSubmitBtn, false, '<i class="fas fa-check-circle"></i> Complete MPSC Mock Interview Registration')
+      }
+    })
+  }
+
+  // STEP 3: WHATSAPP BUTTON TRACKING
+  const whatsappFollowBtn = document.getElementById("whatsappFollowBtn")
+  if (whatsappFollowBtn) {
+    whatsappFollowBtn.addEventListener("click", () => {
+      whatsappFollowBtn.classList.add("joined")
+    })
+  }
 }
 
 

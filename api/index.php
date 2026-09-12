@@ -68,6 +68,12 @@ switch ($action) {
     case 'getRegistrations':
         $result = getRegistrations();
         break;
+    case 'registerMpscInterview':
+        $result = processMpscRegistration($data);
+        break;
+    case 'getMpscRegistrations':
+        $result = getMpscRegistrations();
+        break;
     case 'health':
         $result = healthCheck();
         break;
@@ -328,6 +334,122 @@ function getRegistrations()
                 'email' => $row['email'] ?? '',
                 'address' => $row['full_address'] ?? '',
                 'registration_date' => $row['registration_date'] ?? '',
+            ];
+        }, $registrations);
+
+        return ['success' => true, 'registrations' => $formatted];
+    } catch (PDOException $e) {
+        return ['success' => false, 'message' => 'DB Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Process MPSC Mock Interview Registration (MySQL dual-write)
+ */
+function processMpscRegistration($data)
+{
+    try {
+        $pdo = getDBConnection();
+
+        // Ensure table exists
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS mpsc_registrations (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                roll_no VARCHAR(100) NOT NULL UNIQUE,
+                name VARCHAR(255) DEFAULT '',
+                email VARCHAR(255) DEFAULT '',
+                phone VARCHAR(50) DEFAULT '',
+                category VARCHAR(100) DEFAULT '',
+                gender VARCHAR(50) DEFAULT '',
+                status VARCHAR(50) DEFAULT 'Registered',
+                whatsapp_joined TINYINT(1) DEFAULT 0,
+                registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $roll_no = sanitize($data['roll_no'] ?? '');
+        $name = sanitize($data['name'] ?? '');
+        $email = sanitize($data['email'] ?? '');
+        $phone = sanitize($data['phone'] ?? $data['whatsapp_number'] ?? '');
+        $category = sanitize($data['category'] ?? '');
+        $gender = sanitize($data['gender'] ?? '');
+
+        // Honeypot check
+        if (!empty($data['website'])) {
+            return ['success' => false, 'message' => 'Registration failed.'];
+        }
+
+        if (empty($roll_no)) {
+            return ['success' => false, 'message' => 'Missing Roll Number.'];
+        }
+
+        // Check if already registered
+        $checkStmt = $pdo->prepare("SELECT id FROM mpsc_registrations WHERE roll_no = :roll_no LIMIT 1");
+        $checkStmt->execute([':roll_no' => $roll_no]);
+        if ($checkStmt->fetch()) {
+            return ['success' => false, 'message' => 'Already registered for MPSC Mock Interview in database.'];
+        }
+
+        $stmt = $pdo->prepare("
+            INSERT INTO mpsc_registrations (roll_no, name, email, phone, category, gender, status, registration_date, created_at)
+            VALUES (:roll_no, :name, :email, :phone, :category, :gender, 'Registered', NOW(), NOW())
+        ");
+
+        $stmt->execute([
+            ':roll_no' => $roll_no,
+            ':name' => $name,
+            ':email' => $email,
+            ':phone' => $phone,
+            ':category' => $category,
+            ':gender' => $gender,
+        ]);
+
+        return ['success' => true, 'message' => 'MPSC registration saved to database.', 'id' => $pdo->lastInsertId()];
+    } catch (PDOException $e) {
+        return ['success' => false, 'message' => 'DB Error: ' . $e->getMessage()];
+    }
+}
+
+/**
+ * Get all MPSC Mock Interview registrations
+ */
+function getMpscRegistrations()
+{
+    try {
+        $pdo = getDBConnection();
+
+        // Ensure table exists to prevent queries on missing table
+        $pdo->exec("
+            CREATE TABLE IF NOT EXISTS mpsc_registrations (
+                id INT AUTO_INCREMENT PRIMARY KEY,
+                roll_no VARCHAR(100) NOT NULL UNIQUE,
+                name VARCHAR(255) DEFAULT '',
+                email VARCHAR(255) DEFAULT '',
+                phone VARCHAR(50) DEFAULT '',
+                category VARCHAR(100) DEFAULT '',
+                gender VARCHAR(50) DEFAULT '',
+                status VARCHAR(50) DEFAULT 'Registered',
+                whatsapp_joined TINYINT(1) DEFAULT 0,
+                registration_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+                created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+        ");
+
+        $stmt = $pdo->query("SELECT * FROM mpsc_registrations ORDER BY registration_date DESC");
+        $registrations = $stmt->fetchAll();
+
+        $formatted = array_map(function ($row) {
+            return [
+                'id' => $row['id'],
+                'timestamp' => $row['registration_date'] ?? $row['created_at'],
+                'roll_no' => $row['roll_no'],
+                'name' => $row['name'] ?? '',
+                'email' => $row['email'] ?? '',
+                'phone' => $row['phone'] ?? '',
+                'category' => $row['category'] ?? '',
+                'gender' => $row['gender'] ?? '',
+                'status' => $row['status'] ?? 'Registered',
             ];
         }, $registrations);
 

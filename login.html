@@ -1898,7 +1898,10 @@
             <i class="fa-solid fa-file-pdf"></i> Upload Note
           </a>
           <a class="nav-item" onclick="switchTab('registrations')" id="nav-registrations">
-            <i class="fa-solid fa-user-check"></i> Registrations
+            <i class="fa-solid fa-user-check"></i> MahaJyoti Regs
+          </a>
+          <a class="nav-item" onclick="switchTab('mpsc')" id="nav-mpsc">
+            <i class="fa-solid fa-user-tie"></i> MPSC Mock Interviews
           </a>
           <a class="nav-item" onclick="switchTab('timers')" id="nav-timers">
             <i class="fa-solid fa-clock"></i> Exam Timers
@@ -2021,6 +2024,39 @@
               </div>
 
               <div id="registrationsContainer">
+                <!-- Populated via JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- MPSC Mock Interviews Tab -->
+          <div id="mpscTab" class="tab-content">
+            <div class="table-container">
+              <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:15px;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                  <h3 style="margin:0;"><i class="fa-solid fa-user-tie" style="color:var(--accent-red);"></i> MPSC Mock Interview Registrations</h3>
+                  <span class="badge" id="mpscCountBadge" style="background:#e8f5e9; color:#2e7d32; font-weight:700; padding:4px 10px; border-radius:12px; font-size:12px;">0 Registered</span>
+                </div>
+                <div style="display:flex; gap:10px; align-items:center;">
+                  <input type="text" id="mpscSearchInput" placeholder="Search Roll No, Name, Phone..." 
+                    oninput="filterMpscRegistrations()" 
+                    style="padding:6px 12px; border:1px solid #ddd; border-radius:6px; font-size:13px; min-width:220px;" />
+                  <button onclick="exportMpscToCSV()" class="refresh-btn" style="background:#e8f5e9; color:#2e7d32;" title="Export to CSV">
+                    <i class="fa-solid fa-file-excel"></i> Export CSV
+                  </button>
+                  <button onclick="loadMpscRegistrations()" class="refresh-btn" aria-label="Refresh MPSC registrations">
+                    <i class="fa-solid fa-rotate-right"></i> Refresh
+                  </button>
+                </div>
+              </div>
+
+              <div id="mpscLoader" style="display:none; text-align:center; padding: 20px;">
+                <span class="spinner"
+                  style="width: 20px; height: 20px; border-color: var(--primary-light); border-top-color: transparent;"></span>
+                <span style="font-size:13px; color:#666;">Loading MPSC registrations...</span>
+              </div>
+
+              <div id="mpscContainer">
                 <!-- Populated via JS -->
               </div>
             </div>
@@ -2266,6 +2302,10 @@
         document.getElementById('nav-registrations').classList.add('active');
         document.getElementById('registrationsTab').classList.add('active');
         loadRegistrations();
+      } else if (tabName === 'mpsc') {
+        document.getElementById('nav-mpsc').classList.add('active');
+        document.getElementById('mpscTab').classList.add('active');
+        loadMpscRegistrations();
       }
     }
 
@@ -2418,7 +2458,7 @@
 
     async function callAPI(action, data = {}) {
       // Add Admin Key for sensitive actions
-      if (['getLeads', 'upload', 'deleteFile', 'getRegistrations'].includes(action)) {
+      if (['getLeads', 'upload', 'deleteFile', 'getRegistrations', 'getMpscRegistrations'].includes(action)) {
         data.adminKey = CONFIG.ADMIN_API_KEY;
       }
 
@@ -2818,6 +2858,149 @@
         container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load registrations.</p>';
         console.error(error);
       }
+    }
+
+    // ═══════════════════════════════════════════════════════════════════════════
+    // MPSC MOCK INTERVIEW REGISTRATIONS MANAGEMENT
+    // ═══════════════════════════════════════════════════════════════════════════
+
+    let mpscDataCache = [];
+
+    async function loadMpscRegistrations() {
+      const container = document.getElementById('mpscContainer');
+      const loader = document.getElementById('mpscLoader');
+      const badge = document.getElementById('mpscCountBadge');
+
+      container.innerHTML = '';
+      loader.style.display = 'block';
+
+      try {
+        const result = await callAPI('getMpscRegistrations');
+        loader.style.display = 'none';
+
+        if (result.success && result.registrations) {
+          mpscDataCache = result.registrations;
+          if (badge) badge.innerText = `${mpscDataCache.length} Registered`;
+          renderMpscTable(mpscDataCache);
+        } else {
+          mpscDataCache = [];
+          if (badge) badge.innerText = '0 Registered';
+          container.innerHTML = `
+            <div class="empty-state">
+              <i class="fa-solid fa-user-tie"></i>
+              <p>No MPSC Mock Interview registrations found.</p>
+            </div>
+          `;
+        }
+      } catch (error) {
+        loader.style.display = 'none';
+        container.innerHTML = '<p style="text-align:center; color:red; padding: 20px;">Failed to load MPSC registrations.</p>';
+        console.error(error);
+      }
+    }
+
+    function renderMpscTable(list) {
+      const container = document.getElementById('mpscContainer');
+      if (!list || list.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-solid fa-search"></i>
+            <p>No registrations matching your search.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.className = 'leads-table';
+
+      table.innerHTML = `
+        <thead>
+          <tr>
+            <th>Timestamp</th>
+            <th>Roll No</th>
+            <th>Candidate Name</th>
+            <th>Contact Phone</th>
+            <th>Email</th>
+            <th>Category / Gender</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${list.map(reg => `
+            <tr>
+              <td><small style="color:#666;">${escapeHTML(reg.timestamp || '-')}</small></td>
+              <td><strong style="color:var(--primary-color); font-size:1.05rem;">${escapeHTML(reg.roll_no)}</strong></td>
+              <td><strong>${escapeHTML(reg.name || '-')}</strong></td>
+              <td>
+                <a href="tel:${escapeHTML(reg.phone)}" style="color:inherit; text-decoration:none;">
+                  <i class="fa-solid fa-phone" style="font-size:11px; color:#25D366; margin-right:4px;"></i>${escapeHTML(reg.phone || '-')}
+                </a>
+              </td>
+              <td>${escapeHTML(reg.email || '-')}</td>
+              <td>
+                <span style="font-size:12px;">${escapeHTML(reg.category || '-')}${reg.gender ? ` (${escapeHTML(reg.gender)})` : ''}</span>
+              </td>
+              <td>
+                <span class="badge" style="background:rgba(46, 204, 113, 0.15); color:#27ae60; font-weight:700; border:1px solid rgba(46,204,113,0.3);">
+                  ✓ ${escapeHTML(reg.status || 'Registered')}
+                </span>
+              </td>
+            </tr>
+          `).join('')}
+        </tbody>
+      `;
+
+      container.innerHTML = '';
+      container.appendChild(table);
+    }
+
+    function filterMpscRegistrations() {
+      const query = (document.getElementById('mpscSearchInput')?.value || '').toLowerCase().trim();
+      if (!query) {
+        renderMpscTable(mpscDataCache);
+        return;
+      }
+
+      const filtered = mpscDataCache.filter(item => {
+        return (
+          String(item.roll_no || '').toLowerCase().includes(query) ||
+          String(item.name || '').toLowerCase().includes(query) ||
+          String(item.phone || '').toLowerCase().includes(query) ||
+          String(item.email || '').toLowerCase().includes(query) ||
+          String(item.category || '').toLowerCase().includes(query)
+        );
+      });
+
+      renderMpscTable(filtered);
+    }
+
+    function exportMpscToCSV() {
+      if (!mpscDataCache || mpscDataCache.length === 0) {
+        alert('No data available to export.');
+        return;
+      }
+
+      const headers = ['Timestamp', 'Roll No', 'Candidate Name', 'Contact Number', 'Email', 'Category', 'Gender', 'Status'];
+      const rows = mpscDataCache.map(r => [
+        `"${(r.timestamp || '').replace(/"/g, '""')}"`,
+        `"${(r.roll_no || '').replace(/"/g, '""')}"`,
+        `"${(r.name || '').replace(/"/g, '""')}"`,
+        `"${(r.phone || '').replace(/"/g, '""')}"`,
+        `"${(r.email || '').replace(/"/g, '""')}"`,
+        `"${(r.category || '').replace(/"/g, '""')}"`,
+        `"${(r.gender || '').replace(/"/g, '""')}"`,
+        `"${(r.status || 'Registered').replace(/"/g, '""')}"`
+      ]);
+
+      const csvContent = 'data:text/csv;charset=utf-8,' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement('a');
+      link.setAttribute('href', encodedUri);
+      link.setAttribute('download', `mpsc_mock_registrations_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     }
 
     // ═══════════════════════════════════════════════════════════════════════════

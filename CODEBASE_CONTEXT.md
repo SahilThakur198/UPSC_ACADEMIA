@@ -69,6 +69,7 @@ project-root/
 ├── enroll.html                 # Demo class booking / enrollment form
 ├── login.html                  # Staff portal (auth + dashboard: leads + registrations tabs)
 ├── admitted-registration.html  # 3-step online registration flow for admitted Mahajyoti students
+├── mpsc-mock-interview.html    # 3-step online registration flow for MPSC Mock Interviews
 ├── view_notes.html             # Students' study notes viewer (fetches from Google Drive)
 ├── header.html                 # Shared reusable navbar component (injected via JS fetch)
 ├── footer.html                 # Shared reusable footer component (injected via JS fetch)
@@ -132,7 +133,22 @@ Step 2: Student fills WhatsApp, email, address form (pre-filled readonly fields 
 Step 3: Join WhatsApp + Telegram group links displayed
 ```
 
-### 3. Staff Portal Flow
+### 3. MPSC Mock Interview Registration Flow (3-Step)
+```
+Step 1: Student enters Roll Number
+    ↓ POST action=verifyMpscStudent { roll_no: XXX }
+    ↓ Code.gs: verifyMpscStudent() → checks student_registration sheet & mpsc_mock_registrations
+    ↓ Returns: { exists, already_registered, data: {...name, contact, email, category} }
+Step 2: Student confirms/enters active WhatsApp and Email
+    ├──▶ sendToDatabase('registerMpscInterview', data)  [PARALLEL — fire-and-forget]
+    │       ↓ api/index.php: processMpscRegistration() → MySQL 'mpsc_registrations'
+    └──▶ POST { action: 'registerMpscInterview', data: {...} }
+            ↓ Code.gs: registerMpscInterview() → appends row to 'mpsc_mock_registrations' sheet
+            ↓ Code.gs: sendMpscConfirmationEmail() → sends branded HTML email to student
+Step 3: Follow official WhatsApp Channel (https://whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g)
+```
+
+### 4. Staff Portal Flow
 ```
 Staff opens login.html
     ↓ Signup → sendToDB('signup', data) [PARALLEL fire-and-forget → MySQL 'users']

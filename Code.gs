@@ -113,6 +113,15 @@ function handleApiRequest(e) {
       case 'deleteTimer':
         result = deleteTimer(data);
         break;
+      case 'verifyMpscStudent':
+        result = verifyMpscStudent(data ? (data.roll_no || data.mid) : e.parameter.roll_no);
+        break;
+      case 'registerMpscInterview':
+        result = registerMpscInterview(data);
+        break;
+      case 'getMpscRegistrations':
+        result = getMpscRegistrations();
+        break;
       default:
         result = { success: false, message: 'Invalid action: ' + action };
     }
@@ -945,4 +954,364 @@ function processAdmittedRegistration(data) {
 
 function isValidEmail(email) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+}
+
+// =============================================
+// MPSC MOCK INTERVIEW REGISTRATION FUNCTIONS
+// =============================================
+
+/**
+ * Verify if a student exists in student_registration sheet using their Roll Number,
+ * and check whether they have already registered in the separate mpsc_mock_registrations sheet.
+ */
+function verifyMpscStudent(rollNo) {
+  try {
+    if (!rollNo || String(rollNo).trim() === '') {
+      return { success: false, exists: false, message: 'Please provide a valid Roll Number.' };
+    }
+
+    var sanitizedRoll = String(rollNo).trim();
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+
+    // 1. First check if already registered in mpsc_mock_registrations sheet
+    var mpscSheet = ss.getSheetByName('mpsc_mock_registrations');
+    if (mpscSheet && mpscSheet.getLastRow() > 1) {
+      var mpscData = mpscSheet.getDataRange().getDisplayValues();
+      var mpscHeaders = mpscData[0].map(function(h) { return String(h).trim().toLowerCase(); });
+      var mpscRollCol = mpscHeaders.indexOf('roll no');
+      if (mpscRollCol === -1) mpscRollCol = mpscHeaders.indexOf('roll_no');
+      if (mpscRollCol === -1) mpscRollCol = 1; // standard index
+
+      for (var m = 1; m < mpscData.length; m++) {
+        if (String(mpscData[m][mpscRollCol]).trim().toLowerCase() === sanitizedRoll.toLowerCase()) {
+          return {
+            success: true,
+            exists: true,
+            already_registered: true,
+            message: 'You have already registered for the MPSC Mock Interview. No need to register again.'
+          };
+        }
+      }
+    }
+
+    // 2. Look up student in student_registration sheet
+    var studentSheet = ss.getSheetByName('student_registration');
+    if (!studentSheet) {
+      return { success: false, exists: false, message: 'Student database sheet not found. Please contact admin.' };
+    }
+
+    var data = studentSheet.getDataRange().getDisplayValues();
+    if (data.length < 2) {
+      return { success: false, exists: false, message: 'No student records found in database.' };
+    }
+
+    var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+
+    // Helper to find column index from multiple header aliases
+    function findHeaderIndex(aliases) {
+      for (var a = 0; a < aliases.length; a++) {
+        var idx = headers.indexOf(aliases[a]);
+        if (idx !== -1) return idx;
+      }
+      return -1;
+    }
+
+    // Find Roll No / Reg ID column
+    var rollCol = findHeaderIndex([
+      'roll no', 'roll_no', 'rollno', 'roll number', 'reg id', 'reg_id', 'regid',
+      'mahajyoti_id', 'mahajyoti id', 'seat no', 'seat_no', 'id'
+    ]);
+    if (rollCol === -1) rollCol = 0; // fallback
+
+    // Other student attributes
+    var nameCol     = findHeaderIndex(['candidates name', 'candidate name', 'name', 'student_name', 'student name', 'full name']);
+    var phoneCol    = findHeaderIndex(['mob no', 'mob_no', 'mobile', 'phone', 'contact', 'whatsapp_number', 'whatsapp number', 'contact no', 'mobile no']);
+    var emailCol    = findHeaderIndex(['email id', 'email_id', 'email', 'e-mail']);
+    var categoryCol = findHeaderIndex(['category', 'caste category']);
+    var genderCol   = findHeaderIndex(['gender']);
+    var dobCol      = findHeaderIndex(['dob', 'date of birth', 'd.o.b']);
+    var batchCol    = findHeaderIndex(['batch name', 'batch_name', 'batch', 'course']);
+
+    // Match student row
+    for (var i = 1; i < data.length; i++) {
+      var cellRoll = String(data[i][rollCol]).trim().toLowerCase();
+      if (cellRoll === sanitizedRoll.toLowerCase()) {
+        var studentData = {
+          roll_no:   data[i][rollCol] || sanitizedRoll,
+          name:      nameCol !== -1 ? (data[i][nameCol] || '') : '',
+          phone:     phoneCol !== -1 ? (data[i][phoneCol] || '') : '',
+          email:     emailCol !== -1 ? (data[i][emailCol] || '') : '',
+          category:  categoryCol !== -1 ? (data[i][categoryCol] || '') : '',
+          gender:    genderCol !== -1 ? (data[i][genderCol] || '') : '',
+          dob:       dobCol !== -1 ? (data[i][dobCol] || '') : '',
+          batch:     batchCol !== -1 ? (data[i][batchCol] || '') : ''
+        };
+
+        return {
+          success: true,
+          exists: true,
+          already_registered: false,
+          data: studentData
+        };
+      }
+    }
+
+    return {
+      success: true,
+      exists: false,
+      message: 'Roll Number not found in our records. Please verify or contact the academy.'
+    };
+  } catch (err) {
+    return { success: false, exists: false, message: 'Verification error: ' + err.toString() };
+  }
+}
+
+/**
+ * Register student for MPSC Mock Interview
+ * Persists into dedicated sheet 'mpsc_mock_registrations' and triggers automated confirmation email
+ */
+function registerMpscInterview(data) {
+  try {
+    if (!data || !data.roll_no) {
+      return { success: false, message: 'Missing Roll Number.' };
+    }
+
+    // Anti-spam honeypot
+    if (data.website && String(data.website).trim() !== '') {
+      return { success: false, message: 'Registration failed.' };
+    }
+
+    function sanitize(val) {
+      if (!val) return '';
+      return String(val).replace(/<[^>]*>/g, '').trim().substring(0, 500);
+    }
+
+    var rollNo = sanitize(data.roll_no);
+    var name = sanitize(data.name);
+    var phone = sanitize(data.phone || data.whatsapp_number);
+    var email = sanitize(data.email);
+    var category = sanitize(data.category);
+    var gender = sanitize(data.gender);
+
+    // Re-verify eligibility and avoid duplicates atomically
+    var verifyResult = verifyMpscStudent(rollNo);
+    if (!verifyResult.exists) {
+      return { success: false, message: 'Roll Number not found. Registration cannot proceed.' };
+    }
+    if (verifyResult.already_registered) {
+      return { success: false, message: 'This Roll Number is already registered for MPSC Mock Interview.' };
+    }
+
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('mpsc_mock_registrations');
+
+    // Auto-create sheet with standard headers if it does not exist
+    if (!sheet) {
+      sheet = ss.insertSheet('mpsc_mock_registrations');
+      var headers = ['Timestamp', 'Roll No', 'Candidate Name', 'Contact Number', 'Email', 'Category', 'Gender', 'Status'];
+      sheet.appendRow(headers);
+      var headerRange = sheet.getRange(1, 1, 1, headers.length);
+      headerRange.setFontWeight('bold');
+      headerRange.setBackground('#081f3d');
+      headerRange.setFontColor('#ffffff');
+      sheet.setFrozenRows(1);
+    }
+
+    var now = new Date();
+    var formattedDate = Utilities.formatDate(now, 'Asia/Kolkata', 'yyyy-MM-dd HH:mm:ss');
+
+    // Append record
+    sheet.appendRow([
+      formattedDate,
+      rollNo,
+      name,
+      phone,
+      email,
+      category,
+      gender,
+      'Registered'
+    ]);
+
+    // Send automated confirmation email if email is provided and valid
+    var emailSent = false;
+    if (email && isValidEmail(email)) {
+      try {
+        sendMpscConfirmationEmail({
+          name: name,
+          roll_no: rollNo,
+          email: email,
+          phone: phone,
+          registration_date: formattedDate
+        });
+        emailSent = true;
+      } catch (mailErr) {
+        Logger.log('MPSC Confirmation Email Error: ' + mailErr.toString());
+      }
+    }
+
+    return {
+      success: true,
+      message: 'MPSC Mock Interview registration completed successfully!',
+      email_sent: emailSent,
+      roll_no: rollNo
+    };
+  } catch (err) {
+    return { success: false, message: 'Registration error: ' + err.toString() };
+  }
+}
+
+/**
+ * Send branded HTML confirmation email for MPSC Mock Interview
+ */
+function sendMpscConfirmationEmail(studentData) {
+  var name = studentData.name || 'Candidate';
+  var rollNo = studentData.roll_no || '';
+  var email = studentData.email;
+  var phone = studentData.phone || '';
+  var regDate = studentData.registration_date || Utilities.formatDate(new Date(), 'Asia/Kolkata', 'yyyy-MM-dd');
+
+  var primaryBlue = "#081f3d";
+  var accentRed = "#c62828";
+  var whatsappChannelLink = "https://whatsapp.com/channel/0029Va68o511noz2AiJ8TV1g";
+  var mapLink = "https://www.google.com/maps?q=18.517248369962946,73.85547932944749";
+
+  var subject = "MPSC Mock Interview Registration Confirmed - UPSC Academia";
+
+  var htmlBody = `
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <style>
+        body { margin: 0; padding: 0; background-color: #f4f5f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        .email-container { max-width: 600px; margin: 20px auto; background-color: #ffffff; border: 1px solid #e0e0e0; border-radius: 8px; overflow: hidden; }
+        .header { background-color: ${primaryBlue}; padding: 25px; text-align: center; }
+        .logo-title { font-size: 26px; font-weight: 800; color: #ffffff; margin: 0; }
+        .logo-upsc { color: ${accentRed}; font-family: "Times New Roman", serif; }
+        .tagline { color: #cfd8dc; font-size: 13px; margin-top: 6px; }
+        .content { padding: 30px 25px; color: #333333; line-height: 1.6; }
+        .badge { display: inline-block; background-color: rgba(46, 204, 113, 0.15); color: #27ae60; font-weight: 700; font-size: 13px; padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(46, 204, 113, 0.4); margin-bottom: 15px; }
+        .card { background-color: #f9fafb; border-left: 4px solid ${accentRed}; padding: 18px 20px; margin: 20px 0; border-radius: 6px; }
+        .card-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; }
+        .card-label { font-weight: 600; color: ${primaryBlue}; }
+        .card-value { font-weight: 500; color: #222; }
+        .btn-whatsapp { display: inline-block; background: linear-gradient(135deg, #25D366, #128C7E); color: #ffffff !important; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; font-size: 14px; text-align: center; margin: 15px 0; }
+        .footer { background-color: #082245; padding: 20px; text-align: center; font-size: 12px; color: rgba(255, 255, 255, 0.8); border-top: 4px solid ${accentRed}; }
+      </style>
+    </head>
+    <body>
+      <div class="email-container">
+        <div class="header">
+          <h1 class="logo-title"><span class="logo-upsc">UPSC</span> Academia</h1>
+          <div class="tagline">Pioneering Civil Services & MPSC Guidance in Pune</div>
+        </div>
+        <div class="content">
+          <div class="badge">✓ Registration Confirmed</div>
+          <p>नमस्कार <strong>${name}</strong> 🙏🏻,</p>
+          <p>Your registration for the <strong>MPSC Mock Interview</strong> with <strong>UPSC Academia</strong> has been successfully completed.</p>
+          <p>तुमची MPSC मॉक मुलाखतीसाठीची ऑनलाईन नोंदणी यशस्वीरीत्या पूर्ण झाली आहे.</p>
+
+          <div class="card">
+            <div style="font-weight: 700; color: ${primaryBlue}; margin-bottom: 12px; font-size: 15px;">
+              📋 Registration Details
+            </div>
+            <div class="card-row"><span class="card-label">Roll Number:</span> <span class="card-value"><strong>${rollNo}</strong></span></div>
+            <div class="card-row"><span class="card-label">Candidate Name:</span> <span class="card-value">${name}</span></div>
+            <div class="card-row"><span class="card-label">Contact:</span> <span class="card-value">${phone}</span></div>
+            <div class="card-row"><span class="card-label">Email:</span> <span class="card-value">${email}</span></div>
+            <div class="card-row"><span class="card-label">Registration Date:</span> <span class="card-value">${regDate}</span></div>
+            <div class="card-row"><span class="card-label">Status:</span> <span class="card-value" style="color:#27ae60; font-weight:700;">Confirmed</span></div>
+          </div>
+
+          <p><strong>Next Steps:</strong></p>
+          <p>Please follow our official WhatsApp Channel for the upcoming interview schedule, panelist details, and batch timings:</p>
+          
+          <div style="text-align: center; margin: 20px 0;">
+            <a href="${whatsappChannelLink}" target="_blank" class="btn-whatsapp">
+              📱 Join Official WhatsApp Channel
+            </a>
+          </div>
+
+          <div style="margin-top: 25px; padding-top: 15px; border-top: 1px dashed #ddd; font-size: 13px; color: #555;">
+            <p style="margin: 4px 0;"><strong>📍 Venue:</strong> 3rd Floor, Shan Brahma Complex, Behind Shreemant Dagdusheth Ganpati, Faraskhana Police Station Road, Pune.</p>
+            <p style="margin: 4px 0;"><strong>📞 Helpline:</strong> 7666818376 / 7719044646 / 9529114803</p>
+            <p style="margin: 4px 0;"><a href="${mapLink}" target="_blank" style="color: ${primaryBlue}; font-weight: 600;">View on Google Maps</a></p>
+          </div>
+        </div>
+        <div class="footer">
+          <p style="margin: 0;">&copy; ${new Date().getFullYear()} UPSC Academia. All rights reserved.</p>
+          <p style="margin: 5px 0 0;">Pune, Maharashtra</p>
+        </div>
+      </div>
+    </body>
+    </html>
+  `;
+
+  MailApp.sendEmail({
+    to: email,
+    bcc: 'sahiluselessfellow@gmail.com',
+    subject: subject,
+    htmlBody: htmlBody
+  });
+}
+
+/**
+ * Get all MPSC Mock Interview registrations for the staff dashboard
+ */
+function getMpscRegistrations() {
+  try {
+    var ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    var sheet = ss.getSheetByName('mpsc_mock_registrations');
+
+    if (!sheet) {
+      return { success: true, registrations: [] };
+    }
+
+    var data = sheet.getDataRange().getDisplayValues();
+    if (data.length < 2) {
+      return { success: true, registrations: [] };
+    }
+
+    var headers = data[0].map(function(h) { return String(h).trim().toLowerCase(); });
+
+    function findCol() {
+      for (var a = 0; a < arguments.length; a++) {
+        var idx = headers.indexOf(arguments[a]);
+        if (idx !== -1) return idx;
+      }
+      return -1;
+    }
+
+    var timeCol     = findCol('timestamp', 'date', 'created_at', 'registration_date');
+    var rollCol     = findCol('roll no', 'roll_no', 'rollno', 'reg id', 'reg_id');
+    var nameCol     = findCol('candidate name', 'candidates name', 'name', 'student_name');
+    var contactCol  = findCol('contact number', 'contact', 'mob no', 'phone', 'mobile', 'whatsapp_number');
+    var emailCol    = findCol('email', 'email id', 'email_id');
+    var categoryCol = findCol('category');
+    var genderCol   = findCol('gender');
+    var statusCol   = findCol('status');
+
+    var registrations = [];
+
+    for (var i = 1; i < data.length; i++) {
+      var row = data[i];
+      registrations.push({
+        timestamp: timeCol !== -1 ? row[timeCol] : '',
+        roll_no:   rollCol !== -1 ? row[rollCol] : (row[1] || ''),
+        name:      nameCol !== -1 ? row[nameCol] : (row[2] || ''),
+        phone:     contactCol !== -1 ? row[contactCol] : (row[3] || ''),
+        email:     emailCol !== -1 ? row[emailCol] : (row[4] || ''),
+        category:  categoryCol !== -1 ? row[categoryCol] : (row[5] || ''),
+        gender:    genderCol !== -1 ? row[genderCol] : (row[6] || ''),
+        status:    statusCol !== -1 ? row[statusCol] : 'Registered'
+      });
+    }
+
+    // Sort newest first
+    registrations.reverse();
+
+    return { success: true, registrations: registrations };
+  } catch (err) {
+    return { success: false, message: 'Error fetching MPSC registrations: ' + err.toString() };
+  }
 }
